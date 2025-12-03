@@ -7,6 +7,21 @@ export const listCategories = cache(async function () {
     .then(({ product_categories }) => product_categories)
 })
 
+/**
+ * Recupera solo le categorie top-level (senza parent) con i loro figli
+ */
+export const getTopLevelCategories = cache(async function () {
+  return sdk.store.category
+    .list(
+      {
+        fields: "+category_children",
+        parent_category_id: "null",
+      },
+      { next: { tags: ["categories"] } }
+    )
+    .then(({ product_categories }) => product_categories)
+})
+
 export const getCategoriesList = cache(async function (
   offset: number = 0,
   limit: number = 100

@@ -2,6 +2,7 @@
 
 import { sdk } from "@lib/config"
 import medusaError from "@lib/util/medusa-error"
+import { translateError } from "@lib/util/error-messages"
 import { HttpTypes } from "@medusajs/types"
 import { omit } from "lodash"
 import { revalidateTag } from "next/cache"
@@ -58,7 +59,6 @@ export async function updateCart(data: HttpTypes.StoreUpdateCart) {
   if (!cartId) {
     throw new Error("No existing cart found, please create one before updating")
   }
-
   return sdk.store.cart
     .update(cartId, data, {}, getAuthHeaders())
     .then(({ cart }) => {
@@ -137,12 +137,11 @@ export async function deleteLineItem(lineId: string) {
   }
 
   await sdk.store.cart
-    .deleteLineItem(cartId, lineId, getAuthHeaders())
+    .deleteLineItem(cartId, lineId, {}, getAuthHeaders())
     .then(() => {
       revalidateTag("cart")
     })
     .catch(medusaError)
-  revalidateTag("cart")
 }
 
 export async function enrichLineItems(
@@ -233,12 +232,26 @@ export async function applyPromotions(codes: string[]) {
   if (!cartId) {
     throw new Error("No existing cart found")
   }
+  try {
+    const updatedCart = await updateCart({ promo_codes: codes })
+    revalidateTag("cart")
 
-  await updateCart({ promo_codes: codes })
-    .then(() => {
-      revalidateTag("cart")
-    })
-    .catch(medusaError)
+    // Check if the promotion codes were actually applied
+    if (
+      codes.length > 0 &&
+      (!updatedCart.promotions || updatedCart.promotions.length === 0)
+    ) {
+      const codesList = codes.join(", ")
+      const isPlural = codes.length > 1
+      const errorMessage = `The promotion code${
+        isPlural ? "s" : ""
+      } ${codesList} ${isPlural ? "are" : "is"} invalid`
+      throw new Error(translateError(errorMessage))
+    }
+  } catch (error: any) {
+    // Re-throw the error so it can be caught by the caller
+    throw error
+  }
 }
 
 export async function applyGiftCard(code: string) {

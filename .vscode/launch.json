@@ -1,0 +1,45 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Backend",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/backend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "skipFiles": ["<node_internals>/**", "**/node_modules/**"]
+    },
+    {
+      "name": "_Frontend Server",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/storefront",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "skipFiles": ["<node_internals>/**", "**/node_modules/**"],
+      "trace": false,
+      "presentation": {
+        "hidden": true
+      }
+    },
+    {
+      "name": "_Frontend Chrome",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:8000",
+      "webRoot": "${workspaceFolder}/storefront",
+      "trace": false,
+      "presentation": {
+        "hidden": true
+      }
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Frontend",
+      "configurations": ["_Frontend Server", "_Frontend Chrome"],
+      "stopAll": true
+    }
+  ]
+}

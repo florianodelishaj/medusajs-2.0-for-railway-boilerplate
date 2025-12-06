@@ -3,6 +3,7 @@ import { getRegion } from "@lib/data/regions"
 import ProductPreview from "@modules/products/components/product-preview"
 import { Pagination } from "@modules/store/components/pagination"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
+import { Inbox } from "lucide-react"
 
 const PRODUCT_LIMIT = 12
 
@@ -20,6 +21,8 @@ export default async function PaginatedProducts({
   collectionId,
   categoryId,
   productsIds,
+  minPrice,
+  maxPrice,
   countryCode,
 }: {
   sortBy?: SortOptions
@@ -27,6 +30,8 @@ export default async function PaginatedProducts({
   collectionId?: string
   categoryId?: string
   productsIds?: string[]
+  minPrice?: string
+  maxPrice?: string
   countryCode: string
 }) {
   const queryParams: PaginatedProductsParams = {
@@ -61,10 +66,21 @@ export default async function PaginatedProducts({
     page,
     queryParams,
     sortBy,
+    minPrice,
+    maxPrice,
     countryCode,
   })
 
   const totalPages = Math.ceil(count / PRODUCT_LIMIT)
+
+  if (!products || products.length === 0) {
+    return (
+      <div className="border border-black border-dashed flex items-center justify-center p-8 flex-col gap-y-4 bg-white w-full rounded-lg">
+        <Inbox className="size-12" />
+        <p className="text-base font-medium">Nessun prodotto trovato</p>
+      </div>
+    )
+  }
 
   return (
     <>

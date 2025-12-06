@@ -78,7 +78,7 @@ const CartDropdown = ({
       <Popover className="relative h-full">
         <Popover.Button className="h-full">
           <LocalizedClientLink
-            className="hover:text-ui-fg-base"
+            className="flex items-center h-full px-12 py-2 border-l border-black bg-black text-white hover:bg-pink-400 hover:border-pink-400 hover:text-black transition-colors duration-200 font-semibold gap-2"
             href="/cart"
             data-testid="nav-cart-link"
           >{`Cart (${totalItems})`}</LocalizedClientLink>
@@ -86,16 +86,16 @@ const CartDropdown = ({
         <Transition
           show={cartDropdownOpen}
           as={Fragment}
-          enter="transition ease-out duration-200"
-          enterFrom="opacity-0 translate-y-1"
-          enterTo="opacity-100 translate-y-0"
-          leave="transition ease-in duration-150"
-          leaveFrom="opacity-100 translate-y-0"
-          leaveTo="opacity-0 translate-y-1"
+          enter="transition-none"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="transition-none"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
         >
           <Popover.Panel
             static
-            className="hidden small:block absolute top-[calc(100%+1px)] right-0 bg-white border-x border-b border-gray-200 w-[420px] text-ui-fg-base"
+            className="hidden small:block absolute top-[calc(100%+8px)] right-0 bg-white border border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] w-[420px] text-black"
             data-testid="nav-cart-dropdown"
           >
             <div className="p-4 flex items-center justify-center">

@@ -31,19 +31,40 @@ export default async function ProductPreview({
 
   return (
     <LocalizedClientLink href={`/products/${product.handle}`} className="group">
-      <div data-testid="product-wrapper">
+      <div
+        data-testid="product-wrapper"
+        className="border border-black rounded-lg hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:-translate-x-[2px] hover:-translate-y-[2px] transition-all"
+      >
         <Thumbnail
+          className="rounded-tl-lg rounded-tr-lg rounded-b-none"
           thumbnail={product.thumbnail}
           images={product.images}
-          size="full"
+          size="square"
           isFeatured={isFeatured}
         />
-        <div className="flex txt-compact-medium mt-4 justify-between">
-          <Text className="text-ui-fg-subtle" data-testid="product-title">
+        <div className="p-4 flex flex-col gap-4 justify-between">
+          <Text data-testid="product-title" className="font-bold">
             {product.title}
           </Text>
-          <div className="flex items-center gap-x-2">
-            {cheapestPrice && <PreviewPrice price={cheapestPrice} />}
+          {product.tags?.map((tag: any) => (
+            <div
+              key={tag.id}
+              className="w-fit px-2 py-1 rounded"
+              style={
+                tag.metadata?.color
+                  ? { backgroundColor: tag.metadata.color }
+                  : {}
+              }
+            >
+              {tag.value}
+            </div>
+          ))}
+        </div>
+        <div className="p-4 border-t">
+          <div className="relative px-2 py-1 border bg-pink-400 w-fit">
+            <span>
+              {cheapestPrice && <PreviewPrice price={cheapestPrice} />}
+            </span>
           </div>
         </div>
       </div>

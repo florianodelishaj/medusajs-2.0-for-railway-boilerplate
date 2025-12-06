@@ -6,40 +6,51 @@ export type SortOptions = "price_asc" | "price_desc" | "created_at"
 
 type SortProductsProps = {
   sortBy: SortOptions
-  setQueryParams: (name: string, value: SortOptions) => void
+  minPrice?: string
+  maxPrice?: string
+  setQueryParams: (name: string, value: string) => void
   "data-testid"?: string
 }
 
 const sortOptions = [
   {
     value: "created_at",
-    label: "Latest Arrivals",
+    label: "Ultimi arrivi",
   },
   {
     value: "price_asc",
-    label: "Price: Low -> High",
+    label: "Prezzo crescente",
   },
   {
     value: "price_desc",
-    label: "Price: High -> Low",
+    label: "Prezzo decrescente",
   },
 ]
 
 const SortProducts = ({
   "data-testid": dataTestId,
   sortBy,
+  minPrice,
+  maxPrice,
   setQueryParams,
 }: SortProductsProps) => {
   const handleChange = (value: SortOptions) => {
     setQueryParams("sortBy", value)
   }
 
+  const handlePriceChange = (name: string, value: string) => {
+    setQueryParams(name, value)
+  }
+
   return (
     <FilterRadioGroup
-      title="Sort by"
+      title="Filtri"
       items={sortOptions}
       value={sortBy}
+      minPrice={minPrice}
+      maxPrice={maxPrice}
       handleChange={handleChange}
+      handlePriceChange={handlePriceChange}
       data-testid={dataTestId}
     />
   )

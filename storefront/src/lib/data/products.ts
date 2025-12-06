@@ -97,11 +97,15 @@ export const getProductsListWithSort = cache(async function ({
   page = 0,
   queryParams,
   sortBy = "created_at",
+  minPrice,
+  maxPrice,
   countryCode,
 }: {
   page?: number
   queryParams?: HttpTypes.FindParams & HttpTypes.StoreProductParams
   sortBy?: SortOptions
+  minPrice?: string
+  maxPrice?: string
   countryCode: string
 }): Promise<{
   response: { products: HttpTypes.StoreProduct[]; count: number }
@@ -111,7 +115,7 @@ export const getProductsListWithSort = cache(async function ({
   const limit = queryParams?.limit || 12
 
   const {
-    response: { products, count },
+    response: { products },
   } = await getProductsList({
     pageParam: 0,
     queryParams: {
@@ -123,16 +127,30 @@ export const getProductsListWithSort = cache(async function ({
 
   const sortedProducts = sortProducts(products, sortBy)
 
+  // Filter by price if provided
+  let filteredProducts = sortedProducts
+  if (minPrice || maxPrice) {
+    const min = minPrice ? parseFloat(minPrice) * 100 : 0
+    const max = maxPrice ? parseFloat(maxPrice) * 100 : Infinity
+
+    filteredProducts = sortedProducts.filter((product) => {
+      const price = product.variants?.[0]?.calculated_price?.calculated_amount
+      if (price === undefined || price === null) return true
+      return price >= min && price <= max
+    })
+  }
+
+  const filteredCount = filteredProducts.length
   const pageParam = (page - 1) * limit
 
-  const nextPage = count > pageParam + limit ? pageParam + limit : null
+  const nextPage = filteredCount > pageParam + limit ? pageParam + limit : null
 
-  const paginatedProducts = sortedProducts.slice(pageParam, pageParam + limit)
+  const paginatedProducts = filteredProducts.slice(pageParam, pageParam + limit)
 
   return {
     response: {
       products: paginatedProducts,
-      count,
+      count: filteredCount,
     },
     nextPage,
     queryParams,

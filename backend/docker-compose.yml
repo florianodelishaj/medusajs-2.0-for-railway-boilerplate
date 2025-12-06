@@ -17,6 +17,22 @@ services:
       timeout: 5s
       retries: 5
 
+  meilisearch:
+    image: getmeili/meilisearch:latest
+    ports:
+      - "7700:7700"
+    volumes:
+      - ~/data.ms:/meili_data/data.ms
+    environment:
+      MEILI_MASTER_KEY: your_master_key_here
+    healthcheck:
+      test: ["CMD-SHELL", "wget --spider http://localhost:7700 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 volumes:
   postgres_data:
+    driver: local
+  meili_data:
     driver: local

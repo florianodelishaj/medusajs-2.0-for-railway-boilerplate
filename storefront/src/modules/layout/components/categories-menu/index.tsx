@@ -1,6 +1,6 @@
 "use client"
 
-import { ChevronDownMini } from "@medusajs/icons"
+import { ChevronRightMini } from "@medusajs/icons"
 import { HttpTypes } from "@medusajs/types"
 import { clx } from "@medusajs/ui"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
@@ -36,9 +36,9 @@ export default function CategoriesMenu({
   }
 
   return (
-    <div className="flex flex-col gap-2">
-      <h3 className="text-base-semi text-ui-fg-subtle mb-2">Categorie</h3>
-      <ul className="flex flex-col gap-1">
+    <div className="flex flex-col">
+      <h3 className="text-lg font-bold p-4 border border-black">Categorie</h3>
+      <ul className="flex flex-col">
         {categories.map((category) => {
           const hasChildren =
             category.category_children && category.category_children.length > 0
@@ -46,20 +46,20 @@ export default function CategoriesMenu({
 
           return (
             <li key={category.id}>
-              <div className="flex flex-col gap-1">
+              <div className="flex flex-col">
                 {hasChildren ? (
                   // Categoria con sottocategorie: è un bottone che espande/collassa
                   <button
                     onClick={() => toggleCategory(category.id)}
-                    className="flex items-center justify-between w-full text-left text-base-regular hover:text-ui-fg-base py-1 group"
+                    className="flex items-center justify-between w-full text-left p-4 border border-black hover:bg-black hover:text-white font-semibold transition-none"
                     data-testid={`category-button-${category.handle}`}
                     aria-expanded={isExpanded}
                   >
                     <span>{category.name}</span>
-                    <ChevronDownMini
+                    <ChevronRightMini
                       className={clx(
-                        "transition-transform duration-200",
-                        isExpanded ? "rotate-180" : ""
+                        "transition-none w-5 h-5",
+                        isExpanded ? "rotate-90" : ""
                       )}
                     />
                   </button>
@@ -67,7 +67,7 @@ export default function CategoriesMenu({
                   // Categoria senza sottocategorie: è un link normale
                   <LocalizedClientLink
                     href={`/categories/${category.handle}`}
-                    className="text-base-regular hover:text-ui-fg-base py-1 block"
+                    className="block w-full text-left p-4 border border-black hover:bg-black hover:text-white font-semibold transition-none"
                     onClick={onLinkClick}
                     data-testid={`category-link-${category.handle}`}
                   >
@@ -75,12 +75,12 @@ export default function CategoriesMenu({
                   </LocalizedClientLink>
                 )}
                 {hasChildren && isExpanded && (
-                  <ul className="flex flex-col gap-1 pl-4 border-l border-ui-border-base">
+                  <ul className="flex flex-col bg-gray-50">
                     {category.category_children?.map((child) => (
                       <li key={child.id}>
                         <LocalizedClientLink
                           href={`/categories/${child.handle}`}
-                          className="text-small-regular text-ui-fg-subtle hover:text-ui-fg-base py-1 block"
+                          className="block w-full text-left pl-8 pr-4 py-3 border-b border-gray-300 hover:bg-black hover:text-white font-medium transition-none"
                           onClick={onLinkClick}
                           data-testid={`category-link-${child.handle}`}
                         >

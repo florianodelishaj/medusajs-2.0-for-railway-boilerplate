@@ -1,43 +1,32 @@
-// Error message translations from English to Italian
-export const ERROR_TRANSLATIONS: Record<string, string> = {
-  // Promotion/Discount errors
-  "The promotion code {code} is invalid": "Il codice promozionale {code} non è valido",
-  "The promotion code is not available or does not meet the requirements":
+// Error code translations from English to Italian
+// Using error codes as keys (more robust approach recommended by MedusaJS)
+export const ERROR_CODE_TRANSLATIONS: Record<string, string> = {
+  // Medusa API error codes
+  invalid_request_error: "Richiesta non valida",
+  api_error: "Errore del server",
+  invalid_data: "Dati non validi",
+  not_found: "Risorsa non trovata",
+  not_allowed: "Operazione non consentita",
+  unauthorized: "Non autorizzato",
+  payment_authorization_error: "Errore di autorizzazione pagamento",
+  duplicate_error: "Risorsa già esistente",
+
+  // Custom application error codes
+  cart_not_found: "Nessun carrello trovato",
+  promotion_invalid: "Il codice promozionale non è valido",
+  promotion_not_available:
     "Il codice promozionale non è disponibile o non soddisfa i requisiti",
+  region_not_found: "Regione non trovata",
+  unknown_error: "Si è verificato un errore sconosciuto",
+}
 
-  // Cart errors
+// Fallback: message-based translations for backward compatibility
+export const ERROR_MESSAGE_TRANSLATIONS: Record<string, string> = {
+  "The promotion code  is invalid": "Il codice promozionale non è valido",
   "No existing cart found": "Nessun carrello trovato",
-  "No existing cart found, please create one before updating":
-    "Nessun carrello trovato, creane uno prima di aggiornare",
-  "Missing variant ID when adding to cart": "ID variante mancante durante l'aggiunta al carrello",
-  "Error retrieving or creating cart": "Errore nel recupero o creazione del carrello",
-  "Missing lineItem ID when updating line item":
-    "ID articolo mancante durante l'aggiornamento",
-  "Missing cart ID when updating line item":
-    "ID carrello mancante durante l'aggiornamento dell'articolo",
-  "Missing lineItem ID when deleting line item":
-    "ID articolo mancante durante l'eliminazione",
-  "Missing cart ID when deleting line item":
-    "ID carrello mancante durante l'eliminazione dell'articolo",
-
-  // Region errors
-  "Region not found for country code": "Regione non trovata per il codice paese {code}",
-
-  // Order errors
-  "No existing cart found when placing an order":
-    "Nessun carrello trovato durante l'invio dell'ordine",
-  "No existing cart found when setting addresses":
-    "Nessun carrello trovato durante l'impostazione degli indirizzi",
-  "No form data found when setting addresses":
-    "Dati del modulo mancanti durante l'impostazione degli indirizzi",
-
-  // Generic errors
   "An unknown error occurred": "Si è verificato un errore sconosciuto",
-  "Bad Request": "Richiesta non valida",
-  "Unauthorized": "Non autorizzato",
-  "Forbidden": "Accesso negato",
-  "Not Found": "Non trovato",
-  "Internal Server Error": "Errore interno del server",
+  "Some variant does not have the required inventory":
+    "Alcune varianti non dispongono dell'inventario richiesto.",
 }
 
 // Pattern-based translations (for dynamic messages)
@@ -55,22 +44,42 @@ const ERROR_PATTERNS: Array<{
   },
   {
     pattern: /Region not found for country code: (.+)/i,
-    translate: (match) => `Regione non trovata per il codice paese: ${match[1]}`,
+    translate: (match) =>
+      `Regione non trovata per il codice paese: ${match[1]}`,
   },
 ]
 
 /**
- * Translates an error message from English to Italian
+ * Translates an error using the error code (recommended by MedusaJS)
+ * @param error - The error object from Medusa API
+ * @returns The translated message in Italian
+ */
+export function translateErrorByCode(error: any): string {
+  // Try to get the error code or type
+  const code = error?.code || error?.type
+
+  // If we have a code, try to translate it
+  if (code && ERROR_CODE_TRANSLATIONS[code]) {
+    return ERROR_CODE_TRANSLATIONS[code]
+  }
+
+  // Fallback to message-based translation
+  const message = error?.message || String(error)
+  return translateErrorMessage(message)
+}
+
+/**
+ * Translates an error message from English to Italian (fallback method)
  * @param message - The error message in English
  * @returns The translated message in Italian, or the original if no translation found
  */
-export function translateError(message: string): string {
+export function translateErrorMessage(message: string): string {
   // Remove trailing period if present
   const cleanMessage = message.trim().replace(/\.$/, "")
 
   // Try exact match first
-  if (ERROR_TRANSLATIONS[cleanMessage]) {
-    return ERROR_TRANSLATIONS[cleanMessage]
+  if (ERROR_MESSAGE_TRANSLATIONS[cleanMessage]) {
+    return ERROR_MESSAGE_TRANSLATIONS[cleanMessage]
   }
 
   // Try pattern matching
@@ -83,4 +92,18 @@ export function translateError(message: string): string {
 
   // If no translation found, return original message
   return message
+}
+
+/**
+ * Legacy function for backward compatibility
+ * Translates an error (accepts both error objects and strings)
+ */
+export function translateError(errorOrMessage: any): string {
+  // If it's a string, use message-based translation
+  if (typeof errorOrMessage === "string") {
+    return translateErrorMessage(errorOrMessage)
+  }
+
+  // If it's an object, use code-based translation
+  return translateErrorByCode(errorOrMessage)
 }

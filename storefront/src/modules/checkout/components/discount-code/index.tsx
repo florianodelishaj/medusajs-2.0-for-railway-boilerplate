@@ -1,6 +1,6 @@
 "use client"
 
-import { Badge, Heading, Input, Label, Text, Tooltip } from "@medusajs/ui"
+import { Badge, Heading, Text, Tooltip, TooltipProvider } from "@medusajs/ui"
 import React from "react"
 import { useFormState } from "react-dom"
 
@@ -11,6 +11,8 @@ import { HttpTypes } from "@medusajs/types"
 import Trash from "@modules/common/icons/trash"
 import ErrorMessage from "../error-message"
 import { SubmitButton } from "../submit-button"
+import { Button } from "@components/ui/button"
+import { Input } from "@components/ui/input"
 
 type DiscountCodeProps = {
   cart: HttpTypes.StoreCart & {
@@ -37,39 +39,46 @@ const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
   return (
     <div className="w-full bg-white flex flex-col">
       <div className="txt-medium">
-        <form action={formAction} className="w-full mb-5">
-          <Label className="flex gap-x-1 my-2 items-center">
-            <button
+        <form action={formAction} className="w-full">
+          <div className="flex items-center gap-x-2 my-2">
+            <Button
+              variant="elevated"
+              className="hover:bg-pink-400"
               onClick={() => setIsOpen(!isOpen)}
               type="button"
-              className="txt-medium text-ui-fg-interactive hover:text-ui-fg-interactive-hover"
               data-testid="add-discount-button"
             >
-              Add Promotion Code(s)
-            </button>
+              Aggiungi codice sconto
+            </Button>
 
-            {/* <Tooltip content="You can add multiple promotion codes">
-              <InformationCircleSolid color="var(--fg-muted)" />
-            </Tooltip> */}
-          </Label>
+            <TooltipProvider>
+              <Tooltip
+                content="Puoi aggiungere più codici promozionali"
+                className="bg-white border rounded-md border-black text-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]"
+              >
+                <InformationCircleSolid className="cursor-help" />
+              </Tooltip>
+            </TooltipProvider>
+          </div>
 
           {isOpen && (
             <>
-              <div className="flex w-full gap-x-2">
+              <div className="flex w-full gap-x-4 items-center mt-4">
                 <Input
-                  className="size-full"
                   id="promotion-input"
                   name="code"
                   type="text"
                   autoFocus={false}
                   data-testid="discount-input"
+                  className="h-10"
                 />
-                <SubmitButton
-                  variant="secondary"
+                <Button
+                  variant="elevated"
                   data-testid="discount-apply-button"
+                  className="bg-black text-white hover:bg-pink-400 hover:text-black"
                 >
-                  Apply
-                </SubmitButton>
+                  Applica
+                </Button>
               </div>
 
               <ErrorMessage
@@ -83,11 +92,16 @@ const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
         {promotions.length > 0 && (
           <div className="w-full flex items-center">
             <div className="flex flex-col w-full">
-              <Heading className="txt-medium mb-2">
-                Promotion(s) applied:
+              <Heading className="txt-medium my-2">
+                {promotions.length === 1
+                  ? "Promozione applicata:"
+                  : "Promozioni applicate:"}
               </Heading>
 
               {promotions.map((promotion) => {
+                // Skip if promotion was deleted from DB but still referenced in cart
+                if (!promotion) return null
+
                 return (
                   <div
                     key={promotion.id}
@@ -98,6 +112,7 @@ const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
                       <span className="truncate" data-testid="discount-code">
                         <Badge
                           color={promotion.is_automatic ? "green" : "grey"}
+                          className="rounded-none border border-black px-2 py-1 text-black mr-1"
                           size="small"
                         >
                           {promotion.code}

@@ -3,7 +3,6 @@ import { HttpTypes } from "@medusajs/types"
 import { cache } from "react"
 import { getRegion } from "./regions"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
-import { sortProducts } from "@lib/util/sort-products"
 
 export const getProductsById = cache(async function ({
   ids,
@@ -90,11 +89,10 @@ export const getProductsList = cache(async function ({
 })
 
 /**
- * This will fetch 100 products to the Next.js cache and sort them based on the sortBy parameter.
- * It will then return the paginated products based on the page and limit parameters.
+ * This will fetch filtered and sorted products from the custom API endpoint.
  */
 export const getProductsListWithSort = cache(async function ({
-  page = 0,
+  page = 1,
   queryParams,
   sortBy = "created_at",
   minPrice,
@@ -113,44 +111,78 @@ export const getProductsListWithSort = cache(async function ({
   queryParams?: HttpTypes.FindParams & HttpTypes.StoreProductParams
 }> {
   const limit = queryParams?.limit || 12
+  const region = await getRegion(countryCode)
 
-  const {
-    response: { products },
-  } = await getProductsList({
-    pageParam: 0,
-    queryParams: {
-      ...queryParams,
-      limit: 100,
-    },
-    countryCode,
-  })
-
-  const sortedProducts = sortProducts(products, sortBy)
-
-  // Filter by price if provided
-  let filteredProducts = sortedProducts
-  if (minPrice || maxPrice) {
-    const min = minPrice ? parseFloat(minPrice) * 100 : 0
-    const max = maxPrice ? parseFloat(maxPrice) * 100 : Infinity
-
-    filteredProducts = sortedProducts.filter((product) => {
-      const price = product.variants?.[0]?.calculated_price?.calculated_amount
-      if (price === undefined || price === null) return true
-      return price >= min && price <= max
-    })
+  if (!region) {
+    return {
+      response: { products: [], count: 0 },
+      nextPage: null,
+    }
   }
 
-  const filteredCount = filteredProducts.length
-  const pageParam = (page - 1) * limit
+  // Build query params for custom API
+  const params = new URLSearchParams({
+    page: page.toString(),
+    limit: limit.toString(),
+    region_id: region.id,
+    currency_code: region.currency_code,
+    sort_by: sortBy,
+  })
 
-  const nextPage = filteredCount > pageParam + limit ? pageParam + limit : null
+  if (queryParams && "category_id" in queryParams) {
+    const categoryId = queryParams.category_id
+    if (Array.isArray(categoryId) && categoryId.length > 0) {
+      params.append("category_id", categoryId[0])
+    } else if (typeof categoryId === "string") {
+      params.append("category_id", categoryId)
+    }
+  }
 
-  const paginatedProducts = filteredProducts.slice(pageParam, pageParam + limit)
+  if (queryParams && "collection_id" in queryParams) {
+    const collectionId = queryParams.collection_id
+    if (Array.isArray(collectionId) && collectionId.length > 0) {
+      params.append("collection_id", collectionId[0])
+    } else if (typeof collectionId === "string") {
+      params.append("collection_id", collectionId)
+    }
+  }
+
+  if (minPrice) {
+    params.append("min_price", minPrice)
+  }
+
+  if (maxPrice) {
+    params.append("max_price", maxPrice)
+  }
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL}/store/products-filtered?${params.toString()}`,
+    {
+      headers: {
+        "x-publishable-api-key":
+          process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY || "",
+      },
+      next: { tags: ["products"] },
+    }
+  )
+
+  if (!response.ok) {
+    console.error("Failed to fetch filtered products:", await response.text())
+    return {
+      response: { products: [], count: 0 },
+      nextPage: null,
+    }
+  }
+
+  const data = await response.json()
+  const { products, count } = data
+
+  const nextPage = count > page * limit ? page + 1 : null
 
   return {
     response: {
-      products: paginatedProducts,
-      count: filteredCount,
+      products,
+      count,
     },
     nextPage,
     queryParams,

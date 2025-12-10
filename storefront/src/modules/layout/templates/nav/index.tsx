@@ -6,7 +6,6 @@ import { NavButtons } from "@modules/layout/components/nav-buttons"
 import { NAV_ROUTES } from "@lib/constants/nav-routes"
 
 export default async function Nav() {
-
   return (
     <nav className="flex h-20 border-b justify-between font-medium bg-white">
       {/* Logo */}
@@ -42,7 +41,7 @@ export default async function Nav() {
               href="/cart"
               data-testid="nav-cart-link"
             >
-              Cart (0)
+              Carrello (0)
             </LocalizedClientLink>
           }
         >

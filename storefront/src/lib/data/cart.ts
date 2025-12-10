@@ -2,7 +2,7 @@
 
 import { sdk } from "@lib/config"
 import medusaError from "@lib/util/medusa-error"
-import { translateError } from "@lib/util/error-messages"
+import { translateErrorByCode, translateErrorMessage } from "@lib/util/error-messages"
 import { HttpTypes } from "@medusajs/types"
 import { omit } from "lodash"
 import { revalidateTag } from "next/cache"
@@ -19,7 +19,11 @@ export async function retrieveCart() {
   }
 
   return await sdk.store.cart
-    .retrieve(cartId, {}, { next: { tags: ["cart"] }, ...getAuthHeaders() })
+    .retrieve(
+      cartId,
+      { fields: "+items.*" },
+      { next: { tags: ["cart"] }, ...getAuthHeaders() }
+    )
     .then(({ cart }) => cart)
     .catch(() => {
       return null
@@ -246,7 +250,7 @@ export async function applyPromotions(codes: string[]) {
       const errorMessage = `The promotion code${
         isPlural ? "s" : ""
       } ${codesList} ${isPlural ? "are" : "is"} invalid`
-      throw new Error(translateError(errorMessage))
+      throw new Error(translateErrorMessage(errorMessage))
     }
   } catch (error: any) {
     // Re-throw the error so it can be caught by the caller
@@ -305,7 +309,9 @@ export async function submitPromotionForm(
   try {
     await applyPromotions([code])
   } catch (e: any) {
-    return e.message
+    // Use code-based translation (recommended by MedusaJS)
+    // This will try to use error.code or error.type first, then fallback to message
+    return translateErrorByCode(e)
   }
 }
 

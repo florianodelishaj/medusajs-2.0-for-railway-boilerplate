@@ -54,7 +54,7 @@ export const CategoryDropdown = ({
             className={cn(
               "h-11 px-4 bg-transparent border-transparent rounded-full hover:bg-white hover:border-black text-black transition-all",
               isActive &&
-                "bg-white border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]",
+                "bg-white border-black",
               isOpen &&
                 "bg-white shadow-[4px_4px_0px_rgba(0,0,0,1)] -translate-x-[4px] -translate-y-[4px] border-black"
             )}
@@ -69,7 +69,7 @@ export const CategoryDropdown = ({
             className={cn(
               "h-11 px-4 bg-transparent border-transparent rounded-full hover:bg-white hover:border-black text-black transition-all",
               isActive &&
-                "bg-white border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]",
+                "bg-white border-black",
               isOpen &&
                 "bg-white shadow-[4px_4px_0px_rgba(0,0,0,1)] -translate-x-[4px] -translate-y-[4px] border-black"
             )}
@@ -94,7 +94,7 @@ export const CategoryDropdown = ({
         categoryPath={[...categoryPath, category.handle]}
         isOpen={isOpen}
         position={dropdownPosition}
-        backgroundColor={(category.metadata?.color as string) || "#F5F5F5"}
+        backgroundColor={(category.metadata?.color as string) || "#F4F4F0"}
       />
     </div>
   )

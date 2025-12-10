@@ -1,27 +1,25 @@
-import { translateError } from "./error-messages"
+import { translateErrorByCode } from "./error-messages"
 
 export default function medusaError(error: any): never {
   // Medusa JS SDK v2 uses FetchError (not Axios)
-  // FetchError has status, statusText, and message directly on the error object
+  // FetchError has status, statusText, message, code, and type
+
+  // Use the code-based translation (recommended by MedusaJS)
+  const translatedMessage = translateErrorByCode(error)
+
+  // Log the error details for debugging
   if (error.status && error.statusText) {
-    console.error("Status code:", error.status)
-    console.error("Status text:", error.statusText)
-    console.error("Error message:", error.message)
-
-    const message = error.message || `Request failed with status ${error.status}`
-    const translatedMessage = translateError(message)
-    throw new Error(
-      translatedMessage.charAt(0).toUpperCase() + translatedMessage.slice(1) + "."
-    )
+    console.error("Medusa API Error:", {
+      status: error.status,
+      statusText: error.statusText,
+      code: error.code,
+      type: error.type,
+      message: error.message,
+      translatedMessage,
+    })
   }
 
-  // Fallback for other error types
-  if (error.message) {
-    const translatedMessage = translateError(error.message)
-    throw new Error(
-      translatedMessage.charAt(0).toUpperCase() + translatedMessage.slice(1) + "."
-    )
-  }
-
-  throw new Error(translateError("An unknown error occurred"))
+  // Capitalize first letter and add period if not present
+  const finalMessage = translatedMessage.charAt(0).toUpperCase() + translatedMessage.slice(1)
+  throw new Error(finalMessage.endsWith(".") ? finalMessage : finalMessage + ".")
 }

@@ -1,31 +1,39 @@
-import { clx } from "@medusajs/ui"
-
 import { getPercentageDiff } from "@lib/util/get-precentage-diff"
-import { getPricesForVariant } from "@lib/util/get-product-price"
 import { convertToLocale } from "@lib/util/money"
 import { HttpTypes } from "@medusajs/types"
 
 type LineItemPriceProps = {
   item: HttpTypes.StoreCartLineItem | HttpTypes.StoreOrderLineItem
+  currencyCode: string
   style?: "default" | "tight"
 }
 
-const LineItemPrice = ({ item, style = "default" }: LineItemPriceProps) => {
-  const { currency_code, calculated_price_number, original_price_number } =
-    getPricesForVariant(item.variant) ?? {}
+const LineItemPrice = ({
+  item,
+  currencyCode,
+  style = "default",
+}: LineItemPriceProps) => {
+  // totale riga (sconti + tasse inclusi), in minor units
+  const lineTotal = item.total ?? 0
 
-  const adjustmentsSum = (item.adjustments || []).reduce(
-    (acc, adjustment) => adjustment.amount + acc,
-    0
-  )
+  // prezzo unitario in minor units
+  const unitPrice =
+    item.quantity && item.quantity > 0 ? lineTotal / item.quantity : 0
 
-  const originalPrice = original_price_number * item.quantity
-  const currentPrice = calculated_price_number * item.quantity - adjustmentsSum
-  const hasReducedPrice = currentPrice < originalPrice
+  // totale riga originale (prima degli sconti), se disponibile
+  const originalLineTotal = item.original_total ?? lineTotal
+
+  // prezzo unitario originale in minor units
+  const originalUnitPrice =
+    item.quantity && item.quantity > 0
+      ? originalLineTotal / item.quantity
+      : unitPrice
+
+  const hasReducedPrice = lineTotal < originalLineTotal
 
   return (
-    <div className="flex flex-col gap-x-2 text-ui-fg-subtle items-end">
-      <div className="text-left">
+    <div className="flex flex-col gap-x-2 items-end">
+      <div className="flex flex-col items-center gap-y-1">
         {hasReducedPrice && (
           <>
             <p>
@@ -37,27 +45,25 @@ const LineItemPrice = ({ item, style = "default" }: LineItemPriceProps) => {
                 data-testid="product-original-price"
               >
                 {convertToLocale({
-                  amount: originalPrice,
-                  currency_code,
+                  amount: originalUnitPrice,
+                  currency_code: currencyCode,
                 })}
               </span>
             </p>
             {style === "default" && (
               <span className="text-ui-fg-interactive">
-                -{getPercentageDiff(originalPrice, currentPrice || 0)}%
+                -{getPercentageDiff(originalUnitPrice, unitPrice || 0)}%xx
               </span>
             )}
           </>
         )}
         <span
-          className={clx("text-base-regular", {
-            "text-ui-fg-interactive": hasReducedPrice,
-          })}
+          className="px-2 py-1 border bg-pink-400"
           data-testid="product-price"
         >
           {convertToLocale({
-            amount: currentPrice,
-            currency_code,
+            amount: unitPrice,
+            currency_code: currencyCode,
           })}
         </span>
       </div>

@@ -50,7 +50,7 @@ export const SubcategoryMenu = ({
         <div
           ref={menuRef}
           className="text-black rounded-md overflow-hidden border border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
-          style={{ backgroundColor: backgroundColor || "#F5F5F5" }}
+          style={{ backgroundColor: backgroundColor || "#F4F4F0" }}
         >
           {category.category_children.map((subcategory) => {
             const hasChildren = Boolean(subcategory.category_children?.length)

@@ -34,10 +34,15 @@ export const SearchFilters = ({ categories }: Props) => {
     for (const segment of categorySegments) {
       current = currentLevel.find((cat) => cat.handle === segment)
       if (!current) {
-        return { currentCategory: null, categoryHierarchy: [], activeCategory: null }
+        return {
+          currentCategory: null,
+          categoryHierarchy: [],
+          activeCategory: null,
+        }
       }
       hierarchy.push(current)
-      currentLevel = (current.category_children as HttpTypes.StoreProductCategory[]) || []
+      currentLevel =
+        (current.category_children as HttpTypes.StoreProductCategory[]) || []
     }
 
     return {
@@ -49,7 +54,7 @@ export const SearchFilters = ({ categories }: Props) => {
 
   // Get background color from active category metadata
   const backgroundColor =
-    (activeCategory?.metadata?.color as string) || "#F5F5F5"
+    (activeCategory?.metadata?.color as string) || "#F4F4F0"
 
   return (
     <>

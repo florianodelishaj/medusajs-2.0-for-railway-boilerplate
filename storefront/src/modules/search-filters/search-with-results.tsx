@@ -1,7 +1,11 @@
 "use client"
 
 import { useState, useRef } from "react"
-import { InstantSearch, useSearchBox, useHits } from "react-instantsearch-hooks-web"
+import {
+  InstantSearch,
+  useSearchBox,
+  useHits,
+} from "react-instantsearch-hooks-web"
 import { MagnifyingGlassMini, Funnel } from "@medusajs/icons"
 import { Input } from "@components/ui/input"
 import { Button } from "@components/ui/button"
@@ -26,7 +30,7 @@ function SearchResults({ isFocused }: SearchResultsProps) {
   return (
     <div
       ref={dropdownRef}
-      className="absolute top-full left-0 right-0 mt-2 bg-white border-2 border-black rounded-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] max-h-[400px] overflow-y-auto z-50"
+      className="absolute top-full left-0 right-0 mt-2 bg-white border-2 border-black rounded-md shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] max-h-[400px] overflow-y-auto z-50"
     >
       {hits.map((hit: any) => (
         <LocalizedClientLink

@@ -29,19 +29,33 @@ export default async function ProductPreview({
     product: pricedProduct,
   })
 
+  // Check if all variants are out of stock
+  const isOutOfStock = pricedProduct.variants?.every((variant) => {
+    if (!variant.manage_inventory) return false
+    if (variant.allow_backorder) return false
+    return (variant.inventory_quantity || 0) <= 0
+  })
+
   return (
     <LocalizedClientLink href={`/products/${product.handle}`} className="group">
       <div
         data-testid="product-wrapper"
-        className="border border-black rounded-lg hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:-translate-x-[2px] hover:-translate-y-[2px] transition-all"
+        className="bg-white border border-black rounded-md hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:-translate-x-[2px] hover:-translate-y-[2px] transition-all"
       >
-        <Thumbnail
-          className="rounded-tl-lg rounded-tr-lg rounded-b-none"
-          thumbnail={product.thumbnail}
-          images={product.images}
-          size="square"
-          isFeatured={isFeatured}
-        />
+        <div className="relative overflow-hidden rounded-tl-md rounded-tr-md">
+          {isOutOfStock && (
+            <div className="absolute top-4 -left-10 z-10 w-40 text-center bg-gray-800 border-2 border-black py-1 transform -rotate-45 shadow-lg">
+              <span className="text-xs font-bold uppercase text-white">Esaurito</span>
+            </div>
+          )}
+          <Thumbnail
+            className="rounded-tl-lg rounded-tr-lg rounded-b-none"
+            thumbnail={product.thumbnail}
+            images={product.images}
+            size="square"
+            isFeatured={isFeatured}
+          />
+        </div>
         <div className="p-4 flex flex-col gap-4 justify-between">
           <Text data-testid="product-title" className="font-bold">
             {product.title}
@@ -49,7 +63,7 @@ export default async function ProductPreview({
           {product.tags?.map((tag: any) => (
             <div
               key={tag.id}
-              className="w-fit px-2 py-1 rounded"
+              className="w-fit px-2 py-1 border"
               style={
                 tag.metadata?.color
                   ? { backgroundColor: tag.metadata.color }

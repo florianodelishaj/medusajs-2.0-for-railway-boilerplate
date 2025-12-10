@@ -96,7 +96,7 @@ export const Categories = ({ data, onViewAllClick }: Props) => {
             className={cn(
               "h-11 px-4 bg-transparent border-transparent rounded-full hover:bg-white hover:border-black text-black transition-all",
               isOnStore &&
-                "bg-white border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                "bg-white border-black"
             )}
           >
             Tutti
@@ -120,7 +120,7 @@ export const Categories = ({ data, onViewAllClick }: Props) => {
             className={cn(
               "h-11 px-4 bg-transparent border-transparent rounded-full hover:bg-white hover:border-black text-black transition-all",
               isActiveCategoryHidden &&
-                "bg-white border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                "bg-white border-black"
             )}
           >
             Vedi Tutte

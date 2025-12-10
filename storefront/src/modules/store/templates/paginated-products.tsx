@@ -75,7 +75,7 @@ export default async function PaginatedProducts({
 
   if (!products || products.length === 0) {
     return (
-      <div className="border border-black border-dashed flex items-center justify-center p-8 flex-col gap-y-4 bg-white w-full rounded-lg">
+      <div className="border border-black border-dashed flex items-center justify-center p-8 flex-col gap-y-4 bg-white w-full rounded-md">
         <Inbox className="size-12" />
         <p className="text-base font-medium">Nessun prodotto trovato</p>
       </div>

@@ -70,13 +70,23 @@ export const CategoriesSidebar = ({ open, onOpenChange, data }: Props) => {
           <SheetTitle>Categorie</SheetTitle>
         </SheetHeader>
         <ScrollArea className="flex flex-col overflow-y-auto h-full pb-2">
-          {categoryStack.length > 0 && (
+          {categoryStack.length > 0 ? (
             <button
               onClick={handleBackClick}
               className="w-full text-left p-4 hover:bg-black hover:text-white flex items-center font-medium cursor-pointer border-b border-black/10"
             >
               <ChevronLeftIcon className="size-4 mr-2" />
               Indietro
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                router.push("/store")
+                handleOpenChange(false)
+              }}
+              className="w-full text-left p-4 hover:bg-black hover:text-white flex items-center font-medium cursor-pointer border-b border-black/10 transition-colors"
+            >
+              Tutti
             </button>
           )}
           {currentCategories.map((category) => (

@@ -4,7 +4,7 @@ import { HttpTypes } from "@medusajs/types"
 import { Button } from "@components/ui/button"
 import { cn } from "@lib/util/cn"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
-import { useRef, useState } from "react"
+import { useRef, useState, memo } from "react"
 import { useDropdownPosition } from "./use-dropdown-position"
 import { SubcategoryMenu } from "./subcategory-menu"
 
@@ -14,24 +14,24 @@ interface Props {
   isActive?: boolean
 }
 
-export const CategoryDropdown = ({
+const CategoryDropdownComponent = ({
   category,
   categoryPath = [],
   isActive,
 }: Props) => {
   const [isOpen, setIsOpen] = useState(false)
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 })
   const dropdownRef = useRef<HTMLDivElement>(null)
   const { getDropdownPosition } = useDropdownPosition(dropdownRef)
 
   const onMouseEnter = () => {
     if (category.category_children && category.category_children.length > 0) {
       setIsOpen(true)
+      setDropdownPosition(getDropdownPosition())
     }
   }
 
   const onMouseLeave = () => setIsOpen(false)
-
-  const dropdownPosition = getDropdownPosition()
 
   const hasSubcategories =
     category.category_children && category.category_children.length > 0
@@ -99,3 +99,5 @@ export const CategoryDropdown = ({
     </div>
   )
 }
+
+export const CategoryDropdown = memo(CategoryDropdownComponent)

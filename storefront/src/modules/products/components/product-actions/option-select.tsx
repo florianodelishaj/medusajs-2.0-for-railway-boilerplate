@@ -1,5 +1,5 @@
+import { Button } from "@components/ui/button"
 import { HttpTypes } from "@medusajs/types"
-import { clx } from "@medusajs/ui"
 import React from "react"
 
 type OptionSelectProps = {
@@ -23,29 +23,30 @@ const OptionSelect: React.FC<OptionSelectProps> = ({
 
   return (
     <div className="flex flex-col gap-y-3">
-      <span className="text-sm">Select {title}</span>
-      <div
-        className="flex flex-wrap justify-between gap-2"
-        data-testid={dataTestId}
-      >
+      <span className="text-sm font-bold uppercase text-gray-700">
+        Seleziona {title}
+      </span>
+      <div className="flex flex-wrap gap-3" data-testid={dataTestId}>
         {filteredOptions?.map((v) => {
+          const isSelected = v === current
           return (
-            <button
+            <Button
               onClick={() => updateOption(option.title ?? "", v ?? "")}
               key={v}
-              className={clx(
-                "border-ui-border-base bg-ui-bg-subtle border text-small-regular h-10 rounded-rounded p-2 flex-1 ",
-                {
-                  "border-ui-border-interactive": v === current,
-                  "hover:shadow-elevation-card-rest transition-shadow ease-in-out duration-150":
-                    v !== current,
+              variant="elevated"
+              className={`min-w-[80px] h-10 bg-black text-white hover:bg-pink-400 hover:text-black transition-all 
+                ${
+                  isSelected
+                    ? "bg-pink-400 border border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-black"
+                    : "bg-white border border-black text-black hover:bg-pink-400 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-[2px] hover:-translate-y-[2px]"
                 }
-              )}
+                disabled:opacity-50 disabled:cursor-not-allowed
+                `}
               disabled={disabled}
               data-testid="option-button"
             >
               {v}
-            </button>
+            </Button>
           )
         })}
       </div>

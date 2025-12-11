@@ -3,10 +3,13 @@
 import { HttpTypes } from "@medusajs/types"
 import { Categories } from "./categories"
 import { SearchWithResults } from "./search-with-results"
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { CategoriesSidebar } from "./categories-sidebar"
 import { useParams } from "next/navigation"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
+import { Input } from "@components/ui/input"
+import { Button } from "@components/ui/button"
+import { MagnifyingGlassMini, Funnel } from "@medusajs/icons"
 
 interface Props {
   categories: HttpTypes.StoreProductCategory[]
@@ -14,7 +17,12 @@ interface Props {
 
 export const SearchFilters = ({ categories }: Props) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const [isSearchMounted, setIsSearchMounted] = useState(false)
   const params = useParams()
+
+  useEffect(() => {
+    setIsSearchMounted(true)
+  }, [])
 
   // Find the active category and its hierarchy from URL params
   const { currentCategory, categoryHierarchy, activeCategory } = useMemo(() => {
@@ -70,7 +78,41 @@ export const SearchFilters = ({ categories }: Props) => {
         className="px-4 lg:px-12 py-8 border-b border-black flex flex-col gap-4 w-full transition-colors duration-300"
         style={{ backgroundColor }}
       >
-        <SearchWithResults onFilterClick={() => setIsSidebarOpen(true)} />
+        <div className="relative w-full">
+          <div
+            className={`transition-opacity duration-200 ${
+              isSearchMounted ? "opacity-0 pointer-events-none absolute inset-0" : "opacity-100"
+            }`}
+          >
+            <div className="flex items-center gap-2 w-full relative">
+              <div className="relative w-full">
+                <MagnifyingGlassMini className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-500 z-10" />
+                <Input
+                  type="search"
+                  placeholder="Cerca prodotti..."
+                  disabled
+                  className="pl-12"
+                />
+              </div>
+              <Button
+                variant="elevated"
+                size="icon"
+                className="size-12 shrink-0 flex lg:hidden rounded-full"
+                aria-label="Apri filtri"
+                disabled
+              >
+                <Funnel className="w-5 h-5" />
+              </Button>
+            </div>
+          </div>
+          <div
+            className={`transition-opacity duration-200 ${
+              isSearchMounted ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            <SearchWithResults onFilterClick={() => setIsSidebarOpen(true)} />
+          </div>
+        </div>
         <div className="hidden lg:block">
           <Categories
             data={categories}

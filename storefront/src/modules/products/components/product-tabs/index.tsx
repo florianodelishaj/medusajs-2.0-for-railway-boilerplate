@@ -14,11 +14,11 @@ type ProductTabsProps = {
 const ProductTabs = ({ product }: ProductTabsProps) => {
   const tabs = [
     {
-      label: "Product Information",
+      label: "Informazioni Prodotto",
       component: <ProductInfoTab product={product} />,
     },
     {
-      label: "Shipping & Returns",
+      label: "Spedizione & Resi",
       component: <ShippingInfoTab />,
     },
   ]
@@ -43,32 +43,50 @@ const ProductTabs = ({ product }: ProductTabsProps) => {
 
 const ProductInfoTab = ({ product }: ProductTabsProps) => {
   return (
-    <div className="text-small-regular py-8">
-      <div className="grid grid-cols-2 gap-x-8">
-        <div className="flex flex-col gap-y-4">
-          <div>
-            <span className="font-semibold">Material</span>
-            <p>{product.material ? product.material : "-"}</p>
+    <div className="text-sm">
+      <div className="grid grid-cols-1 small:grid-cols-2 gap-4">
+        <div className="flex flex-col gap-3">
+          <div className="border-l-4 border-black pl-3">
+            <span className="font-bold text-xs uppercase text-gray-600 block mb-1">
+              Materiale
+            </span>
+            <p className="font-medium text-black">
+              {product.material ? product.material : "-"}
+            </p>
           </div>
-          <div>
-            <span className="font-semibold">Country of origin</span>
-            <p>{product.origin_country ? product.origin_country : "-"}</p>
+          <div className="border-l-4 border-black pl-3">
+            <span className="font-bold text-xs uppercase text-gray-600 block mb-1">
+              Paese d'origine
+            </span>
+            <p className="font-medium text-black">
+              {product.origin_country ? product.origin_country : "-"}
+            </p>
           </div>
-          <div>
-            <span className="font-semibold">Type</span>
-            <p>{product.type ? product.type.value : "-"}</p>
+          <div className="border-l-4 border-black pl-3">
+            <span className="font-bold text-xs uppercase text-gray-600 block mb-1">
+              Tipo
+            </span>
+            <p className="font-medium text-black">
+              {product.type ? product.type.value : "-"}
+            </p>
           </div>
         </div>
-        <div className="flex flex-col gap-y-4">
-          <div>
-            <span className="font-semibold">Weight</span>
-            <p>{product.weight ? `${product.weight} g` : "-"}</p>
+        <div className="flex flex-col gap-3">
+          <div className="border-l-4 border-black pl-3">
+            <span className="font-bold text-xs uppercase text-gray-600 block mb-1">
+              Peso
+            </span>
+            <p className="font-medium text-black">
+              {product.weight ? `${product.weight} g` : "-"}
+            </p>
           </div>
-          <div>
-            <span className="font-semibold">Dimensions</span>
-            <p>
+          <div className="border-l-4 border-black pl-3">
+            <span className="font-bold text-xs uppercase text-gray-600 block mb-1">
+              Dimensioni
+            </span>
+            <p className="font-medium text-black">
               {product.length && product.width && product.height
-                ? `${product.length}L x ${product.width}W x ${product.height}H`
+                ? `${product.length}L x ${product.width}L x ${product.height}A`
                 : "-"}
             </p>
           </div>
@@ -80,36 +98,45 @@ const ProductInfoTab = ({ product }: ProductTabsProps) => {
 
 const ShippingInfoTab = () => {
   return (
-    <div className="text-small-regular py-8">
-      <div className="grid grid-cols-1 gap-y-8">
-        <div className="flex items-start gap-x-2">
-          <FastDelivery />
+    <div className="text-sm">
+      <div className="grid grid-cols-1 gap-4">
+        <div className="flex items-start gap-3 p-3 bg-white border border-black rounded-md">
+          <div className="shrink-0 w-8 h-8 flex items-center justify-center bg-pink-400 border border-black rounded-md">
+            <FastDelivery />
+          </div>
           <div>
-            <span className="font-semibold">Fast delivery</span>
-            <p className="max-w-sm">
-              Your package will arrive in 3-5 business days at your pick up
-              location or in the comfort of your home.
+            <span className="font-bold text-black block mb-1">
+              Consegna Veloce
+            </span>
+            <p className="text-gray-700 text-sm">
+              Il tuo pacco arriverà in 3-5 giorni lavorativi al tuo punto di
+              ritiro o comodamente a casa tua.
             </p>
           </div>
         </div>
-        <div className="flex items-start gap-x-2">
-          <Refresh />
+        <div className="flex items-start gap-3 p-3 bg-white border border-black rounded-md">
+          <div className="shrink-0 w-8 h-8 flex items-center justify-center bg-pink-400 border border-black rounded-md">
+            <Refresh />
+          </div>
           <div>
-            <span className="font-semibold">Simple exchanges</span>
-            <p className="max-w-sm">
-              Is the fit not quite right? No worries - we&apos;ll exchange your
-              product for a new one.
+            <span className="font-bold text-black block mb-1">
+              Cambi Semplici
+            </span>
+            <p className="text-gray-700 text-sm">
+              La taglia non è quella giusta? Nessun problema - cambieremo il tuo
+              prodotto con uno nuovo.
             </p>
           </div>
         </div>
-        <div className="flex items-start gap-x-2">
-          <Back />
+        <div className="flex items-start gap-3 p-3 bg-white border border-black rounded-md">
+          <div className="shrink-0 w-8 h-8 flex items-center justify-center bg-pink-400 border border-black rounded-md">
+            <Back />
+          </div>
           <div>
-            <span className="font-semibold">Easy returns</span>
-            <p className="max-w-sm">
-              Just return your product and we&apos;ll refund your money. No
-              questions asked – we&apos;ll do our best to make sure your return
-              is hassle-free.
+            <span className="font-bold text-black block mb-1">Resi Facili</span>
+            <p className="text-gray-700 text-sm">
+              Restituisci il tuo prodotto e ti rimborseremo. Nessuna domanda -
+              faremo del nostro meglio per rendere il reso senza problemi.
             </p>
           </div>
         </div>

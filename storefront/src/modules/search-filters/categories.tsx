@@ -39,16 +39,15 @@ export const Categories = ({ data, onViewAllClick }: Props) => {
       if (!containerRef.current) return
 
       const container = containerRef.current
-      const allButton = container.querySelector("[data-all-button]")
       const buttons = container.querySelectorAll("[data-category-button]")
-      const viewAllButton = container.querySelector("[data-view-all-button]")
-
       if (buttons.length === 0) return
 
       const containerWidth = container.offsetWidth
+      const allButton = container.querySelector("[data-all-button]")
       const allButtonWidth = allButton?.getBoundingClientRect().width || 0
-      const viewAllWidth = viewAllButton?.getBoundingClientRect().width || 140
+      const viewAllWidth = 140 // Stima per "Vedi Tutte" button
       const gap = 8 // gap-2 = 8px
+
       const availableWidth =
         containerWidth - allButtonWidth - viewAllWidth - gap * 2
 
@@ -66,20 +65,27 @@ export const Categories = ({ data, onViewAllClick }: Props) => {
         count++
       }
 
-      setVisibleCount(Math.max(1, count)) // At least 1 visible
+      const newCount = Math.max(1, count)
+      setVisibleCount((prev) => (prev === newCount ? prev : newCount))
     }
 
     // Initial calculation
     const timer = setTimeout(calculateVisible, 100)
 
-    // Recalculate on resize
-    const resizeObserver = new ResizeObserver(calculateVisible)
+    // Debounced resize observer
+    let resizeTimer: NodeJS.Timeout
+    const resizeObserver = new ResizeObserver(() => {
+      clearTimeout(resizeTimer)
+      resizeTimer = setTimeout(calculateVisible, 100)
+    })
+
     if (containerRef.current) {
       resizeObserver.observe(containerRef.current)
     }
 
     return () => {
-      clearTimeout(timer)
+      // clearTimeout(timer)
+      clearTimeout(resizeTimer)
       resizeObserver.disconnect()
     }
   }, [data.length])
@@ -95,16 +101,19 @@ export const Categories = ({ data, onViewAllClick }: Props) => {
             variant="elevated"
             className={cn(
               "h-11 px-4 bg-transparent border-transparent rounded-full hover:bg-white hover:border-black text-black transition-all",
-              isOnStore &&
-                "bg-white border-black"
+              isOnStore && "bg-white border-black"
             )}
           >
             Tutti
           </Button>
         </LocalizedClientLink>
       </div>
-      {data.slice(0, visibleCount).map((category) => (
-        <div key={category.id} data-category-button>
+      {data.map((category, index) => (
+        <div
+          key={category.id}
+          data-category-button
+          className={cn(index >= visibleCount && "invisible absolute")}
+        >
           <CategoryDropdown
             category={category}
             isActive={activeCategory === category.handle}
@@ -119,8 +128,7 @@ export const Categories = ({ data, onViewAllClick }: Props) => {
             onClick={onViewAllClick}
             className={cn(
               "h-11 px-4 bg-transparent border-transparent rounded-full hover:bg-white hover:border-black text-black transition-all",
-              isActiveCategoryHidden &&
-                "bg-white border-black"
+              isActiveCategoryHidden && "bg-white border-black"
             )}
           >
             Vedi Tutte

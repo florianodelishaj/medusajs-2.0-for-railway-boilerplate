@@ -1,18 +1,17 @@
 "use client"
 
-import { Button } from "@medusajs/ui"
 import { isEqual } from "lodash"
 import { useParams } from "next/navigation"
 import { useEffect, useMemo, useRef, useState } from "react"
 
 import { useIntersection } from "@lib/hooks/use-in-view"
-import Divider from "@modules/common/components/divider"
 import OptionSelect from "@modules/products/components/product-actions/option-select"
 
 import MobileActions from "./mobile-actions"
 import ProductPrice from "../product-price"
 import { addToCart } from "@lib/data/cart"
 import { HttpTypes } from "@medusajs/types"
+import { Button } from "@components/ui/button"
 
 type ProductActionsProps = {
   product: HttpTypes.StoreProduct
@@ -21,12 +20,19 @@ type ProductActionsProps = {
 }
 
 const optionsAsKeymap = (variantOptions: any) => {
-  return variantOptions?.reduce((acc: Record<string, string | undefined>, varopt: any) => {
-    if (varopt.option && varopt.value !== null && varopt.value !== undefined) {
-      acc[varopt.option.title] = varopt.value
-    }
-    return acc
-  }, {})
+  return variantOptions?.reduce(
+    (acc: Record<string, string | undefined>, varopt: any) => {
+      if (
+        varopt.option &&
+        varopt.value !== null &&
+        varopt.value !== undefined
+      ) {
+        acc[varopt.option.title] = varopt.value
+      }
+      return acc
+    },
+    {}
+  )
 }
 
 export default function ProductActions({
@@ -110,9 +116,12 @@ export default function ProductActions({
 
   return (
     <>
-      <div className="flex flex-col gap-y-2" ref={actionsRef}>
-        <div>
-          {(product.variants?.length ?? 0) > 1 && (
+      <div
+        className="flex flex-col gap-y-4 bg-white border border-black rounded-md p-6"
+        ref={actionsRef}
+      >
+        {(product.variants?.length ?? 0) > 1 && (
+          <div>
             <div className="flex flex-col gap-y-4">
               {(product.options || []).map((option) => {
                 return (
@@ -128,28 +137,28 @@ export default function ProductActions({
                   </div>
                 )
               })}
-              <Divider />
+              <div className="border-t-2 border-black my-4"></div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
 
         <ProductPrice product={product} variant={selectedVariant} />
-
         <Button
           onClick={handleAddToCart}
           disabled={!inStock || !selectedVariant || !!disabled || isAdding}
-          variant="primary"
-          className="w-full h-10"
+          variant="elevated"
           isLoading={isAdding}
           data-testid="add-product-button"
+          className="w-full h-10 bg-black text-white hover:bg-pink-400 hover:text-black"
         >
           {!selectedVariant
-            ? "Select variant"
+            ? "Seleziona variante"
             : !inStock
-            ? "Out of stock"
-            : "Add to cart"}
+            ? "Esaurito"
+            : "Aggiungi al carrello"}
         </Button>
-        <MobileActions
+        {/* TODO: Valutare mobileactions */}
+        {/* <MobileActions
           product={product}
           variant={selectedVariant}
           options={options}
@@ -159,7 +168,7 @@ export default function ProductActions({
           isAdding={isAdding}
           show={!inView}
           optionsDisabled={!!disabled || isAdding}
-        />
+        /> */}
       </div>
     </>
   )

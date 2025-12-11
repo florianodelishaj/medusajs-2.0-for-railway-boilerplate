@@ -14,7 +14,10 @@ const ItemsTemplate = ({ items, currencyCode }: ItemsTemplateProps) => {
   return (
     <div className="border border-black rounded-md bg-white">
       <div className="p-4 border-b border-black">
-        <Heading level="h2" className="txt-xlarge">
+        <Heading
+          level="h2"
+          className="flex flex-row text-2xl font-black uppercase items-baseline"
+        >
           Carrello
         </Heading>
       </div>

@@ -1,11 +1,11 @@
 "use client"
 
 import { CheckCircleSolid } from "@medusajs/icons"
-import { Heading, Text, useToggleState } from "@medusajs/ui"
+import { Heading, Text, useToggleState, clx } from "@medusajs/ui"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
-import Divider from "@modules/common/components/divider"
 import Spinner from "@modules/common/icons/spinner"
+import { Button } from "@components/ui/button"
 
 import { setAddresses } from "@lib/data/cart"
 import compareAddresses from "@lib/util/compare-addresses"
@@ -42,54 +42,59 @@ const Addresses = ({
   const [message, formAction] = useFormState(setAddresses, null)
 
   return (
-    <div className="bg-white">
-      <div className="flex flex-row items-center justify-between mb-6">
+    <div className="bg-white border border-black rounded-md p-6">
+      <div
+        className={clx("flex flex-row items-center justify-between", {
+          "mb-6": isOpen,
+        })}
+      >
         <Heading
           level="h2"
-          className="flex flex-row text-3xl-regular gap-x-2 items-baseline"
+          className="flex flex-row text-2xl font-black uppercase gap-x-2 items-baseline"
         >
-          Shipping Address
+          Indirizzo di spedizione
           {!isOpen && <CheckCircleSolid />}
         </Heading>
         {!isOpen && cart?.shipping_address && (
-          <Text>
-            <button
-              onClick={handleEdit}
-              className="text-ui-fg-interactive hover:text-ui-fg-interactive-hover"
-              data-testid="edit-address-button"
-            >
-              Edit
-            </button>
-          </Text>
+          <Button
+            onClick={handleEdit}
+            variant="elevated"
+            size="sm"
+            data-testid="edit-address-button"
+            className="hover:bg-pink-400 hover:text-black"
+          >
+            Modifica
+          </Button>
         )}
       </div>
       {isOpen ? (
         <form action={formAction}>
-          <div className="pb-8">
-            <ShippingAddress
-              customer={customer}
-              checked={sameAsBilling}
-              onChange={toggleSameAsBilling}
-              cart={cart}
-            />
+          <ShippingAddress
+            customer={customer}
+            checked={sameAsBilling}
+            onChange={toggleSameAsBilling}
+            cart={cart}
+          />
 
-            {!sameAsBilling && (
-              <div>
-                <Heading
-                  level="h2"
-                  className="text-3xl-regular gap-x-4 pb-6 pt-8"
-                >
-                  Billing address
-                </Heading>
+          {!sameAsBilling && (
+            <div>
+              <Heading
+                level="h2"
+                className="text-2xl font-black uppercase gap-x-4 pb-6 pt-8"
+              >
+                Indirizzo di fatturazione
+              </Heading>
 
-                <BillingAddress cart={cart} />
-              </div>
-            )}
-            <SubmitButton className="mt-6" data-testid="submit-address-button">
-              Continue to delivery
-            </SubmitButton>
-            <ErrorMessage error={message} data-testid="address-error-message" />
-          </div>
+              <BillingAddress cart={cart} />
+            </div>
+          )}
+          <SubmitButton
+            className="mt-6 bg-black text-white hover:bg-pink-400 hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:text-black"
+            data-testid="submit-address-button"
+          >
+            Continua alla consegna
+          </SubmitButton>
+          <ErrorMessage error={message} data-testid="address-error-message" />
         </form>
       ) : (
         <div>
@@ -101,8 +106,8 @@ const Addresses = ({
                     className="flex flex-col w-1/3"
                     data-testid="shipping-address-summary"
                   >
-                    <Text className="txt-medium-plus text-ui-fg-base mb-1">
-                      Shipping Address
+                    <Text className="txt-medium-plus text-ui-fg-base mb-1 font-bold uppercase">
+                      Indirizzo di spedizione
                     </Text>
                     <Text className="txt-medium text-ui-fg-subtle">
                       {cart.shipping_address.first_name}{" "}
@@ -125,8 +130,8 @@ const Addresses = ({
                     className="flex flex-col w-1/3 "
                     data-testid="shipping-contact-summary"
                   >
-                    <Text className="txt-medium-plus text-ui-fg-base mb-1">
-                      Contact
+                    <Text className="txt-medium-plus text-ui-fg-base mb-1 font-bold uppercase">
+                      Contatti
                     </Text>
                     <Text className="txt-medium text-ui-fg-subtle">
                       {cart.shipping_address.phone}
@@ -140,13 +145,13 @@ const Addresses = ({
                     className="flex flex-col w-1/3"
                     data-testid="billing-address-summary"
                   >
-                    <Text className="txt-medium-plus text-ui-fg-base mb-1">
-                      Billing Address
+                    <Text className="txt-medium-plus text-ui-fg-base mb-1 font-bold uppercase">
+                      Indirizzo di fatturazione
                     </Text>
 
                     {sameAsBilling ? (
                       <Text className="txt-medium text-ui-fg-subtle">
-                        Billing- and delivery address are the same.
+                        Indirizzo di fatturazione e spedizione coincidono.
                       </Text>
                     ) : (
                       <>
@@ -178,7 +183,6 @@ const Addresses = ({
           </div>
         </div>
       )}
-      <Divider className="mt-8" />
     </div>
   )
 }

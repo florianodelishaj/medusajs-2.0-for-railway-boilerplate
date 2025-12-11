@@ -1,9 +1,8 @@
 import { Listbox, Transition } from "@headlessui/react"
-import { ChevronUpDown } from "@medusajs/icons"
 import { clx } from "@medusajs/ui"
 import { Fragment, useMemo } from "react"
+import { Check } from "lucide-react"
 
-import Radio from "@modules/common/components/radio"
 import compareAddresses from "@lib/util/compare-addresses"
 import { HttpTypes } from "@medusajs/types"
 
@@ -36,23 +35,14 @@ const AddressSelect = ({
     <Listbox onChange={handleSelect} value={selectedAddress?.id}>
       <div className="relative">
         <Listbox.Button
-          className="relative w-full flex justify-between items-center px-4 py-[10px] text-left bg-white cursor-default focus:outline-none border rounded-rounded focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-white focus-visible:ring-offset-gray-300 focus-visible:ring-offset-2 focus-visible:border-gray-300 text-base-regular"
+          className="relative w-full flex justify-between items-center px-4 h-12 text-left bg-white cursor-pointer focus:outline-none border border-black rounded-md hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-pink-400 transition-all font-medium"
           data-testid="shipping-address-select"
         >
-          {({ open }) => (
-            <>
-              <span className="block truncate">
-                {selectedAddress
-                  ? selectedAddress.address_1
-                  : "Choose an address"}
-              </span>
-              <ChevronUpDown
-                className={clx("transition-rotate duration-200", {
-                  "transform rotate-180": open,
-                })}
-              />
-            </>
-          )}
+          <span className="block truncate text-sm">
+            {selectedAddress
+              ? selectedAddress.address_1
+              : "Scegli un indirizzo"}
+          </span>
         </Listbox.Button>
         <Transition
           as={Fragment}
@@ -61,32 +51,32 @@ const AddressSelect = ({
           leaveTo="opacity-0"
         >
           <Listbox.Options
-            className="absolute z-20 w-full overflow-auto text-small-regular bg-white border border-top-0 max-h-60 focus:outline-none sm:text-sm"
+            className="absolute z-20 w-full mt-1 overflow-auto bg-white border border-black rounded-md shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] max-h-60 focus:outline-none"
             data-testid="shipping-address-options"
           >
             {addresses.map((address) => {
+              const isSelected = selectedAddress?.id === address.id
               return (
                 <Listbox.Option
                   key={address.id}
                   value={address.id}
-                  className="cursor-default select-none relative pl-6 pr-10 hover:bg-gray-50 py-4"
+                  className="cursor-pointer select-none relative px-4 py-3 hover:bg-pink-400 transition-colors"
                   data-testid="shipping-address-option"
                 >
-                  <div className="flex gap-x-4 items-start">
-                    <Radio
-                      checked={selectedAddress?.id === address.id}
-                      data-testid="shipping-address-radio"
-                    />
-                    <div className="flex flex-col">
-                      <span className="text-left text-base-semi">
+                  <div className="flex gap-x-3 items-start">
+                    <div className="mt-0.5 flex-shrink-0">
+                      {isSelected && <Check className="h-4 w-4" strokeWidth={3} />}
+                    </div>
+                    <div className="flex flex-col flex-1">
+                      <span className="text-left text-sm font-semibold">
                         {address.first_name} {address.last_name}
                       </span>
                       {address.company && (
-                        <span className="text-small-regular text-ui-fg-base">
+                        <span className="text-xs text-gray-600">
                           {address.company}
                         </span>
                       )}
-                      <div className="flex flex-col text-left text-base-regular mt-2">
+                      <div className="flex flex-col text-left text-xs mt-1">
                         <span>
                           {address.address_1}
                           {address.address_2 && (

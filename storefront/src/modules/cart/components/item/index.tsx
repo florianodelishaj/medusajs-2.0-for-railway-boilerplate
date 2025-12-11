@@ -56,11 +56,8 @@ const Item = ({ item, currencyCode, type = "full" }: ItemProps) => {
   return (
     <Table.Row className="w-full" data-testid="product-row">
       <Table.Cell className="!pl-3 small:!pl-6 p-2 small:p-4 w-14 small:w-24">
-        <LocalizedClientLink
-          href={`/products/${handle}`}
-          className="flex"
-        >
-          <div className="w-12 h-12 small:w-20 small:h-20 border border-black rounded-md overflow-hidden">
+        <LocalizedClientLink href={`/products/${handle}`} className="flex">
+          <div className="w-12 h-12 small:w-20 small:h-20 border border-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-md overflow-hidden">
             <Thumbnail
               thumbnail={item.variant?.product?.thumbnail}
               images={item.variant?.product?.images}

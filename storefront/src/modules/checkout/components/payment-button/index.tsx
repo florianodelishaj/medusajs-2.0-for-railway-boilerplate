@@ -1,6 +1,5 @@
 "use client"
 
-import { Button } from "@medusajs/ui"
 import { OnApproveActions, OnApproveData } from "@paypal/paypal-js"
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js"
 import { useElements, useStripe } from "@stripe/react-stripe-js"
@@ -10,6 +9,7 @@ import Spinner from "@modules/common/icons/spinner"
 import { placeOrder } from "@lib/data/cart"
 import { HttpTypes } from "@medusajs/types"
 import { isManual, isPaypal, isStripe } from "@lib/constants"
+import { Button } from "@components/ui/button"
 
 type PaymentButtonProps = {
   cart: HttpTypes.StoreCart
@@ -73,11 +73,13 @@ const GiftCardPaymentButton = () => {
 
   return (
     <Button
+      variant="elevated"
       onClick={handleOrder}
       isLoading={submitting}
       data-testid="submit-order-button"
+      className="bg-black text-white hover:bg-pink-400 hover:text-black"
     >
-      Place order
+      Effettua Ordine
     </Button>
   )
 }
@@ -173,13 +175,15 @@ const StripePaymentButton = ({
   return (
     <>
       <Button
+        variant="elevated"
         disabled={disabled || notReady}
         onClick={handlePayment}
-        size="large"
+        size="lg"
         isLoading={submitting}
         data-testid={dataTestId}
+        className="bg-black text-white hover:bg-pink-400 hover:text-black"
       >
-        Place order
+        Effettua Ordine
       </Button>
       <ErrorMessage
         error={errorMessage}
@@ -282,13 +286,15 @@ const ManualTestPaymentButton = ({ notReady }: { notReady: boolean }) => {
   return (
     <>
       <Button
+        variant="elevated"
         disabled={notReady}
         isLoading={submitting}
         onClick={handlePayment}
-        size="large"
+        size="lg"
         data-testid="submit-order-button"
+        className="bg-black text-white hover:bg-pink-400 hover:text-black"
       >
-        Place order
+        Effettua Ordine
       </Button>
       <ErrorMessage
         error={errorMessage}

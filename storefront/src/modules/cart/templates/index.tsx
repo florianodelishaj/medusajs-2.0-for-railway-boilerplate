@@ -15,7 +15,7 @@ const CartTemplate = ({
   return (
     <div className="content-container" data-testid="cart-container">
       {cart?.items?.length ? (
-        <div className="grid grid-cols-1 small:grid-cols-[1fr_360px] gap-x-24">
+        <div className="grid grid-cols-1 small:grid-cols-[1fr_416px] gap-x-24">
           <div className="flex flex-col gap-y-6 mb-6 lg:mb-0">
             {!customer && (
               <div className="flex flex-col p-4 border rounded-md bg-white">

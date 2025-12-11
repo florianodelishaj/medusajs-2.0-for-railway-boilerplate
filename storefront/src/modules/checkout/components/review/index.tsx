@@ -19,18 +19,22 @@ const Review = ({ cart }: { cart: any }) => {
     (cart.payment_collection || paidByGiftcard)
 
   return (
-    <div className="bg-white">
-      <div className="flex flex-row items-center justify-between mb-6">
+    <div className="bg-white border border-black rounded-md p-6">
+      <div
+        className={clx("flex flex-row items-center justify-between", {
+          "mb-6": isOpen,
+        })}
+      >
         <Heading
           level="h2"
           className={clx(
-            "flex flex-row text-3xl-regular gap-x-2 items-baseline",
+            "flex flex-row text-2xl font-black uppercase gap-x-2 items-baseline",
             {
               "opacity-50 pointer-events-none select-none": !isOpen,
             }
           )}
         >
-          Review
+          Riepilogo
         </Heading>
       </div>
       {isOpen && previousStepsCompleted && (
@@ -38,10 +42,10 @@ const Review = ({ cart }: { cart: any }) => {
           <div className="flex items-start gap-x-1 w-full mb-6">
             <div className="w-full">
               <Text className="txt-medium-plus text-ui-fg-base mb-1">
-                By clicking the Place Order button, you confirm that you have
-                read, understand and accept our Terms of Use, Terms of Sale and
-                Returns Policy and acknowledge that you have read Medusa
-                Store&apos;s Privacy Policy.
+                Cliccando il pulsante Effettua Ordine, confermi di aver letto,
+                compreso e accettato i nostri Termini di Utilizzo, Termini di
+                Vendita e Politica di Reso e riconosci di aver letto la Politica
+                sulla Privacy di Medusa Store.
               </Text>
             </div>
           </div>

@@ -5,11 +5,11 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { RadioGroup } from "@headlessui/react"
 import ErrorMessage from "@modules/checkout/components/error-message"
 import { CheckCircleSolid, CreditCard } from "@medusajs/icons"
-import { Button, Container, Heading, Text, Tooltip, clx } from "@medusajs/ui"
+import { Container, Heading, Text, clx } from "@medusajs/ui"
 import { CardElement } from "@stripe/react-stripe-js"
 import { StripeCardElementOptions } from "@stripe/stripe-js"
 
-import Divider from "@modules/common/components/divider"
+import { Button } from "@components/ui/button"
 import PaymentContainer from "@modules/checkout/components/payment-container"
 import { isStripe as isStripeFunc, paymentInfoMap } from "@lib/constants"
 import { StripeContext } from "@modules/checkout/components/payment-wrapper"
@@ -114,31 +114,35 @@ const Payment = ({
   }, [isOpen])
 
   return (
-    <div className="bg-white">
-      <div className="flex flex-row items-center justify-between mb-6">
+    <div className="bg-white border border-black rounded-md p-6">
+      <div
+        className={clx("flex flex-row items-center justify-between", {
+          "mb-6": isOpen,
+        })}
+      >
         <Heading
           level="h2"
           className={clx(
-            "flex flex-row text-3xl-regular gap-x-2 items-baseline",
+            "flex flex-row text-2xl font-black uppercase gap-x-2 items-baseline",
             {
               "opacity-50 pointer-events-none select-none":
                 !isOpen && !paymentReady,
             }
           )}
         >
-          Payment
+          Pagamento
           {!isOpen && paymentReady && <CheckCircleSolid />}
         </Heading>
         {!isOpen && paymentReady && (
-          <Text>
-            <button
-              onClick={handleEdit}
-              className="text-ui-fg-interactive hover:text-ui-fg-interactive-hover"
-              data-testid="edit-payment-button"
-            >
-              Edit
-            </button>
-          </Text>
+          <Button
+            onClick={handleEdit}
+            variant="elevated"
+            size="sm"
+            data-testid="edit-payment-button"
+            className="hover:bg-pink-400 hover:text-black"
+          >
+            Modifica
+          </Button>
         )}
       </div>
       <div>
@@ -166,8 +170,8 @@ const Payment = ({
               </RadioGroup>
               {isStripe && stripeReady && (
                 <div className="mt-5 transition-all duration-150 ease-in-out">
-                  <Text className="txt-medium-plus text-ui-fg-base mb-1">
-                    Enter your card details:
+                  <Text className="txt-medium-plus text-ui-fg-base mb-1 font-bold uppercase">
+                    Inserisci i dettagli della carta:
                   </Text>
 
                   <CardElement
@@ -188,14 +192,14 @@ const Payment = ({
 
           {paidByGiftcard && (
             <div className="flex flex-col w-1/3">
-              <Text className="txt-medium-plus text-ui-fg-base mb-1">
-                Payment method
+              <Text className="txt-medium-plus text-ui-fg-base mb-1 font-bold uppercase">
+                Metodo di pagamento
               </Text>
               <Text
                 className="txt-medium text-ui-fg-subtle"
                 data-testid="payment-method-summary"
               >
-                Gift card
+                Carta regalo
               </Text>
             </div>
           )}
@@ -206,8 +210,9 @@ const Payment = ({
           />
 
           <Button
-            size="large"
-            className="mt-6"
+            variant="elevated"
+            size="lg"
+            className="mt-6 w-full bg-black text-white hover:bg-pink-400 hover:text-black"
             onClick={handleSubmit}
             isLoading={isLoading}
             disabled={
@@ -217,8 +222,8 @@ const Payment = ({
             data-testid="submit-payment-button"
           >
             {!activeSession && isStripeFunc(selectedPaymentMethod)
-              ? " Enter card details"
-              : "Continue to review"}
+              ? "Inserisci i dettagli della carta"
+              : "Continua al riepilogo"}
           </Button>
         </div>
 
@@ -226,8 +231,8 @@ const Payment = ({
           {cart && paymentReady && activeSession ? (
             <div className="flex items-start gap-x-1 w-full">
               <div className="flex flex-col w-1/3">
-                <Text className="txt-medium-plus text-ui-fg-base mb-1">
-                  Payment method
+                <Text className="txt-medium-plus text-ui-fg-base mb-1 font-bold uppercase">
+                  Metodo di pagamento
                 </Text>
                 <Text
                   className="txt-medium text-ui-fg-subtle"
@@ -238,8 +243,8 @@ const Payment = ({
                 </Text>
               </div>
               <div className="flex flex-col w-1/3">
-                <Text className="txt-medium-plus text-ui-fg-base mb-1">
-                  Payment details
+                <Text className="txt-medium-plus text-ui-fg-base mb-1 font-bold uppercase">
+                  Dettagli pagamento
                 </Text>
                 <div
                   className="flex gap-2 txt-medium text-ui-fg-subtle items-center"
@@ -253,27 +258,26 @@ const Payment = ({
                   <Text>
                     {isStripeFunc(selectedPaymentMethod) && cardBrand
                       ? cardBrand
-                      : "Another step will appear"}
+                      : "Apparirà un altro passaggio"}
                   </Text>
                 </div>
               </div>
             </div>
           ) : paidByGiftcard ? (
             <div className="flex flex-col w-1/3">
-              <Text className="txt-medium-plus text-ui-fg-base mb-1">
-                Payment method
+              <Text className="txt-medium-plus text-ui-fg-base mb-1 font-bold uppercase">
+                Metodo di pagamento
               </Text>
               <Text
                 className="txt-medium text-ui-fg-subtle"
                 data-testid="payment-method-summary"
               >
-                Gift card
+                Carta regalo
               </Text>
             </div>
           ) : null}
         </div>
       </div>
-      <Divider className="mt-8" />
     </div>
   )
 }

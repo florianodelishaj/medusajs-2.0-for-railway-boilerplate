@@ -1,26 +1,26 @@
+import { cn } from "@lib/util/cn"
+
 const Radio = ({ checked, 'data-testid': dataTestId }: { checked: boolean, 'data-testid'?: string }) => {
   return (
-    <>
-      <button
-        type="button"
-        role="radio"
-        aria-checked="true"
-        data-state={checked ? "checked" : "unchecked"}
-        className="group relative flex h-5 w-5 items-center justify-center outline-none"
-        data-testid={dataTestId || 'radio-button'}
+    <button
+      type="button"
+      role="radio"
+      aria-checked={checked}
+      data-state={checked ? "checked" : "unchecked"}
+      className="group relative flex size-5 items-center justify-center outline-none"
+      data-testid={dataTestId || 'radio-button'}
+    >
+      <div
+        className={cn(
+          "flex size-5 items-center justify-center rounded-full border-2 border-black bg-white transition-all",
+          checked && "bg-pink-400"
+        )}
       >
-        <div className="shadow-borders-base group-hover:shadow-borders-strong-with-shadow bg-ui-bg-base group-data-[state=checked]:bg-ui-bg-interactive group-data-[state=checked]:shadow-borders-interactive group-focus:!shadow-borders-interactive-with-focus group-disabled:!bg-ui-bg-disabled group-disabled:!shadow-borders-base flex h-[14px] w-[14px] items-center justify-center rounded-full transition-all">
-          {checked && (
-            <span
-              data-state={checked ? "checked" : "unchecked"}
-              className="group flex items-center justify-center"
-            >
-              <div className="bg-ui-bg-base shadow-details-contrast-on-bg-interactive group-disabled:bg-ui-fg-disabled rounded-full group-disabled:shadow-none h-1.5 w-1.5"></div>
-            </span>
-          )}
-        </div>
-      </button>
-    </>
+        {checked && (
+          <div className="size-2 rounded-full bg-black" />
+        )}
+      </div>
+    </button>
   )
 }
 

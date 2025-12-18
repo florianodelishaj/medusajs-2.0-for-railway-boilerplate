@@ -27,7 +27,6 @@ const Accordion: React.FC<AccordionProps> & {
   Item: React.FC<AccordionItemProps>
 } = ({ children, ...props }) => {
   return (
-    /* x@ts-expect-error */
     <AccordionPrimitive.Root {...props}>{children}</AccordionPrimitive.Root>
   )
 }
@@ -45,20 +44,17 @@ const Item: React.FC<AccordionItemProps> = ({
   ...props
 }) => {
   return (
-    /* x@ts-expect-error */
     <AccordionPrimitive.Item
       {...props}
       className={clx(
-        "group bg-white border border-black rounded-md mb-3 overflow-hidden",
+        "group bg-white border border-black rounded-md overflow-hidden",
         "hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]",
         className
       )}
     >
-      {/* x@ts-expect-error */}
       <AccordionPrimitive.Header>
         <div className="flex flex-col">
           <div className="flex w-full items-center justify-between">
-            {/* x@ts-expect-error */}
             <AccordionPrimitive.Trigger className="flex items-center justify-between w-full px-4 py-3 hover:bg-pink-400 transition-colors">
               <Text className="text-black font-bold text-sm uppercase">
                 {title}
@@ -73,7 +69,6 @@ const Item: React.FC<AccordionItemProps> = ({
           )}
         </div>
       </AccordionPrimitive.Header>
-      {/* x@ts-expect-error */}
       <AccordionPrimitive.Content
         forceMount={forceMountContent}
         className={clx(

@@ -3,13 +3,15 @@ import React, { Suspense } from "react"
 import ImageGallery from "@modules/products/components/image-gallery"
 import ProductActions from "@modules/products/components/product-actions"
 import ProductOnboardingCta from "@modules/products/components/product-onboarding-cta"
-import ProductTabs from "@modules/products/components/product-tabs"
+import ProductCentralInfo from "@modules/products/components/product-central-info"
+import ProductDetails from "@modules/products/components/product-central-info/product-details"
+import ProductPurchaseSidebar from "@modules/products/components/product-purchase-sidebar"
 import RelatedProducts from "@modules/products/components/related-products"
-import ProductInfo from "@modules/products/templates/product-info"
 import SkeletonRelatedProducts from "@modules/skeletons/templates/skeleton-related-products"
 import { notFound } from "next/navigation"
 import ProductActionsWrapper from "./product-actions-wrapper"
 import { HttpTypes } from "@medusajs/types"
+import { Heading } from "@medusajs/ui"
 
 type ProductTemplateProps = {
   product: HttpTypes.StoreProduct
@@ -26,31 +28,160 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
     return notFound()
   }
 
+  // Check if all variants are out of stock
+  const isOutOfStock = product.variants?.every((variant) => {
+    if (!variant.manage_inventory) return false
+    if (variant.allow_backorder) return false
+    return (variant.inventory_quantity || 0) <= 0
+  })
+
+  // Check if any variant has discount (sale price)
+  const hasDiscount = product.variants?.some((variant) => {
+    const calculatedAmount = variant.calculated_price?.calculated_amount
+    const originalAmount = variant.calculated_price?.original_amount
+    const priceListType =
+      variant.calculated_price?.calculated_price?.price_list_type
+
+    if (!calculatedAmount) return false
+
+    return (
+      priceListType === "sale" ||
+      (originalAmount && originalAmount > calculatedAmount)
+    )
+  })
+
   return (
     <>
-      <div
-        className="content-container flex flex-col small:flex-row small:items-start py-6 relative gap-4 small:gap-32"
-        data-testid="product-container"
-      >
-        <div className="w-full small:w-[48%]">
-          <ImageGallery images={product?.images || []} />
-        </div>
-        <div className="flex flex-col small:top-48 small:py-0 w-full small:w-[52%] gap-y-6">
-          <ProductInfo product={product} />
-          <ProductOnboardingCta />
-          <Suspense
-            fallback={
-              <ProductActions
-                disabled={true}
-                product={product}
-                region={region}
-              />
-            }
-          >
-            <ProductActionsWrapper id={product.id} region={region} />
-          </Suspense>
-          <ProductTabs product={product} />
-        </div>
+      <div className="content-container py-6" data-testid="product-container">
+        <Suspense
+          fallback={
+            <ProductActions disabled={true} product={product} region={region}>
+              <div className="flex flex-col xl:flex-row gap-6">
+                {/* Immagine - order-1 */}
+                <div className="w-full xl:w-auto xl:min-w-[300px] xl:max-w-[650px] xl:shrink xl:grow-0 xl:basis-[650px] order-1">
+                  <ImageGallery
+                    images={product?.images || []}
+                    isOutOfStock={isOutOfStock}
+                    hasDiscount={hasDiscount}
+                  />
+                </div>
+
+                {/* Mobile: Titolo - order-2 */}
+                <div className="xl:hidden order-2">
+                  <Heading
+                    level="h1"
+                    className="text-3xl font-black uppercase text-black"
+                    data-testid="product-title-mobile"
+                  >
+                    {product.title}
+                  </Heading>
+                </div>
+
+                {/* Mobile: Selezione Varianti - order-3 */}
+                <div className="xl:hidden order-3">
+                  <ProductOnboardingCta />
+                  <ProductCentralInfo
+                    product={product}
+                    showTitle={false}
+                    showVariants={true}
+                    showDescription={false}
+                    showDetails={false}
+                  />
+                </div>
+
+                {/* Mobile: Descrizione - order-4 */}
+                <div className="xl:hidden order-4">
+                  <ProductCentralInfo
+                    product={product}
+                    showTitle={false}
+                    showVariants={false}
+                    showDescription={true}
+                    showDetails={false}
+                  />
+                </div>
+
+                {/* Desktop: Info Centrale completa - order-2 */}
+                <div className="hidden xl:block flex-1 w-full xl:min-w-[400px] xl:order-2">
+                  <ProductOnboardingCta />
+                  <ProductCentralInfo product={product} />
+                </div>
+
+                {/* Sidebar Acquisto - Mobile: order-5, Desktop: order-3 */}
+                <div className="w-full xl:w-auto xl:min-w-[280px] xl:max-w-96 xl:shrink xl:grow-0 xl:basis-96 order-5 xl:order-3">
+                  <ProductPurchaseSidebar product={product} region={region} />
+                </div>
+
+                {/* Mobile: Dettagli Prodotto - order-6 */}
+                <div className="w-full xl:hidden order-6">
+                  <ProductDetails product={product} />
+                </div>
+              </div>
+            </ProductActions>
+          }
+        >
+          <ProductActionsWrapper id={product.id} region={region}>
+            <div className="flex flex-col xl:flex-row gap-6">
+              {/* Immagine - order-1 */}
+              <div className="w-full xl:w-auto xl:min-w-[300px] xl:max-w-[650px] xl:shrink xl:grow-0 xl:basis-[650px] order-1">
+                <ImageGallery
+                  images={product?.images || []}
+                  isOutOfStock={isOutOfStock}
+                  hasDiscount={hasDiscount}
+                />
+              </div>
+
+              {/* Mobile: Titolo - order-2 */}
+              <div className="xl:hidden order-2">
+                <Heading
+                  level="h1"
+                  className="text-3xl font-black uppercase text-black"
+                  data-testid="product-title-mobile"
+                >
+                  {product.title}
+                </Heading>
+              </div>
+
+              {/* Mobile: Selezione Varianti - order-3 */}
+              <div className="xl:hidden order-3">
+                <ProductOnboardingCta />
+                <ProductCentralInfo
+                  product={product}
+                  showTitle={false}
+                  showVariants={true}
+                  showDescription={false}
+                  showDetails={false}
+                />
+              </div>
+
+              {/* Mobile: Descrizione - order-4 */}
+              <div className="xl:hidden order-4">
+                <ProductCentralInfo
+                  product={product}
+                  showTitle={false}
+                  showVariants={false}
+                  showDescription={true}
+                  showDetails={false}
+                />
+              </div>
+
+              {/* Desktop: Info Centrale completa - order-2 */}
+              <div className="hidden xl:block flex-1 w-full xl:min-w-[400px] xl:order-2">
+                <ProductOnboardingCta />
+                <ProductCentralInfo product={product} />
+              </div>
+
+              {/* Sidebar Acquisto - Mobile: order-5, Desktop: order-3 */}
+              <div className="w-full xl:w-auto xl:min-w-[280px] xl:max-w-96 xl:shrink xl:grow-0 xl:basis-96 order-5 xl:order-3">
+                <ProductPurchaseSidebar product={product} region={region} />
+              </div>
+
+              {/* Mobile: Dettagli Prodotto - order-6 */}
+              <div className="w-full xl:hidden order-6">
+                <ProductDetails product={product} />
+              </div>
+            </div>
+          </ProductActionsWrapper>
+        </Suspense>
       </div>
       <div
         className="content-container my-12"

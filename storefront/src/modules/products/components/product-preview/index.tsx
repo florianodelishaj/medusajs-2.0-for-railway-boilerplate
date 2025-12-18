@@ -38,6 +38,13 @@ export default async function ProductPreview({
     return (variant.inventory_quantity || 0) <= 0
   })
 
+  // Check if product has discount
+  const hasDiscount =
+    cheapestPrice?.price_type === "sale" ||
+    (cheapestPrice?.original_price_number &&
+      cheapestPrice?.calculated_price_number &&
+      cheapestPrice.original_price_number > cheapestPrice.calculated_price_number)
+
   return (
     <LocalizedClientLink href={`/products/${product.handle}`} className="group">
       <div
@@ -50,6 +57,13 @@ export default async function ProductPreview({
             <div className="absolute top-4 -left-10 z-10 w-40 text-center bg-gray-800 border-2 border-black py-1 transform -rotate-45 shadow-lg">
               <span className="text-xs font-bold uppercase text-white">
                 Esaurito
+              </span>
+            </div>
+          )}
+          {!isOutOfStock && hasDiscount && (
+            <div className="absolute top-4 -left-10 z-10 w-40 text-center bg-red-500 border-2 border-black py-1 transform -rotate-45 shadow-lg">
+              <span className="text-xs font-bold uppercase text-white">
+                Sconto
               </span>
             </div>
           )}

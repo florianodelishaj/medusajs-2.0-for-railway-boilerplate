@@ -6,9 +6,15 @@ import { useState } from "react"
 
 type ImageGalleryProps = {
   images: HttpTypes.StoreProductImage[]
+  isOutOfStock?: boolean
+  hasDiscount?: boolean
 }
 
-const ImageGallery = ({ images }: ImageGalleryProps) => {
+const ImageGallery = ({
+  images,
+  isOutOfStock,
+  hasDiscount,
+}: ImageGalleryProps) => {
   const [selectedImage, setSelectedImage] = useState(0)
 
   if (!images || images.length === 0) {
@@ -19,6 +25,20 @@ const ImageGallery = ({ images }: ImageGalleryProps) => {
     <div className="flex flex-col gap-4">
       {/* Immagine principale */}
       <div className="relative aspect-square w-full overflow-hidden bg-gray-100 border border-black rounded-md">
+        {isOutOfStock && (
+          <div className="absolute top-4 -left-10 z-10 w-40 text-center bg-gray-800 border-2 border-black py-1 transform -rotate-45 shadow-lg">
+            <span className="text-xs font-bold uppercase text-white">
+              Esaurito
+            </span>
+          </div>
+        )}
+        {!isOutOfStock && hasDiscount && (
+          <div className="absolute top-4 -left-10 z-10 w-40 text-center bg-red-500 border-2 border-black py-1 transform -rotate-45 shadow-lg">
+            <span className="text-xs font-bold uppercase text-white">
+              Sconto
+            </span>
+          </div>
+        )}
         {images[selectedImage]?.url && (
           <Image
             src={images[selectedImage].url}

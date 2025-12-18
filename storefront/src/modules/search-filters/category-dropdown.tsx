@@ -52,8 +52,7 @@ const CategoryDropdownComponent = ({
           variant="elevated"
           className={cn(
             "h-11 px-4 bg-transparent border-transparent rounded-full hover:bg-white hover:border-black text-black transition-all",
-            isActive &&
-              "bg-white border-black",
+            isActive && "bg-white border-black",
             isOpen &&
               "bg-white shadow-[4px_4px_0px_rgba(0,0,0,1)] -translate-x-[4px] -translate-y-[4px] border-black"
           )}

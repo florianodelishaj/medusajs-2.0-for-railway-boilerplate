@@ -1,10 +1,17 @@
+"use client"
+
 import { Heading } from "@medusajs/ui"
 
 import ItemsPreviewTemplate from "@modules/cart/templates/preview"
 import DiscountCode from "@modules/checkout/components/discount-code"
 import CartTotals from "@modules/common/components/cart-totals"
+import { useMemo } from "react"
+import { getTotalDiscount } from "@lib/util/get-total-discount"
 
 const CheckoutSummary = ({ cart }: { cart: any }) => {
+  // Calcola sconto totale: promo code + price list discounts
+  const totalDiscount = useMemo(() => getTotalDiscount(cart), [cart])
+
   return (
     <div className="sticky top-0 flex flex-col-reverse small:flex-col gap-y-8 py-8 small:py-0 ">
       <div className="w-full bg-white border border-black rounded-md p-6 flex flex-col">
@@ -14,7 +21,10 @@ const CheckoutSummary = ({ cart }: { cart: any }) => {
         >
           Il tuo carrello
         </Heading>
-        <CartTotals totals={cart} />
+        <CartTotals totals={{
+          ...cart,
+          discount_total: totalDiscount
+        }} />
         <ItemsPreviewTemplate
           items={cart?.items}
           currencyCode={cart?.currency_code}

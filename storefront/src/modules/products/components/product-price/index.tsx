@@ -21,37 +21,41 @@ export default function ProductPrice({
     return <div className="block w-32 h-9 bg-gray-100 animate-pulse" />
   }
 
+  // Verifica se c'è uno sconto confrontando i prezzi o controllando il tipo
+  const hasDiscount =
+    selectedPrice.price_type === "sale" ||
+    (selectedPrice.original_price_number > selectedPrice.calculated_price_number)
+
   return (
-    <div className="flex flex-col text-ui-fg-base">
-      <span
-        className={clx("text-xl-semi", {
-          "text-ui-fg-interactive": selectedPrice.price_type === "sale",
-        })}
-      >
-        {!variant && "A partire da "}
+    <div className="flex flex-col gap-2">
+      {/* Prezzo finale */}
+      <div className="flex items-center gap-2 flex-wrap">
         <span
+          className="text-3xl font-black text-black"
           data-testid="product-price"
           data-value={selectedPrice.calculated_price_number}
         >
+          {!variant && "A partire da "}
           {selectedPrice.calculated_price}
         </span>
-      </span>
-      {selectedPrice.price_type === "sale" && (
-        <>
-          <p>
-            <span className="text-ui-fg-subtle">Original: </span>
-            <span
-              className="line-through"
-              data-testid="original-product-price"
-              data-value={selectedPrice.original_price_number}
-            >
-              {selectedPrice.original_price}
-            </span>
-          </p>
-          <span className="text-ui-fg-interactive">
+
+        {/* Badge sconto rosso */}
+        {hasDiscount && (
+          <span className="px-2 py-1 bg-red-500 text-white font-bold text-sm rounded border border-black">
             -{selectedPrice.percentage_diff}%
           </span>
-        </>
+        )}
+      </div>
+
+      {/* Prezzo originale barrato */}
+      {hasDiscount && (
+        <span
+          className="text-lg line-through text-gray-500"
+          data-testid="original-product-price"
+          data-value={selectedPrice.original_price_number}
+        >
+          {selectedPrice.original_price}
+        </span>
       )}
     </div>
   )

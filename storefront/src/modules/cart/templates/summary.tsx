@@ -8,6 +8,8 @@ import DiscountCode from "@modules/checkout/components/discount-code"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { HttpTypes } from "@medusajs/types"
 import { Button } from "@components/ui/button"
+import { useMemo } from "react"
+import { getTotalDiscount } from "@lib/util/get-total-discount"
 
 type SummaryProps = {
   cart: HttpTypes.StoreCart & {
@@ -28,6 +30,9 @@ function getCheckoutStep(cart: HttpTypes.StoreCart) {
 const Summary = ({ cart }: SummaryProps) => {
   const step = getCheckoutStep(cart)
 
+  // Calcola sconto totale: promo code + price list discounts
+  const totalDiscount = useMemo(() => getTotalDiscount(cart), [cart])
+
   return (
     <div className="flex flex-col gap-y-4">
       <Heading
@@ -38,7 +43,10 @@ const Summary = ({ cart }: SummaryProps) => {
       </Heading>
       <DiscountCode cart={cart} />
       <Divider />
-      <CartTotals totals={cart} />
+      <CartTotals totals={{
+        ...cart,
+        discount_total: totalDiscount
+      }} />
       <LocalizedClientLink
         href={"/checkout?step=" + step}
         data-testid="checkout-button"

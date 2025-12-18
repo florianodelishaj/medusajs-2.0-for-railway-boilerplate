@@ -12,6 +12,7 @@ import {
 } from "react"
 
 import { convertToLocale } from "@lib/util/money"
+import { getTotalDiscount } from "@lib/util/get-total-discount"
 import { HttpTypes } from "@medusajs/types"
 import DeleteButton from "@modules/common/components/delete-button"
 import LineItemOptions from "@modules/common/components/line-item-options"
@@ -67,9 +68,14 @@ const CartDropdown = ({
   )
 
   const subtotal = cartState?.subtotal ?? 0
-  const discountTotal = cartState?.discount_total ?? 0
   const total = cartState?.total ?? 0
   const itemRef = useRef<number>(totalItems || 0)
+
+  // Calcola sconto totale: promo code + price list discounts
+  const totalDiscount = useMemo(
+    () => (cartState ? getTotalDiscount(cartState) : 0),
+    [cartState]
+  )
 
   const open = useCallback(() => setCartDropdownOpen(true), [])
 
@@ -194,7 +200,7 @@ const CartDropdown = ({
             </div>
             <div className="p-4 flex flex-col gap-y-3 border-t border-black bg-gray-50">
               <div className="flex flex-col gap-y-2 p-3 border border-black rounded-md bg-white">
-                {discountTotal > 0 && (
+                {totalDiscount > 0 && (
                   <>
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-medium text-gray-600">
@@ -219,11 +225,11 @@ const CartDropdown = ({
                       <span
                         className="text-sm font-bold text-green-600"
                         data-testid="cart-discount"
-                        data-value={discountTotal}
+                        data-value={totalDiscount}
                       >
                         -
                         {convertToLocale({
-                          amount: discountTotal,
+                          amount: totalDiscount,
                           currency_code: cartState.currency_code,
                         })}
                       </span>
@@ -232,7 +238,7 @@ const CartDropdown = ({
                 )}
                 <div
                   className={`flex items-center justify-between ${
-                    discountTotal > 0 ? "pt-2 border-t border-black" : ""
+                    totalDiscount > 0 ? "pt-2 border-t border-black" : ""
                   }`}
                 >
                   <span className="uppercase font-medium text-gray-900">
@@ -283,7 +289,7 @@ const CartDropdown = ({
         )}
       </>
     ),
-    [sortedItems, cartState, subtotal, discountTotal, total, close]
+    [sortedItems, cartState, subtotal, total, totalDiscount, close]
   )
 
   return (

@@ -29,7 +29,29 @@ const LineItemPrice = ({
       ? originalLineTotal / item.quantity
       : unitPrice
 
-  const hasReducedPrice = lineTotal < originalLineTotal
+  // Check for discount from cart (promo codes)
+  const hasCartDiscount = lineTotal < originalLineTotal
+
+  // Check for discount from price list (sale prices on variants)
+  const variantCalcAmount = (item as any).variant?.calculated_price?.calculated_amount
+  const variantOrigAmount = (item as any).variant?.calculated_price?.original_amount
+  const variantPriceListType = (item as any).variant?.calculated_price?.calculated_price?.price_list_type
+
+  const hasPriceListDiscount =
+    variantCalcAmount &&
+    (variantPriceListType === "sale" ||
+     (variantOrigAmount && variantOrigAmount > variantCalcAmount))
+
+  // Use price list discount if available, otherwise cart discount
+  const hasReducedPrice = hasPriceListDiscount || hasCartDiscount
+
+  const finalOriginalPrice = hasPriceListDiscount && variantOrigAmount
+    ? variantOrigAmount
+    : originalUnitPrice
+
+  const finalCurrentPrice = hasPriceListDiscount && variantCalcAmount
+    ? variantCalcAmount
+    : unitPrice
 
   return (
     <div className="flex flex-col gap-x-2 items-end">
@@ -45,14 +67,14 @@ const LineItemPrice = ({
                 data-testid="product-original-price"
               >
                 {convertToLocale({
-                  amount: originalUnitPrice,
+                  amount: finalOriginalPrice,
                   currency_code: currencyCode,
                 })}
               </span>
             </p>
             {style === "default" && (
               <span className="text-ui-fg-interactive">
-                -{getPercentageDiff(originalUnitPrice, unitPrice || 0)}%xx
+                -{getPercentageDiff(finalOriginalPrice, finalCurrentPrice || 0)}%
               </span>
             )}
           </>

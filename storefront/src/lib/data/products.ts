@@ -7,18 +7,21 @@ import { SortOptions } from "@modules/store/components/refinement-list/sort-prod
 export const getProductsById = cache(async function ({
   ids,
   regionId,
+  cartId,
 }: {
   ids: string[]
   regionId: string
+  cartId?: string
 }) {
   return sdk.store.product
     .list(
       {
         id: ids,
         region_id: regionId,
-        fields: "*variants.calculated_price,+variants.inventory_quantity",
+        cart_id: cartId,
+        fields: "*variants.calculated_price,+variants.inventory_quantity,*categories",
       },
-      { next: { tags: ["products"] } }
+      { next: { tags: ["products"], revalidate: 300 } as any }
     )
     .then(({ products }) => products)
 })
@@ -32,9 +35,9 @@ export const getProductByHandle = cache(async function (
       {
         handle,
         region_id: regionId,
-        fields: "*variants.calculated_price,+variants.inventory_quantity",
+        fields: "*variants.calculated_price,+variants.inventory_quantity,*categories",
       },
-      { next: { tags: ["products"] } }
+      { next: { tags: ["products"], revalidate: 300 } as any }
     )
     .then(({ products }) => products[0])
 })
@@ -72,7 +75,7 @@ export const getProductsList = cache(async function ({
         fields: "*variants.calculated_price",
         ...queryParams,
       },
-      { next: { tags: ["products"] } }
+      { next: { tags: ["products"], revalidate: 300 } as any }
     )
     .then(({ products, count }) => {
       const nextPage = count > offset + limit ? pageParam + 1 : null
@@ -165,7 +168,7 @@ export const getProductsListWithSort = cache(async function ({
         "x-publishable-api-key":
           process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY || "",
       },
-      next: { tags: ["products"] },
+      next: { tags: ["products"], revalidate: 300 } as any,
     }
   )
 

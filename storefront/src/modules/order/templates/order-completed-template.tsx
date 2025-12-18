@@ -9,6 +9,7 @@ import OrderDetails from "@modules/order/components/order-details"
 import ShippingDetails from "@modules/order/components/shipping-details"
 import PaymentDetails from "@modules/order/components/payment-details"
 import { HttpTypes } from "@medusajs/types"
+import { getTotalDiscount } from "@lib/util/get-total-discount"
 
 type OrderCompletedTemplateProps = {
   order: HttpTypes.StoreOrder
@@ -18,6 +19,7 @@ export default function OrderCompletedTemplate({
   order,
 }: OrderCompletedTemplateProps) {
   const isOnboarding = cookies().get("_medusa_onboarding")?.value === "true"
+  const totalDiscount = getTotalDiscount(order)
 
   return (
     <div className="py-6 min-h-[calc(100vh-64px)]">
@@ -39,7 +41,10 @@ export default function OrderCompletedTemplate({
             Summary
           </Heading>
           <Items items={order.items} currencyCode={order.currency_code} />
-          <CartTotals totals={order} />
+          <CartTotals totals={{
+            ...order,
+            discount_total: totalDiscount
+          }} />
           <ShippingDetails order={order} />
           <PaymentDetails order={order} />
           <Help />

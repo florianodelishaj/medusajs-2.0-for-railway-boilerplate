@@ -5,17 +5,18 @@ import { useParams } from "next/navigation"
 import { useEffect, useMemo, useRef, useState } from "react"
 
 import { useIntersection } from "@lib/hooks/use-in-view"
+import { useAddToCart } from "@lib/hooks/use-cart-actions"
 import OptionSelect from "@modules/products/components/product-actions/option-select"
 
 import MobileActions from "./mobile-actions"
 import ProductPrice from "../product-price"
-import { addToCart } from "@lib/data/cart"
 import { HttpTypes } from "@medusajs/types"
 import { Button } from "@components/ui/button"
 
 type ProductActionsProps = {
   product: HttpTypes.StoreProduct
   region: HttpTypes.StoreRegion
+  cart?: HttpTypes.StoreCart | null
   disabled?: boolean
 }
 
@@ -38,10 +39,11 @@ const optionsAsKeymap = (variantOptions: any) => {
 export default function ProductActions({
   product,
   region,
+  cart,
   disabled,
 }: ProductActionsProps) {
   const [options, setOptions] = useState<Record<string, string | undefined>>({})
-  const [isAdding, setIsAdding] = useState(false)
+  const { addToCart, isAdding } = useAddToCart()
   const countryCode = useParams().countryCode as string
 
   // If there is only 1 variant, preselect the options
@@ -73,27 +75,41 @@ export default function ProductActions({
 
   // check if the selected variant is in stock
   const inStock = useMemo(() => {
+    if (!selectedVariant) {
+      return false
+    }
+
+    // Calculate quantity already in cart for this variant
+    const quantityInCart =
+      cart?.items?.reduce((acc, item) => {
+        if (item.variant_id === selectedVariant.id) {
+          return acc + item.quantity
+        }
+        return acc
+      }, 0) || 0
+
     // If we don't manage inventory, we can always add to cart
-    if (selectedVariant && !selectedVariant.manage_inventory) {
+    if (!selectedVariant.manage_inventory) {
       return true
     }
 
     // If we allow back orders on the variant, we can add to cart
-    if (selectedVariant?.allow_backorder) {
+    if (selectedVariant.allow_backorder) {
       return true
     }
 
+    // Calculate available inventory (total - already in cart)
+    const availableInventory =
+      (selectedVariant.inventory_quantity || 0) - quantityInCart
+
     // If there is inventory available, we can add to cart
-    if (
-      selectedVariant?.manage_inventory &&
-      (selectedVariant?.inventory_quantity || 0) > 0
-    ) {
+    if (availableInventory > 0) {
       return true
     }
 
     // Otherwise, we can't add to cart
     return false
-  }, [selectedVariant])
+  }, [selectedVariant, cart])
 
   const actionsRef = useRef<HTMLDivElement>(null)
 
@@ -103,15 +119,15 @@ export default function ProductActions({
   const handleAddToCart = async () => {
     if (!selectedVariant?.id) return null
 
-    setIsAdding(true)
-
-    await addToCart({
-      variantId: selectedVariant.id,
-      quantity: 1,
-      countryCode,
-    })
-
-    setIsAdding(false)
+    try {
+      await addToCart({
+        variantId: selectedVariant.id,
+        quantity: 1,
+        countryCode,
+      })
+    } catch (error: any) {
+      // Error toast is already handled by useAddToCart hook
+    }
   }
 
   return (
@@ -137,7 +153,7 @@ export default function ProductActions({
                   </div>
                 )
               })}
-              <div className="border-t-2 border-black my-4"></div>
+              <div className="border-t-2 border-black mt-4"></div>
             </div>
           </div>
         )}

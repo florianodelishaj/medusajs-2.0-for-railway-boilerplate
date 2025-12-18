@@ -1,7 +1,8 @@
-import { deleteLineItem } from "@lib/data/cart"
+"use client"
+
+import { useDeleteLineItem } from "@lib/hooks/use-cart-actions"
 import { Spinner, Trash } from "@medusajs/icons"
 import { clx } from "@medusajs/ui"
-import { useState } from "react"
 
 const DeleteButton = ({
   id,
@@ -12,13 +13,14 @@ const DeleteButton = ({
   children?: React.ReactNode
   className?: string
 }) => {
-  const [isDeleting, setIsDeleting] = useState(false)
+  const { deleteLineItem, isDeleting } = useDeleteLineItem()
 
   const handleDelete = async (id: string) => {
-    setIsDeleting(true)
-    await deleteLineItem(id).catch((err) => {
-      setIsDeleting(false)
-    })
+    try {
+      await deleteLineItem(id)
+    } catch (err) {
+      // Error toast is already handled by useDeleteLineItem hook
+    }
   }
 
   return (

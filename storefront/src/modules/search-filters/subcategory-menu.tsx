@@ -119,14 +119,17 @@ export const SubcategoryMenu = ({
                 onMouseEnter={() => setHoveredSubcategory(subcategory.id)}
                 onMouseLeave={() => setHoveredSubcategory(null)}
               >
-                <div className="w-full text-left p-4 hover:bg-black hover:text-white flex justify-between items-center font-medium cursor-default">
+                <LocalizedClientLink
+                  href={`/categories/${fullPath}`}
+                  className="w-full text-left p-4 hover:bg-black hover:text-white flex justify-between items-center font-medium"
+                >
                   <span>{subcategory.name}</span>
                   {fitsOnRight ? (
                     <ChevronRight className="size-4" />
                   ) : (
                     <ChevronLeft className="size-4" />
                   )}
-                </div>
+                </LocalizedClientLink>
 
                 {isHovered && itemRect && (
                   <>

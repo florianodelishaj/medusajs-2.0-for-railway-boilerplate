@@ -1,6 +1,7 @@
 import { getBaseURL } from "@lib/util/env"
 import { Metadata } from "next"
 import { DM_Sans } from "next/font/google"
+import { Toaster } from "sonner"
 import "styles/globals.css"
 
 const dmSans = DM_Sans({
@@ -18,6 +19,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
     <html lang="en" data-mode="light">
       <body className={dmSans.className}>
         <main className="relative">{props.children}</main>
+        <Toaster position="bottom-right" richColors />
       </body>
     </html>
   )

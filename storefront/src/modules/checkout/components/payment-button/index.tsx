@@ -6,7 +6,7 @@ import { useElements, useStripe } from "@stripe/react-stripe-js"
 import React, { useState } from "react"
 import ErrorMessage from "../error-message"
 import Spinner from "@modules/common/icons/spinner"
-import { placeOrder } from "@lib/data/cart"
+import { usePlaceOrder } from "@lib/hooks/use-checkout-actions"
 import { HttpTypes } from "@medusajs/types"
 import { isManual, isPaypal, isStripe } from "@lib/constants"
 import { Button } from "@components/ui/button"
@@ -64,18 +64,21 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
 }
 
 const GiftCardPaymentButton = () => {
-  const [submitting, setSubmitting] = useState(false)
+  const { placeOrder, isLoading } = usePlaceOrder()
 
   const handleOrder = async () => {
-    setSubmitting(true)
-    await placeOrder()
+    try {
+      await placeOrder()
+    } catch (error) {
+      // Error toast is already handled by usePlaceOrder hook
+    }
   }
 
   return (
     <Button
       variant="elevated"
       onClick={handleOrder}
-      isLoading={submitting}
+      isLoading={isLoading}
       data-testid="submit-order-button"
       className="bg-black text-white hover:bg-pink-400 hover:text-black"
     >
@@ -93,17 +96,19 @@ const StripePaymentButton = ({
   notReady: boolean
   "data-testid"?: string
 }) => {
+  const { placeOrder, isLoading: isPlacingOrder } = usePlaceOrder()
   const [submitting, setSubmitting] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const onPaymentCompleted = async () => {
-    await placeOrder()
-      .catch((err) => {
-        setErrorMessage(err.message)
-      })
-      .finally(() => {
-        setSubmitting(false)
-      })
+    try {
+      await placeOrder()
+    } catch (err: any) {
+      // Error toast is already handled by usePlaceOrder hook
+      setErrorMessage(err.message)
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   const stripe = useStripe()
@@ -202,17 +207,19 @@ const PayPalPaymentButton = ({
   notReady: boolean
   "data-testid"?: string
 }) => {
+  const { placeOrder } = usePlaceOrder()
   const [submitting, setSubmitting] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const onPaymentCompleted = async () => {
-    await placeOrder()
-      .catch((err) => {
-        setErrorMessage(err.message)
-      })
-      .finally(() => {
-        setSubmitting(false)
-      })
+    try {
+      await placeOrder()
+    } catch (err: any) {
+      // Error toast is already handled by usePlaceOrder hook
+      setErrorMessage(err.message)
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   const session = cart.payment_collection?.payment_sessions?.find(
@@ -264,17 +271,19 @@ const PayPalPaymentButton = ({
 }
 
 const ManualTestPaymentButton = ({ notReady }: { notReady: boolean }) => {
+  const { placeOrder } = usePlaceOrder()
   const [submitting, setSubmitting] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const onPaymentCompleted = async () => {
-    await placeOrder()
-      .catch((err) => {
-        setErrorMessage(err.message)
-      })
-      .finally(() => {
-        setSubmitting(false)
-      })
+    try {
+      await placeOrder()
+    } catch (err: any) {
+      // Error toast is already handled by usePlaceOrder hook
+      setErrorMessage(err.message)
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   const handlePayment = () => {

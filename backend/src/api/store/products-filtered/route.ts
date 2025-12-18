@@ -1,6 +1,44 @@
 import { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
 import { ContainerRegistrationKeys, QueryContext } from "@medusajs/framework/utils"
 
+/**
+ * Recursively collect all category IDs including the category and all its descendants
+ * Uses a recursive query approach to handle unlimited depth
+ */
+async function getAllCategoryIds(query: any, categoryId: string): Promise<string[]> {
+  const allIds = new Set<string>([categoryId])
+
+  // Helper function to recursively fetch children
+  async function fetchChildren(parentId: string): Promise<void> {
+    try {
+      // Fetch direct children of this category
+      const { data: children } = await query.graph({
+        entity: "product_category",
+        fields: ["id"],
+        filters: { parent_category_id: parentId },
+      })
+
+      if (children && children.length > 0) {
+        // Add all child IDs and recursively fetch their children
+        for (const child of children) {
+          allIds.add(child.id)
+          await fetchChildren(child.id)
+        }
+      }
+    } catch (error) {
+      console.error(`Error fetching children for category ${parentId}:`, error)
+    }
+  }
+
+  try {
+    await fetchChildren(categoryId)
+  } catch (error) {
+    console.error("Error in getAllCategoryIds:", error)
+  }
+
+  return Array.from(allIds)
+}
+
 export const GET = async (
   req: MedusaRequest,
   res: MedusaResponse
@@ -28,8 +66,14 @@ export const GET = async (
   }
 
   if (category_id) {
+    // Get single category_id (backend now handles the recursion)
+    const singleCategoryId = Array.isArray(category_id) ? category_id[0] : category_id
+
+    // Recursively get all category IDs including children
+    const categoryIds = await getAllCategoryIds(query, singleCategoryId as string)
+
     filters.categories = {
-      id: category_id,
+      id: categoryIds.length === 1 ? categoryIds[0] : { $in: categoryIds },
     }
   }
 

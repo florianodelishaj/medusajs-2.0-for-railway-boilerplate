@@ -184,6 +184,14 @@ module.exports = {
           "0%": { transform: "translateX(0)" },
           "100%": { transform: "translateX(-100%)" },
         },
+        "slide-in-from-right": {
+          "0%": { transform: "translateX(100%)" },
+          "100%": { transform: "translateX(0)" },
+        },
+        "slide-out-to-right": {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(100%)" },
+        },
       },
       animation: {
         ring: "ring 2.2s cubic-bezier(0.5, 0, 0.5, 1) infinite",
@@ -200,6 +208,8 @@ module.exports = {
         "slide-in": "slide-in 1.2s cubic-bezier(.41,.73,.51,1.02)",
         "slide-in-from-left": "slide-in-from-left 300ms ease-out",
         "slide-out-to-left": "slide-out-to-left 300ms ease-in",
+        "slide-in-from-right": "slide-in-from-right 300ms ease-out",
+        "slide-out-to-right": "slide-out-to-right 300ms ease-in",
         leave: "leave 150ms ease-in forwards",
       },
     },

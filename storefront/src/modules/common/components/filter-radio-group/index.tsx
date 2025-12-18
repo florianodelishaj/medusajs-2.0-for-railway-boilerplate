@@ -58,7 +58,7 @@ const FilterRadioGroup = ({
       <Text className="p-4 border rounded-md flex items-center justify-between font-medium bg-white">
         {title}
       </Text>
-      <div className="w-full lg:w-auto border rounded-md bg-white">
+      <div className="w-full lg:w-auto border rounded-md bg-white overflow-hidden">
         {/* Ordinamento per prezzo */}
         {items?.map((i) => (
           <div

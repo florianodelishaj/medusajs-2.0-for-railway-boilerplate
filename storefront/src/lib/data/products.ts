@@ -53,7 +53,7 @@ export const getProductsList = cache(async function ({
   queryParams?: HttpTypes.FindParams & HttpTypes.StoreProductParams
 }> {
   const limit = queryParams?.limit || 12
-  const validPageParam = Math.max(pageParam, 1);
+  const validPageParam = Math.max(pageParam, 1)
   const offset = (validPageParam - 1) * limit
   const region = await getRegion(countryCode)
 
@@ -132,6 +132,7 @@ export const getProductsListWithSort = cache(async function ({
   if (queryParams && "category_id" in queryParams) {
     const categoryId = queryParams.category_id
     if (Array.isArray(categoryId) && categoryId.length > 0) {
+      // Pass only the first category_id (backend handles subcategories recursively)
       params.append("category_id", categoryId[0])
     } else if (typeof categoryId === "string") {
       params.append("category_id", categoryId)
@@ -156,7 +157,9 @@ export const getProductsListWithSort = cache(async function ({
   }
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL}/store/products-filtered?${params.toString()}`,
+    `${
+      process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL
+    }/store/products-filtered?${params.toString()}`,
     {
       headers: {
         "x-publishable-api-key":

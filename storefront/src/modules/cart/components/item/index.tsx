@@ -2,7 +2,7 @@
 
 import { Table, Text, clx } from "@medusajs/ui"
 
-import { updateLineItem } from "@lib/data/cart"
+import { useUpdateLineItem } from "@lib/hooks/use-cart-actions"
 import { HttpTypes } from "@medusajs/types"
 import ErrorMessage from "@modules/checkout/components/error-message"
 import DeleteButton from "@modules/common/components/delete-button"
@@ -28,25 +28,24 @@ type ItemProps = {
 }
 
 const Item = ({ item, currencyCode, type = "full" }: ItemProps) => {
-  const [updating, setUpdating] = useState(false)
+  const { updateLineItem, isUpdating } = useUpdateLineItem()
   const [error, setError] = useState<string | null>(null)
 
   const { handle } = item.variant?.product ?? {}
 
   const changeQuantity = async (quantity: number) => {
     setError(null)
-    setUpdating(true)
 
-    const message = await updateLineItem({
-      lineId: item.id,
-      quantity,
-    })
-      .catch((err) => {
-        setError(err.message)
+    try {
+      await updateLineItem({
+        lineId: item.id,
+        quantity,
       })
-      .finally(() => {
-        setUpdating(false)
-      })
+    } catch (err: any) {
+      // Error toast is already handled by useUpdateLineItem hook
+      // Keep local error message for inline display
+      setError(err.message)
+    }
   }
 
   // TODO: Update this to grab the actual max inventory
@@ -74,12 +73,14 @@ const Item = ({ item, currencyCode, type = "full" }: ItemProps) => {
         >
           {item.product_title}
         </Text>
-        {item.variant && item.variant.title !== "Default variant" && (
-          <LineItemOptions
-            variant={item.variant}
-            data-testid="product-variant"
-          />
-        )}
+        {item.variant &&
+          (item.variant.title !== "Default variant" ||
+            item.product_title !== item.variant.title) && (
+            <LineItemOptions
+              variant={item.variant}
+              data-testid="product-variant"
+            />
+          )}
       </Table.Cell>
 
       {type === "full" && (
@@ -89,7 +90,7 @@ const Item = ({ item, currencyCode, type = "full" }: ItemProps) => {
             <Select
               value={String(item.quantity)}
               onValueChange={(value) => changeQuantity(parseInt(value))}
-              disabled={updating}
+              disabled={isUpdating}
             >
               <SelectTrigger
                 className="w-12 small:w-16 h-8 small:h-10 text-xs small:text-sm border text-black border-black rounded-md hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-pink-400 transition-all"
@@ -114,7 +115,7 @@ const Item = ({ item, currencyCode, type = "full" }: ItemProps) => {
                 )}
               </SelectContent>
             </Select>
-            {updating && <Spinner />}
+            {isUpdating && <Spinner />}
           </div>
           <ErrorMessage error={error} data-testid="product-error-message" />
         </Table.Cell>

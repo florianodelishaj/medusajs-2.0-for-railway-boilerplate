@@ -9,7 +9,7 @@ import Radio from "@modules/common/components/radio"
 import ErrorMessage from "@modules/checkout/components/error-message"
 import { useRouter, useSearchParams, usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
-import { setShippingMethod } from "@lib/data/cart"
+import { useSetShippingMethod } from "@lib/hooks/use-checkout-actions"
 import { convertToLocale } from "@lib/util/money"
 import { HttpTypes } from "@medusajs/types"
 
@@ -22,7 +22,7 @@ const Shipping: React.FC<ShippingProps> = ({
   cart,
   availableShippingMethods,
 }) => {
-  const [isLoading, setIsLoading] = useState(false)
+  const { setShippingMethod, isLoading } = useSetShippingMethod()
   const [error, setError] = useState<string | null>(null)
 
   const searchParams = useSearchParams()
@@ -45,14 +45,12 @@ const Shipping: React.FC<ShippingProps> = ({
   }
 
   const set = async (id: string) => {
-    setIsLoading(true)
-    await setShippingMethod({ cartId: cart.id, shippingMethodId: id })
-      .catch((err) => {
-        setError(err.message)
-      })
-      .finally(() => {
-        setIsLoading(false)
-      })
+    try {
+      await setShippingMethod({ cartId: cart.id, shippingMethodId: id })
+    } catch (err: any) {
+      // Error toast is already handled by useSetShippingMethod hook
+      setError(err.message)
+    }
   }
 
   useEffect(() => {

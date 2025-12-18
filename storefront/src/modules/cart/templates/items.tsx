@@ -12,7 +12,7 @@ type ItemsTemplateProps = {
 
 const ItemsTemplate = ({ items, currencyCode }: ItemsTemplateProps) => {
   return (
-    <div className="border border-black rounded-md bg-white">
+    <div className="border border-black rounded-md bg-white overflow-hidden">
       <div className="p-4 border-b border-black">
         <Heading
           level="h2"

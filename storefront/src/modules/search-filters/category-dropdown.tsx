@@ -47,38 +47,21 @@ const CategoryDropdownComponent = ({
       onMouseLeave={onMouseLeave}
     >
       <div className="relative">
-        {hasSubcategories ? (
-          // Se ha sottocategorie, è solo un bottone (non navigabile)
-          <Button
-            variant="elevated"
-            className={cn(
-              "h-11 px-4 bg-transparent border-transparent rounded-full hover:bg-white hover:border-black text-black transition-all",
-              isActive &&
-                "bg-white border-black",
-              isOpen &&
-                "bg-white shadow-[4px_4px_0px_rgba(0,0,0,1)] -translate-x-[4px] -translate-y-[4px] border-black"
-            )}
-          >
+        <Button
+          asChild
+          variant="elevated"
+          className={cn(
+            "h-11 px-4 bg-transparent border-transparent rounded-full hover:bg-white hover:border-black text-black transition-all",
+            isActive &&
+              "bg-white border-black",
+            isOpen &&
+              "bg-white shadow-[4px_4px_0px_rgba(0,0,0,1)] -translate-x-[4px] -translate-y-[4px] border-black"
+          )}
+        >
+          <LocalizedClientLink href={`/categories/${fullPath}`}>
             {category.name}
-          </Button>
-        ) : (
-          // Se non ha sottocategorie, è un link normale
-          <Button
-            asChild
-            variant="elevated"
-            className={cn(
-              "h-11 px-4 bg-transparent border-transparent rounded-full hover:bg-white hover:border-black text-black transition-all",
-              isActive &&
-                "bg-white border-black",
-              isOpen &&
-                "bg-white shadow-[4px_4px_0px_rgba(0,0,0,1)] -translate-x-[4px] -translate-y-[4px] border-black"
-            )}
-          >
-            <LocalizedClientLink href={`/categories/${fullPath}`}>
-              {category.name}
-            </LocalizedClientLink>
-          </Button>
-        )}
+          </LocalizedClientLink>
+        </Button>
         {hasSubcategories && (
           <div
             className={cn(

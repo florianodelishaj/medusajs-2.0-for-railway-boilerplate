@@ -56,7 +56,7 @@ const ProductInfoTab = ({ product }: ProductTabsProps) => {
           </div>
           <div className="border-l-4 border-black pl-3">
             <span className="font-bold text-xs uppercase text-gray-600 block mb-1">
-              Paese d'origine
+              Paese d&apos;origine
             </span>
             <p className="font-medium text-black">
               {product.origin_country ? product.origin_country : "-"}

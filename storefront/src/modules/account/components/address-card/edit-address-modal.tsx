@@ -12,10 +12,8 @@ import Spinner from "@modules/common/icons/spinner"
 import { useFormState } from "react-dom"
 import { SubmitButton } from "@modules/checkout/components/submit-button"
 import { HttpTypes } from "@medusajs/types"
-import {
-  deleteCustomerAddress,
-  updateCustomerAddress,
-} from "@lib/data/customer"
+import { updateCustomerAddress } from "@lib/data/customer"
+import { useDeleteCustomerAddress } from "@lib/hooks/use-customer-actions"
 
 type EditAddressProps = {
   region: HttpTypes.StoreRegion
@@ -28,9 +26,9 @@ const EditAddress: React.FC<EditAddressProps> = ({
   address,
   isActive = false,
 }) => {
-  const [removing, setRemoving] = useState(false)
   const [successState, setSuccessState] = useState(false)
   const { state, open, close: closeModal } = useToggleState(false)
+  const { deleteAddress, isDeleting } = useDeleteCustomerAddress()
 
   const [formState, formAction] = useFormState(updateCustomerAddress, {
     success: false,
@@ -57,9 +55,11 @@ const EditAddress: React.FC<EditAddressProps> = ({
   }, [formState])
 
   const removeAddress = async () => {
-    setRemoving(true)
-    await deleteCustomerAddress(address.id)
-    setRemoving(false)
+    try {
+      await deleteAddress(address.id)
+    } catch (error) {
+      // Error toast is already handled by useDeleteCustomerAddress hook
+    }
   }
 
   return (
@@ -115,8 +115,9 @@ const EditAddress: React.FC<EditAddressProps> = ({
             className="text-small-regular text-ui-fg-base flex items-center gap-x-2"
             onClick={removeAddress}
             data-testid="address-delete-button"
+            disabled={isDeleting}
           >
-            {removing ? <Spinner /> : <Trash />}
+            {isDeleting ? <Spinner /> : <Trash />}
             Remove
           </button>
         </div>

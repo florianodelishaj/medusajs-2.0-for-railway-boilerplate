@@ -11,10 +11,12 @@ export default async function ProductPreview({
   product,
   isFeatured,
   region,
+  categoryColor,
 }: {
   product: HttpTypes.StoreProduct
   isFeatured?: boolean
   region: HttpTypes.StoreRegion
+  categoryColor?: string
 }) {
   const [pricedProduct] = await getProductsById({
     ids: [product.id!],
@@ -41,11 +43,14 @@ export default async function ProductPreview({
       <div
         data-testid="product-wrapper"
         className="bg-white border border-black rounded-md hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:-translate-x-[2px] hover:-translate-y-[2px] transition-all"
+        style={categoryColor ? { backgroundColor: categoryColor } : {}}
       >
         <div className="relative overflow-hidden rounded-tl-md rounded-tr-md">
           {isOutOfStock && (
             <div className="absolute top-4 -left-10 z-10 w-40 text-center bg-gray-800 border-2 border-black py-1 transform -rotate-45 shadow-lg">
-              <span className="text-xs font-bold uppercase text-white">Esaurito</span>
+              <span className="text-xs font-bold uppercase text-white">
+                Esaurito
+              </span>
             </div>
           )}
           <Thumbnail
@@ -60,7 +65,8 @@ export default async function ProductPreview({
           <Text data-testid="product-title" className="font-bold">
             {product.title}
           </Text>
-          {product.tags?.map((tag: any) => (
+          {/* TODO: stampa del tag sulla product card */}
+          {/* {product.tags?.map((tag: any) => (
             <div
               key={tag.id}
               className="w-fit px-2 py-1 border"
@@ -72,7 +78,7 @@ export default async function ProductPreview({
             >
               {tag.value}
             </div>
-          ))}
+          ))} */}
         </div>
         <div className="p-4 border-t">
           <div className="relative px-2 py-1 border bg-pink-400 w-fit">

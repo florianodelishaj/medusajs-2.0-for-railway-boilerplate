@@ -3,9 +3,8 @@ import { getRegion } from "@lib/data/regions"
 import ProductPreview from "@modules/products/components/product-preview"
 import { Pagination } from "@modules/store/components/pagination"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
+import { PRODUCT_LIMIT } from "app/[countryCode]/(main)/collections/[handle]/page"
 import { Inbox } from "lucide-react"
-
-const PRODUCT_LIMIT = 12
 
 type PaginatedProductsParams = {
   limit: number
@@ -20,6 +19,7 @@ export default async function PaginatedProducts({
   page,
   collectionId,
   categoryId,
+  categoryColor,
   productsIds,
   minPrice,
   maxPrice,
@@ -29,13 +29,14 @@ export default async function PaginatedProducts({
   page: number
   collectionId?: string
   categoryId?: string
+  categoryColor?: string
   productsIds?: string[]
   minPrice?: string
   maxPrice?: string
   countryCode: string
 }) {
   const queryParams: PaginatedProductsParams = {
-    limit: 12,
+    limit: PRODUCT_LIMIT,
   }
 
   if (collectionId) {
@@ -91,7 +92,11 @@ export default async function PaginatedProducts({
         {products.map((p) => {
           return (
             <li key={p.id}>
-              <ProductPreview product={p} region={region} />
+              <ProductPreview
+                product={p}
+                region={region}
+                categoryColor={categoryColor}
+              />
             </li>
           )
         })}

@@ -13,7 +13,7 @@ import { Button } from "@components/ui/button"
 import PaymentContainer from "@modules/checkout/components/payment-container"
 import { isStripe as isStripeFunc, paymentInfoMap } from "@lib/constants"
 import { StripeContext } from "@modules/checkout/components/payment-wrapper"
-import { initiatePaymentSession } from "@lib/data/cart"
+import { useInitiatePaymentSession } from "@lib/hooks/use-checkout-actions"
 
 const Payment = ({
   cart,
@@ -26,7 +26,7 @@ const Payment = ({
     (paymentSession: any) => paymentSession.status === "pending"
   )
 
-  const [isLoading, setIsLoading] = useState(false)
+  const { initiatePaymentSession, isLoading } = useInitiatePaymentSession()
   const [error, setError] = useState<string | null>(null)
   const [cardBrand, setCardBrand] = useState<string | null>(null)
   const [cardComplete, setCardComplete] = useState(false)
@@ -83,7 +83,6 @@ const Payment = ({
   }
 
   const handleSubmit = async () => {
-    setIsLoading(true)
     try {
       const shouldInputCard =
         isStripeFunc(selectedPaymentMethod) && !activeSession
@@ -103,9 +102,8 @@ const Payment = ({
         )
       }
     } catch (err: any) {
+      // Error toast is already handled by useInitiatePaymentSession hook
       setError(err.message)
-    } finally {
-      setIsLoading(false)
     }
   }
 

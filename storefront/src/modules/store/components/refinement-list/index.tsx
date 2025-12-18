@@ -39,7 +39,7 @@ const RefinementList = ({
   }
 
   return (
-    <div className="flex flex-col gap-6 small:px-0 mr-0 small:mr-6 mb-6 small:min-w-[250px]">
+    <div className="flex flex-col gap-6 small:px-0 mr-0 small:mr-6 mb-6 small:min-w-[250px] lg:sticky lg:top-6">
       <SortProducts
         sortBy={sortBy}
         minPrice={minPrice}

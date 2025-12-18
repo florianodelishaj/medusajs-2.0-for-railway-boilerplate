@@ -80,7 +80,7 @@ const Item: React.FC<AccordionItemProps> = ({
           "radix-state-closed:animate-accordion-close radix-state-open:animate-accordion-open radix-state-closed:pointer-events-none"
         )}
       >
-        <div className="border-t-2 border-black px-4 py-4 bg-gray-50">
+        <div className="border-t-2 border-black px-4 py-4">
           {description && <Text>{description}</Text>}
           <div className="w-full">{children}</div>
         </div>

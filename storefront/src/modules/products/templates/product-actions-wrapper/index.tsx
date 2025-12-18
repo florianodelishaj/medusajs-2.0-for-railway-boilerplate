@@ -1,4 +1,5 @@
 import { getProductsById } from "@lib/data/products"
+import { retrieveCart } from "@lib/data/cart"
 import { HttpTypes } from "@medusajs/types"
 import ProductActions from "@modules/products/components/product-actions"
 
@@ -12,14 +13,17 @@ export default async function ProductActionsWrapper({
   id: string
   region: HttpTypes.StoreRegion
 }) {
-  const [product] = await getProductsById({
-    ids: [id],
-    regionId: region.id,
-  })
+  const [product, cart] = await Promise.all([
+    getProductsById({
+      ids: [id],
+      regionId: region.id,
+    }).then((products) => products[0]),
+    retrieveCart(),
+  ])
 
   if (!product) {
     return null
   }
 
-  return <ProductActions product={product} region={region} />
+  return <ProductActions product={product} region={region} cart={cart} />
 }

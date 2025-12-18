@@ -27,6 +27,9 @@ export default function CategoryTemplate({
 
   const category = categories[categories.length - 1]
 
+  // Get background color from the root category (first in the array)
+  const categoryColor = (categories[0]?.metadata?.color as string) || "white"
+
   if (!category || !countryCode) notFound()
 
   return (
@@ -34,7 +37,12 @@ export default function CategoryTemplate({
       className="flex flex-col small:flex-row small:items-start content-container"
       data-testid="category-container"
     >
-      <RefinementList sortBy={sort} minPrice={minPrice} maxPrice={maxPrice} data-testid="sort-by-container" />
+      <RefinementList
+        sortBy={sort}
+        minPrice={minPrice}
+        maxPrice={maxPrice}
+        data-testid="sort-by-container"
+      />
       <div className="w-full">
         {/* {category.description && (
           <div className="mb-8 text-base-regular">
@@ -59,6 +67,7 @@ export default function CategoryTemplate({
             sortBy={sort}
             page={pageNumber}
             categoryId={category.id}
+            categoryColor={categoryColor}
             minPrice={minPrice}
             maxPrice={maxPrice}
             countryCode={countryCode}

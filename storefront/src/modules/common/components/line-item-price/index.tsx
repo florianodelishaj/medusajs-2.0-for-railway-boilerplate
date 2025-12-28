@@ -80,7 +80,7 @@ const LineItemPrice = ({
           </>
         )}
         <span
-          className="px-2 py-1 border bg-pink-400"
+          className="px-2 py-1 border bg-green-400"
           data-testid="product-price"
         >
           {convertToLocale({

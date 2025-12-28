@@ -41,14 +41,14 @@ export const NavMenuSidebar = ({ open, onOpenChange }: Props) => {
           <LocalizedClientLink
             href="/account"
             onClick={() => onOpenChange(false)}
-            className="w-full text-left p-4 hover:bg-pink-400 text-black font-medium cursor-pointer border-b border-black/10 transition-colors block"
+            className="w-full text-left p-4 hover:bg-green-400 text-black font-medium cursor-pointer border-b border-black/10 transition-colors block"
           >
             Account
           </LocalizedClientLink>
           <LocalizedClientLink
             href="/cart"
             onClick={() => onOpenChange(false)}
-            className="w-full text-left p-4 bg-black text-white hover:bg-pink-400 hover:text-black font-medium cursor-pointer transition-colors block"
+            className="w-full text-left p-4 bg-black text-white hover:bg-green-400 hover:text-black font-medium cursor-pointer transition-colors block"
           >
             Carrello
           </LocalizedClientLink>

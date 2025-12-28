@@ -134,7 +134,7 @@ const ProductPurchaseSidebar = ({
         variant="elevated"
         isLoading={isAdding}
         data-testid="add-product-button"
-        className="w-full h-12 bg-black text-white hover:bg-pink-400 hover:text-black"
+        className="w-full h-12 bg-black text-white hover:bg-green-400 hover:text-black"
       >
         {!selectedVariant
           ? "Seleziona variante"

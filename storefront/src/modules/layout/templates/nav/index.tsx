@@ -4,6 +4,13 @@ import CartButton from "@modules/layout/components/cart-button"
 import { NavMenuButton } from "@modules/layout/components/nav-menu-button"
 import { NavButtons } from "@modules/layout/components/nav-buttons"
 import { NAV_ROUTES } from "@lib/constants/nav-routes"
+import { Poppins } from "next/font/google"
+import { cn } from "@lib/util/cn"
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["700"],
+})
 
 export default async function Nav() {
   return (
@@ -12,10 +19,10 @@ export default async function Nav() {
       <div className="pl-6 flex items-center xl:pl-6">
         <LocalizedClientLink
           href="/"
-          className="text-4xl font-bold hover:text-gray-700 transition-none"
+          className={cn("text-4xl font-bold uppercase", poppins.className)}
           data-testid="nav-store-link"
         >
-          NOX STORE
+          il covo di xur
         </LocalizedClientLink>
       </div>
 
@@ -28,7 +35,7 @@ export default async function Nav() {
 
       <div className="hidden xl:flex">
         <LocalizedClientLink
-          className="hidden small:flex items-center h-full px-12 py-2 border-l border-black hover:bg-pink-400 hover:border-pink-400 transition-colors duration-200 font-semibold"
+          className="hidden small:flex items-center h-full px-12 py-2 border-l border-black hover:bg-green-400 hover:border-green-400 transition-colors duration-200 font-semibold"
           href="/account"
           data-testid="nav-account-link"
         >
@@ -37,7 +44,7 @@ export default async function Nav() {
         <Suspense
           fallback={
             <LocalizedClientLink
-              className="flex items-center h-full px-12 py-2 border-l border-black bg-black text-white hover:bg-pink-400 hover:border-pink-400 hover:text-black transition-colors duration-200 font-semibold gap-2"
+              className="flex items-center h-full px-12 py-2 border-l border-black bg-black text-white hover:bg-green-400 hover:border-green-400 hover:text-black transition-colors duration-200 font-semibold gap-2"
               href="/cart"
               data-testid="nav-cart-link"
             >

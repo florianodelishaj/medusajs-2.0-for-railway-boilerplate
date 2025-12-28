@@ -4,6 +4,13 @@ import { Text, clx } from "@medusajs/ui"
 
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import MedusaCTA from "@modules/layout/components/medusa-cta"
+import { Poppins } from "next/font/google"
+import { cn } from "@lib/util/cn"
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["700"],
+})
 
 export default async function Footer() {
   const { collections } = await getCollectionsList(0, 6)
@@ -13,9 +20,10 @@ export default async function Footer() {
     <footer className="px-4 py-6 border-t w-full">
       <LocalizedClientLink
         href="/"
-        className="txt-compact-xlarge-plus text-ui-fg-subtle hover:text-ui-fg-base uppercase"
+        className={cn("text-2xl font-bold uppercase", poppins.className)}
+        data-testid="footer-store-link"
       >
-        NOX STORE
+        IL COVO DI XUR
       </LocalizedClientLink>
     </footer>
   )

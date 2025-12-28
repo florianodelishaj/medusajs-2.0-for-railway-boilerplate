@@ -14,6 +14,16 @@ const AccountLayout: React.FC<AccountLayoutProps> = ({
   customer,
   children,
 }) => {
+  // For login page (no customer), render without container constraints
+  if (!customer) {
+    return (
+      <div className="flex-1" data-testid="account-page">
+        {children}
+      </div>
+    )
+  }
+
+  // For logged-in customer, use the regular layout with sidebar
   return (
     <div className="flex-1 small:py-12" data-testid="account-page">
       <div className="flex-1 content-container h-full max-w-5xl mx-auto bg-white flex flex-col">

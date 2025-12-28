@@ -34,11 +34,11 @@ const OptionSelect: React.FC<OptionSelectProps> = ({
               onClick={() => updateOption(option.title ?? "", v ?? "")}
               key={v}
               variant="elevated"
-              className={`min-w-[80px] h-10 bg-black text-white hover:bg-pink-400 hover:text-black transition-all 
+              className={`min-w-[80px] h-10 bg-black text-white hover:bg-green-400 hover:text-black transition-all 
                 ${
                   isSelected
-                    ? "bg-pink-400 border border-black text-black"
-                    : "bg-white border border-black text-black hover:bg-pink-400 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-[2px] hover:-translate-y-[2px]"
+                    ? "bg-green-400 border border-black text-black"
+                    : "bg-white border border-black text-black hover:bg-green-400 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-[2px] hover:-translate-y-[2px]"
                 }
                 disabled:opacity-50 disabled:cursor-not-allowed
                 `}

@@ -13,7 +13,7 @@ const Radio = ({ checked, 'data-testid': dataTestId }: { checked: boolean, 'data
       <div
         className={cn(
           "flex size-5 items-center justify-center rounded-full border-2 border-black bg-white transition-all",
-          checked && "bg-pink-400"
+          checked && "bg-green-400"
         )}
       >
         {checked && (

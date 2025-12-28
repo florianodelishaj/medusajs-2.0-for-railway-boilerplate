@@ -64,7 +64,7 @@ const FilterRadioGroup = ({
           <div
             key={i.value}
             className={clx("p-4 flex flex-col gap-2 border-b", {
-              "bg-pink-400": i.value === value,
+              "bg-green-400": i.value === value,
               "bg-white": i.value !== value,
             })}
           >

@@ -12,7 +12,7 @@ const EmptyCartMessage = () => {
       <p className="text-base font-medium">Nessun oggetto nel carrello</p>
       <LocalizedClientLink href="/store" data-testid="store-link">
         <Button
-          className="bg-black text-white hover:bg-pink-400 hover:text-black font-bold tracking-wide"
+          className="bg-black text-white hover:bg-green-400 hover:text-black font-bold tracking-wide"
           variant="elevated"
         >
           Esplora i prodotti

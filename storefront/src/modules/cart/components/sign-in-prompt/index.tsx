@@ -17,7 +17,7 @@ const SignInPrompt = () => {
         <LocalizedClientLink href="/account">
           <Button
             variant="elevated"
-            className="hover:bg-pink-400"
+            className="hover:bg-green-400"
             data-testid="sign-in-button"
           >
             Accedi

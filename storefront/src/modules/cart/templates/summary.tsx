@@ -53,7 +53,7 @@ const Summary = ({ cart }: SummaryProps) => {
       >
         <Button
           variant="elevated"
-          className="w-full h-10 bg-black text-white hover:bg-pink-400 hover:text-black"
+          className="w-full h-10 bg-black text-white hover:bg-green-400 hover:text-black"
         >
           Vai al pagamento
         </Button>

@@ -9,7 +9,7 @@ const ShippingInfoCards = () => {
       <Accordion.Item title="Spedizioni & Resi" value="shipping">
         <div className="flex flex-col gap-3">
           <div className="flex items-start gap-2 p-3 bg-white border border-black rounded-md">
-            <div className="shrink-0 w-6 h-6 flex items-center justify-center bg-pink-400 border border-black rounded-md">
+            <div className="shrink-0 w-6 h-6 flex items-center justify-center bg-green-400 border border-black rounded-md">
               <FastDelivery className="w-4 h-4" />
             </div>
             <div>
@@ -21,7 +21,7 @@ const ShippingInfoCards = () => {
           </div>
 
           <div className="flex items-start gap-2 p-3 bg-white border border-black rounded-md">
-            <div className="shrink-0 w-6 h-6 flex items-center justify-center bg-pink-400 border border-black rounded-md">
+            <div className="shrink-0 w-6 h-6 flex items-center justify-center bg-green-400 border border-black rounded-md">
               <Refresh className="w-4 h-4" />
             </div>
             <div>
@@ -33,7 +33,7 @@ const ShippingInfoCards = () => {
           </div>
 
           <div className="flex items-start gap-2 p-3 bg-white border border-black rounded-md">
-            <div className="shrink-0 w-6 h-6 flex items-center justify-center bg-pink-400 border border-black rounded-md">
+            <div className="shrink-0 w-6 h-6 flex items-center justify-center bg-green-400 border border-black rounded-md">
               <Back className="w-4 h-4" />
             </div>
             <div>

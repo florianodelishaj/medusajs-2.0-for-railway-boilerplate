@@ -32,7 +32,7 @@ const ProductCentralInfo = ({
       {product.collection && (
         <LocalizedClientLink
           href={`/collections/${product.collection.handle}`}
-          className="text-sm font-bold uppercase text-black hover:text-pink-600 transition-colors px-3 py-1 border border-black w-fit rounded-md"
+          className="text-sm font-bold uppercase text-black hover:text-green-600 transition-colors px-3 py-1 border border-black w-fit rounded-md"
         >
           {product.collection.title}
         </LocalizedClientLink>

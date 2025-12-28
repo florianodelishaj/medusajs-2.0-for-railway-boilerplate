@@ -93,7 +93,7 @@ const Item = ({ item, currencyCode, type = "full" }: ItemProps) => {
               disabled={isUpdating}
             >
               <SelectTrigger
-                className="w-12 small:w-16 h-8 small:h-10 text-xs small:text-sm border text-black border-black rounded-md hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-pink-400 transition-all"
+                className="w-12 small:w-16 h-8 small:h-10 text-xs small:text-sm border text-black border-black rounded-md hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-green-400 transition-all"
                 data-testid="product-select-button"
               >
                 <SelectValue />
@@ -107,7 +107,7 @@ const Item = ({ item, currencyCode, type = "full" }: ItemProps) => {
                     <SelectItem
                       value={String(i + 1)}
                       key={i}
-                      className="hover:bg-pink-400 cursor-pointer"
+                      className="hover:bg-green-400 cursor-pointer"
                     >
                       {i + 1}
                     </SelectItem>

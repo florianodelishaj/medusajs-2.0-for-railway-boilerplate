@@ -55,7 +55,7 @@ const Item: React.FC<AccordionItemProps> = ({
       <AccordionPrimitive.Header>
         <div className="flex flex-col">
           <div className="flex w-full items-center justify-between">
-            <AccordionPrimitive.Trigger className="flex items-center justify-between w-full px-4 py-3 hover:bg-pink-400 transition-colors">
+            <AccordionPrimitive.Trigger className="flex items-center justify-between w-full px-4 py-3 hover:bg-green-400 transition-colors">
               <Text className="text-black font-bold text-sm uppercase">
                 {title}
               </Text>

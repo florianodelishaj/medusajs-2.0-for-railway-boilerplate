@@ -61,7 +61,7 @@ const Addresses = ({
             variant="elevated"
             size="sm"
             data-testid="edit-address-button"
-            className="hover:bg-pink-400 hover:text-black"
+            className="hover:bg-green-400 hover:text-black"
           >
             Modifica
           </Button>
@@ -89,7 +89,7 @@ const Addresses = ({
             </div>
           )}
           <SubmitButton
-            className="mt-6 bg-black text-white hover:bg-pink-400 hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:text-black"
+            className="mt-6 bg-black text-white hover:bg-green-400 hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:text-black"
             data-testid="submit-address-button"
           >
             Continua alla consegna

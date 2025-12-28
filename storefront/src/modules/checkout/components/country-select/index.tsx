@@ -125,7 +125,7 @@ const CountrySelect = ({
         {({ open }) => (
           <div className="relative z-0">
             <Listbox.Button
-              className="relative w-full flex justify-between items-center pt-4 pb-1 px-4 h-12 text-left bg-white cursor-pointer focus:outline-none border border-black rounded-md hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-pink-400 transition-all font-medium"
+              className="relative w-full flex justify-between items-center pt-4 pb-1 px-4 h-12 text-left bg-white cursor-pointer focus:outline-none border border-black rounded-md hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-green-400 transition-all font-medium"
               data-testid={props["data-testid"]}
             >
               <span className="block truncate text-sm opacity-0">
@@ -167,7 +167,7 @@ const CountrySelect = ({
                     <Listbox.Option
                       key={country.value}
                       value={country.value}
-                      className="cursor-pointer select-none relative px-4 py-2 hover:bg-pink-400 transition-colors flex items-center gap-x-3"
+                      className="cursor-pointer select-none relative px-4 py-2 hover:bg-green-400 transition-colors flex items-center gap-x-3"
                     >
                       <div className="flex-shrink-0 w-4">
                         {isSelected && (

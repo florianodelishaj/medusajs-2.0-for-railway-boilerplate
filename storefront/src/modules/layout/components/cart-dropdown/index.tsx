@@ -33,7 +33,7 @@ import useBreakpoints from "@lib/hooks/useBreakpoints"
 // Cart link component to avoid duplication
 const CartLink = ({ totalItems }: { totalItems: number }) => (
   <LocalizedClientLink
-    className="flex items-center h-full px-12 py-2 border-l border-black bg-black text-white hover:bg-pink-400 hover:border-pink-400 hover:text-black transition-colors duration-200 font-semibold gap-2"
+    className="flex items-center h-full px-12 py-2 border-l border-black bg-black text-white hover:bg-green-400 hover:border-green-400 hover:text-black transition-colors duration-200 font-semibold gap-2"
     href="/cart"
     data-testid="nav-cart-link"
   >{`Carrello (${totalItems})`}</LocalizedClientLink>
@@ -259,7 +259,7 @@ const CartDropdown = ({
               <LocalizedClientLink href="/cart" passHref onClick={close}>
                 <Button
                   variant="elevated"
-                  className="w-full bg-black text-white hover:bg-pink-400 hover:text-black font-bold uppercase tracking-wide"
+                  className="w-full bg-black text-white hover:bg-green-400 hover:text-black font-bold uppercase tracking-wide"
                   data-testid="go-to-cart-button"
                 >
                   Vai al carrello
@@ -277,7 +277,7 @@ const CartDropdown = ({
               <div>
                 <LocalizedClientLink href="/store" onClick={close}>
                   <Button
-                    className="bg-black text-white hover:bg-pink-400 hover:text-black font-bold tracking-wide"
+                    className="bg-black text-white hover:bg-green-400 hover:text-black font-bold tracking-wide"
                     variant="elevated"
                   >
                     Esplora i prodotti
@@ -313,7 +313,7 @@ const CartDropdown = ({
               side="right"
               className="w-full sm:max-w-lg p-0 bg-white border-l-2 border-black flex flex-col"
             >
-              <SheetHeader className="p-4 pr-16 border-b-2 border-black bg-pink-400">
+              <SheetHeader className="p-4 pr-16 border-b-2 border-black bg-green-400">
                 <SheetTitle className="text-2xl font-black uppercase">
                   Carrello
                 </SheetTitle>

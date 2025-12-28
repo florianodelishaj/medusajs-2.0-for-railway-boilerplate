@@ -137,7 +137,7 @@ const Payment = ({
             variant="elevated"
             size="sm"
             data-testid="edit-payment-button"
-            className="hover:bg-pink-400 hover:text-black"
+            className="hover:bg-green-400 hover:text-black"
           >
             Modifica
           </Button>
@@ -210,7 +210,7 @@ const Payment = ({
           <Button
             variant="elevated"
             size="lg"
-            className="mt-6 w-full bg-black text-white hover:bg-pink-400 hover:text-black"
+            className="mt-6 w-full bg-black text-white hover:bg-green-400 hover:text-black"
             onClick={handleSubmit}
             isLoading={isLoading}
             disabled={

@@ -43,7 +43,7 @@ const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
           <div className="flex items-center gap-x-2 my-2">
             <Button
               variant="elevated"
-              className="hover:bg-pink-400"
+              className="hover:bg-green-400"
               onClick={() => setIsOpen(!isOpen)}
               type="button"
               data-testid="add-discount-button"
@@ -75,7 +75,7 @@ const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
                 <Button
                   variant="elevated"
                   data-testid="discount-apply-button"
-                  className="bg-black text-white hover:bg-pink-400 hover:text-black"
+                  className="bg-black text-white hover:bg-green-400 hover:text-black"
                 >
                   Applica
                 </Button>

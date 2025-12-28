@@ -67,7 +67,7 @@ const ImageGallery = ({
                   relative aspect-square w-full overflow-hidden rounded-md transition-all cursor-pointer
                   ${
                     isSelected
-                      ? "border border-pink-400"
+                      ? "border border-green-400"
                       : "border border-black hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
                   }
                 `}

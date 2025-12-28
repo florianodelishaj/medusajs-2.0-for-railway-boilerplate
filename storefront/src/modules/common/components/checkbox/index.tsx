@@ -33,8 +33,8 @@ const CheckboxWithLabel: React.FC<CheckboxProps> = ({
       <label
         htmlFor={id}
         className={cn(
-          "!m-0 !p-0 !translate-y-0 size-5 border border-black rounded bg-white cursor-pointer transition-all flex items-center justify-center flex-shrink-0 hover:bg-pink-400 hover:shadow-[4px_4px_0px_rgba(0,0,0,1)]",
-          checked && "bg-pink-400"
+          "!m-0 !p-0 !translate-y-0 size-5 border border-black rounded bg-white cursor-pointer transition-all flex items-center justify-center flex-shrink-0 hover:bg-green-400 hover:shadow-[4px_4px_0px_rgba(0,0,0,1)]",
+          checked && "bg-green-400"
         )}
       >
         <Check

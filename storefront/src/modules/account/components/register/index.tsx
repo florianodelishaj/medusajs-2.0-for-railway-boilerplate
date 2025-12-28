@@ -17,89 +17,72 @@ const Register = ({ setCurrentView }: Props) => {
   const [message, formAction] = useFormState(signup, null)
 
   return (
-    <div
-      className="max-w-sm flex flex-col items-center"
-      data-testid="register-page"
-    >
-      <h1 className="text-large-semi uppercase mb-6">
-        Become a Medusa Store Member
-      </h1>
-      <p className="text-center text-base-regular text-ui-fg-base mb-4">
-        Create your Medusa Store Member profile, and get access to an enhanced
-        shopping experience.
-      </p>
-      <form className="w-full flex flex-col" action={formAction}>
-        <div className="flex flex-col w-full gap-y-2">
-          <Input
-            label="First name"
-            name="first_name"
-            required
-            autoComplete="given-name"
-            data-testid="first-name-input"
-          />
-          <Input
-            label="Last name"
-            name="last_name"
-            required
-            autoComplete="family-name"
-            data-testid="last-name-input"
-          />
-          <Input
-            label="Email"
-            name="email"
-            required
-            type="email"
-            autoComplete="email"
-            data-testid="email-input"
-          />
-          <Input
-            label="Phone"
-            name="phone"
-            type="tel"
-            autoComplete="tel"
-            data-testid="phone-input"
-          />
-          <Input
-            label="Password"
-            name="password"
-            required
-            type="password"
-            autoComplete="new-password"
-            data-testid="password-input"
-          />
-        </div>
+    <div className="w-full" data-testid="register-page">
+      <h1 className="text-4xl font-medium mb-8">Entra nel Covo di Xur</h1>
+      <form className="w-full flex flex-col gap-6" action={formAction}>
+        <Input
+          label="Nome"
+          name="first_name"
+          required
+          autoComplete="given-name"
+          data-testid="first-name-input"
+        />
+        <Input
+          label="Cognome"
+          name="last_name"
+          required
+          autoComplete="family-name"
+          data-testid="last-name-input"
+        />
+        <Input
+          label="Email"
+          name="email"
+          required
+          type="email"
+          autoComplete="email"
+          data-testid="email-input"
+        />
+        <Input
+          label="Telefono"
+          name="phone"
+          type="tel"
+          autoComplete="tel"
+          data-testid="phone-input"
+        />
+        <Input
+          label="Password"
+          name="password"
+          required
+          type="password"
+          autoComplete="new-password"
+          data-testid="password-input"
+        />
         <ErrorMessage error={message} data-testid="register-error" />
-        <span className="text-center text-ui-fg-base text-small-regular mt-6">
-          By creating an account, you agree to Medusa Store&apos;s{" "}
+        <span className="text-sm text-gray-700">
+          Creando un account, accetti la{" "}
           <LocalizedClientLink
             href="/content/privacy-policy"
-            className="underline"
+            className="underline hover:text-green-600"
           >
-            Privacy Policy
+            Informativa sulla Privacy
           </LocalizedClientLink>{" "}
-          and{" "}
+          e i{" "}
           <LocalizedClientLink
             href="/content/terms-of-use"
-            className="underline"
+            className="underline hover:text-green-600"
           >
-            Terms of Use
+            Termini di utilizzo
           </LocalizedClientLink>
           .
         </span>
-        <SubmitButton className="w-full mt-6" data-testid="register-button">
-          Join
+
+        <SubmitButton
+          className="w-full h-12 bg-black text-white hover:bg-green-400 hover:text-black transition-all border border-black rounded-md hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-[4px] hover:-translate-y-[4px]"
+          data-testid="register-button"
+        >
+          Registrati
         </SubmitButton>
       </form>
-      <span className="text-center text-ui-fg-base text-small-regular mt-6">
-        Already a member?{" "}
-        <button
-          onClick={() => setCurrentView(LOGIN_VIEW.SIGN_IN)}
-          className="underline"
-        >
-          Sign in
-        </button>
-        .
-      </span>
     </div>
   )
 }

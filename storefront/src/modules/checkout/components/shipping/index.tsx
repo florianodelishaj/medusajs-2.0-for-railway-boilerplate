@@ -88,7 +88,7 @@ const Shipping: React.FC<ShippingProps> = ({
               variant="elevated"
               size="sm"
               data-testid="edit-delivery-button"
-              className="hover:bg-pink-400 hover:text-black"
+              className="hover:bg-green-400 hover:text-black"
             >
               Modifica
             </Button>
@@ -107,9 +107,9 @@ const Shipping: React.FC<ShippingProps> = ({
                     className={clx(
                       "flex items-center justify-between text-small-regular cursor-pointer py-4 border border-black rounded-md px-6 mb-3 transition-all",
                       {
-                        "bg-pink-400 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]":
+                        "bg-green-400 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]":
                           option.id === selectedShippingMethod?.id,
-                        "bg-white hover:bg-pink-400 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-[2px] hover:-translate-y-[2px]":
+                        "bg-white hover:bg-green-400 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-[2px] hover:-translate-y-[2px]":
                           option.id !== selectedShippingMethod?.id,
                       }
                     )}
@@ -139,7 +139,7 @@ const Shipping: React.FC<ShippingProps> = ({
           <Button
             variant="elevated"
             size="lg"
-            className="w-full bg-black text-white hover:bg-pink-400 hover:text-black"
+            className="w-full bg-black text-white hover:bg-green-400 hover:text-black"
             onClick={handleSubmit}
             isLoading={isLoading}
             disabled={!cart.shipping_methods?.[0]}

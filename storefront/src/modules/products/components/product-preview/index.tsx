@@ -95,7 +95,7 @@ export default async function ProductPreview({
           ))} */}
         </div>
         <div className="p-4 border-t">
-          <div className="relative px-2 py-1 border bg-pink-400 w-fit">
+          <div className="relative px-2 py-1 border bg-green-400 w-fit">
             <span>
               {cheapestPrice && <PreviewPrice price={cheapestPrice} />}
             </span>

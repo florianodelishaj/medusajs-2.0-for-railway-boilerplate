@@ -1,41 +1,49 @@
-# ------------------------
+# =========================
 # 1. Dependencies
-# ------------------------
+# =========================
 FROM node:20-alpine AS deps
 WORKDIR /app
 
-# Enable corepack for Yarn Berry
+# Enable Corepack per Yarn Berry
 RUN corepack enable
 
-# COPY SOLO i file necessari
+# Copia solo i file necessari per installare dipendenze
 COPY package.json .yarnrc.yml ./
 
-# Install dependencies
+# Installa le dipendenze in modalità immutable
 RUN yarn install --immutable
 
-# ------------------------
+# =========================
 # 2. Build
-# ------------------------
+# =========================
 FROM node:20-alpine AS builder
 WORKDIR /app
 RUN corepack enable
 
+# Copia le dipendenze installate
 COPY --from=deps /app ./
+
+# Copia il resto del progetto
 COPY . .
 
-RUN yarn build
+# Build per produzione: usa lo script build:prod (salta await-backend)
+RUN npm run build:prod
 
-# ------------------------
-# 3. Production
-# ------------------------
+# =========================
+# 3. Runtime / Production
+# =========================
 FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
+
+# Abilita Corepack per sicurezza
 RUN corepack enable
 
+# Copia tutto dalla build
 COPY --from=builder /app ./
 
-# Railway injects PORT
+# Railway injecta automaticamente PORT
 EXPOSE 3000
 
+# Comando di start: legge le variabili runtime (MEDUSA_BACKEND_URL ecc.)
 CMD ["npm", "run", "start"]

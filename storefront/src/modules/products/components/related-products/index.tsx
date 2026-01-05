@@ -1,6 +1,6 @@
 import Product from "../product-preview"
 import { getRegion } from "@lib/data/regions"
-import { getProductsList } from "@lib/data/products"
+import { getProductsListWithSort } from "@lib/data/products"
 import { HttpTypes } from "@medusajs/types"
 
 type RelatedProductsProps = {
@@ -10,7 +10,7 @@ type RelatedProductsProps = {
 
 type RelatedProductsParams = {
   region_id?: string
-  collection_id?: string[]
+  category_id?: string[]
   is_giftcard?: boolean
 }
 
@@ -24,24 +24,30 @@ export default async function RelatedProducts({
     return null
   }
 
-  // edit this function to define your related products logic
+  // Logica prodotti correlati: mostra tutti i prodotti della categoria root + sottocategorie
   const queryParams: RelatedProductsParams = {}
   if (region?.id) {
     queryParams.region_id = region.id
   }
-  if (product.collection_id) {
-    queryParams.collection_id = [product.collection_id]
+
+  if (product.categories && product.categories.length > 0) {
+    // Passa semplicemente la categoria del prodotto
+    // Il backend si occupa automaticamente di risalire alla root e raccogliere tutti i discendenti
+    queryParams.category_id = [product.categories[0].id]
   }
+
   queryParams.is_giftcard = false
 
-  const products = await getProductsList({
+  const { response } = await getProductsListWithSort({
+    page: 1,
     queryParams,
+    includeRootFamily: true, // Attiva la risalita alla root nel backend
     countryCode,
-  }).then(({ response }) => {
-    return response.products.filter(
-      (responseProduct) => responseProduct.id !== product.id
-    )
   })
+
+  const products = response.products.filter(
+    (responseProduct) => responseProduct.id !== product.id
+  )
 
   if (!products.length) {
     return null

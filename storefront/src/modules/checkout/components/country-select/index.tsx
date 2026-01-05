@@ -1,5 +1,7 @@
+"use client"
+
 import { Listbox, Transition } from "@headlessui/react"
-import { Fragment, useMemo, useState, useEffect } from "react"
+import { Fragment, useMemo, useState, useEffect, useRef, useLayoutEffect } from "react"
 import { Check } from "lucide-react"
 import { HttpTypes } from "@medusajs/types"
 import countries from "i18n-iso-countries"
@@ -28,6 +30,30 @@ const CountrySelect = ({
   ...props
 }: CountrySelectProps) => {
   const [selectedCountry, setSelectedCountry] = useState<string>(value || "")
+  const [searchQuery, setSearchQuery] = useState<string>("")
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const openStateRef = useRef(false)
+
+  const searchInputCallbackRef = (node: HTMLInputElement | null) => {
+    if (node && isDropdownOpen) {
+      // Focus when the input is mounted and dropdown is open
+      setTimeout(() => {
+        node.focus()
+      }, 0)
+    }
+  }
+
+  // Update dropdown state via useLayoutEffect to avoid setState during render
+  useLayoutEffect(() => {
+    if (openStateRef.current !== isDropdownOpen) {
+      if (!openStateRef.current && isDropdownOpen) {
+        // Dropdown just opened - focus will be handled by callback ref
+      } else if (openStateRef.current && !isDropdownOpen) {
+        // Dropdown just closed - reset search
+        setSearchQuery("")
+      }
+    }
+  }, [isDropdownOpen])
 
   useEffect(() => {
     if (value) {
@@ -81,16 +107,21 @@ const CountrySelect = ({
     return region.countries
       ?.filter((country) => country.iso_2) // Filtra paesi senza iso_2
       .map((country) => {
-        const translatedName = countries.getName(
-          country.iso_2!.toUpperCase(),
-          locale
-        )
         return {
           value: country.iso_2!,
-          label: translatedName || country.display_name,
+          label: country.display_name, // Use display_name from backend to avoid hydration errors
         }
       })
-  }, [region, locale])
+  }, [region])
+
+  // Filtra le opzioni in base alla ricerca
+  const filteredOptions = useMemo(() => {
+    if (!searchQuery) return countryOptions
+
+    return countryOptions?.filter((country) =>
+      country.label?.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  }, [countryOptions, searchQuery])
 
   const handleSelect = (countryCode: string) => {
     setSelectedCountry(countryCode)
@@ -122,12 +153,21 @@ const CountrySelect = ({
         autoComplete={props.autoComplete}
       />
       <Listbox onChange={handleSelect} value={selectedCountry}>
-        {({ open }) => (
-          <div className="relative z-0">
-            <Listbox.Button
-              className="relative w-full flex justify-between items-center pt-4 pb-1 px-4 h-12 text-left bg-white cursor-pointer focus:outline-none border border-black rounded-md hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-green-400 transition-all font-medium"
-              data-testid={props["data-testid"]}
-            >
+        {({ open }) => {
+          // Update ref immediately (doesn't cause re-render)
+          openStateRef.current = open
+
+          // Schedule state update for next render cycle
+          if (open !== isDropdownOpen) {
+            Promise.resolve().then(() => setIsDropdownOpen(open))
+          }
+
+          return (
+            <div className="relative z-50">
+              <Listbox.Button
+                className="relative w-full flex justify-between items-center pt-4 pb-1 px-4 h-12 text-left bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 border border-black rounded-md hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-green-400 transition-all font-medium"
+                data-testid={props["data-testid"]}
+              >
               <span className="block truncate text-sm opacity-0">
                 {selectedOption?.label || " "}
               </span>
@@ -160,28 +200,50 @@ const CountrySelect = ({
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Listbox.Options className="absolute z-20 w-full mt-1 overflow-auto bg-white border border-black rounded-md shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] max-h-60 focus:outline-none">
-                {countryOptions?.map((country) => {
-                  const isSelected = selectedCountry === country.value
-                  return (
-                    <Listbox.Option
-                      key={country.value}
-                      value={country.value}
-                      className="cursor-pointer select-none relative px-4 py-2 hover:bg-green-400 transition-colors flex items-center gap-x-3"
-                    >
-                      <div className="flex-shrink-0 w-4">
-                        {isSelected && (
-                          <Check className="h-4 w-4" strokeWidth={3} />
-                        )}
-                      </div>
-                      <span className="text-sm">{country.label}</span>
-                    </Listbox.Option>
-                  )
-                })}
+              <Listbox.Options className="absolute z-50 w-full mt-1 bg-white border border-black rounded-md shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] max-h-60 focus:outline-none overflow-hidden">
+                {/* Search input */}
+                <div className="sticky top-0 bg-white border-b border-gray-300 p-2">
+                  <input
+                    ref={searchInputCallbackRef}
+                    type="text"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 text-sm"
+                    placeholder="Cerca paese..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                </div>
+                {/* Options list */}
+                <div className="overflow-auto max-h-48">
+                  {filteredOptions && filteredOptions.length > 0 ? (
+                    filteredOptions.map((country) => {
+                      const isSelected = selectedCountry === country.value
+                      return (
+                        <Listbox.Option
+                          key={country.value}
+                          value={country.value}
+                          className="cursor-pointer select-none relative px-4 py-2 hover:bg-green-400 transition-colors flex items-center gap-x-3"
+                        >
+                          <div className="flex-shrink-0 w-4">
+                            {isSelected && (
+                              <Check className="h-4 w-4" strokeWidth={3} />
+                            )}
+                          </div>
+                          <span className="text-sm">{country.label}</span>
+                        </Listbox.Option>
+                      )
+                    })
+                  ) : (
+                    <div className="px-4 py-2 text-sm text-gray-500 text-center">
+                      Nessun paese trovato
+                    </div>
+                  )}
+                </div>
               </Listbox.Options>
             </Transition>
           </div>
-        )}
+          )
+        }}
       </Listbox>
     </div>
   )

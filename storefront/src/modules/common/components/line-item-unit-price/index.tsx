@@ -1,4 +1,5 @@
 import { getPricesForVariant } from "@lib/util/get-product-price"
+import { convertToLocale } from "@lib/util/money"
 import { HttpTypes } from "@medusajs/types"
 import { clx } from "@medusajs/ui"
 
@@ -18,7 +19,25 @@ const LineItemUnitPrice = ({
     calculated_price_number,
     percentage_diff,
   } = getPricesForVariant(item.variant) ?? {}
-  const hasReducedPrice = calculated_price_number < original_price_number
+
+  // Check if there's a cart discount (promo code) applied
+  const lineTotal = item.total ?? 0
+  const originalLineTotal = item.original_total ?? lineTotal
+  const hasCartDiscount = lineTotal < originalLineTotal
+
+  // Calculate final unit price including cart discounts
+  const finalUnitPrice = item.quantity && item.quantity > 0
+    ? lineTotal / item.quantity
+    : calculated_price_number
+
+  const displayPrice = hasCartDiscount
+    ? convertToLocale({
+        amount: finalUnitPrice,
+        currency_code: (item as any).cart?.currency_code || (item as any).currency_code || 'eur'
+      })
+    : calculated_price
+
+  const hasReducedPrice = calculated_price_number < original_price_number || hasCartDiscount
 
   return (
     <div className="flex flex-col text-ui-fg-muted justify-center h-full">
@@ -46,7 +65,7 @@ const LineItemUnitPrice = ({
         })}
         data-testid="product-unit-price"
       >
-        {calculated_price}
+        {displayPrice}
       </span>
     </div>
   )

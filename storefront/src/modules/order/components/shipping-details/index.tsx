@@ -10,52 +10,50 @@ type ShippingDetailsProps = {
 
 const ShippingDetails = ({ order }: ShippingDetailsProps) => {
   return (
-    <div>
-      <Heading level="h2" className="flex flex-row text-3xl-regular my-6">
-        Delivery
-      </Heading>
-      <div className="flex items-start gap-x-8">
+    <div className="py-6 border-b border-black">
+      <h2 className="text-xl font-bold mb-4">Consegna</h2>
+      <div className="flex flex-col small:flex-row items-start gap-6">
         <div
-          className="flex flex-col w-1/3"
+          className="flex flex-col flex-1"
           data-testid="shipping-address-summary"
         >
-          <Text className="txt-medium-plus text-ui-fg-base mb-1">
-            Shipping Address
-          </Text>
-          <Text className="txt-medium text-ui-fg-subtle">
+          <p className="text-sm font-bold text-gray-700 mb-2 uppercase">
+            Indirizzo di spedizione
+          </p>
+          <p className="text-base">
             {order.shipping_address?.first_name}{" "}
             {order.shipping_address?.last_name}
-          </Text>
-          <Text className="txt-medium text-ui-fg-subtle">
+          </p>
+          <p className="text-base text-gray-700">
             {order.shipping_address?.address_1}{" "}
             {order.shipping_address?.address_2}
-          </Text>
-          <Text className="txt-medium text-ui-fg-subtle">
+          </p>
+          <p className="text-base text-gray-700">
             {order.shipping_address?.postal_code},{" "}
             {order.shipping_address?.city}
-          </Text>
-          <Text className="txt-medium text-ui-fg-subtle">
+          </p>
+          <p className="text-base text-gray-700">
             {order.shipping_address?.country_code?.toUpperCase()}
-          </Text>
+          </p>
         </div>
 
         <div
-          className="flex flex-col w-1/3 "
+          className="flex flex-col flex-1"
           data-testid="shipping-contact-summary"
         >
-          <Text className="txt-medium-plus text-ui-fg-base mb-1">Contact</Text>
-          <Text className="txt-medium text-ui-fg-subtle">
+          <p className="text-sm font-bold text-gray-700 mb-2 uppercase">Contatto</p>
+          <p className="text-base">
             {order.shipping_address?.phone}
-          </Text>
-          <Text className="txt-medium text-ui-fg-subtle">{order.email}</Text>
+          </p>
+          <p className="text-base text-gray-700">{order.email}</p>
         </div>
 
         <div
-          className="flex flex-col w-1/3"
+          className="flex flex-col flex-1"
           data-testid="shipping-method-summary"
         >
-          <Text className="txt-medium-plus text-ui-fg-base mb-1">Method</Text>
-          <Text className="txt-medium text-ui-fg-subtle">
+          <p className="text-sm font-bold text-gray-700 mb-2 uppercase">Metodo</p>
+          <p className="text-base">
             {(order as any).shipping_methods[0]?.name} (
             {convertToLocale({
               amount: order.shipping_methods?.[0].total ?? 0,
@@ -64,10 +62,9 @@ const ShippingDetails = ({ order }: ShippingDetailsProps) => {
               .replace(/,/g, "")
               .replace(/\./g, ",")}
             )
-          </Text>
+          </p>
         </div>
       </div>
-      <Divider className="mt-8" />
     </div>
   )
 }

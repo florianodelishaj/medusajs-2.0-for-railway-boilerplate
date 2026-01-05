@@ -29,15 +29,20 @@ const LoginTemplate = () => {
         <div className="flex flex-col gap-8 p-4 xl:p-16 w-full">
           {/* Header */}
           <div className="flex items-center justify-between w-full mb-8">
-            <LocalizedClientLink href="/">
-              <span
-                className={cn(
-                  "text-2xl font-bold uppercase",
-                  poppins.className
-                )}
-              >
-                il covo di xur
-              </span>
+            <LocalizedClientLink
+              href="/"
+              className={cn(
+                "flex justify-center items-center gap-4 text-2xl font-bold uppercase",
+                poppins.className
+              )}
+            >
+              <Image
+                src="/images/logo.png"
+                alt="Anime illustration"
+                width={50}
+                height={50}
+              />
+              IL COVO DI XUR
             </LocalizedClientLink>
             <button
               onClick={() =>

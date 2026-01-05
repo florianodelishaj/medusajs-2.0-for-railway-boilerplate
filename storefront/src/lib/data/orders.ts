@@ -21,7 +21,14 @@ export const listOrders = cache(async function (
   offset: number = 0
 ) {
   return sdk.store.order
-    .list({ limit, offset }, { next: { tags: ["order"] }, ...getAuthHeaders() })
+    .list(
+      {
+        limit,
+        offset,
+        order: "-created_at" // Ordina per data di creazione decrescente
+      },
+      { next: { tags: ["order"] }, ...getAuthHeaders() }
+    )
     .then(({ orders }) => orders)
     .catch((err) => medusaError(err))
 })

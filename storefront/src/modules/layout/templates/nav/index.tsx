@@ -6,6 +6,7 @@ import { NavButtons } from "@modules/layout/components/nav-buttons"
 import { NAV_ROUTES } from "@lib/constants/nav-routes"
 import { Poppins } from "next/font/google"
 import { cn } from "@lib/util/cn"
+import Image from "next/image"
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -19,10 +20,20 @@ export default async function Nav() {
       <div className="pl-6 flex items-center xl:pl-6">
         <LocalizedClientLink
           href="/"
-          className={cn("text-4xl font-bold uppercase", poppins.className)}
+          className={cn(
+            "flex justify-center items-center gap-2 md:gap-4 text-xl md:text-4xl font-bold uppercase",
+            poppins.className
+          )}
           data-testid="nav-store-link"
         >
-          il covo di xur
+          <Image
+            src="/images/logo.png"
+            alt="Anime illustration"
+            width={50}
+            height={50}
+            className="md:w-[70px] md:h-[70px]"
+          />
+          IL COVO DI XUR
         </LocalizedClientLink>
       </div>
 

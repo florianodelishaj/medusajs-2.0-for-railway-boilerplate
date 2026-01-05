@@ -33,8 +33,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: `Order #${order.display_id}`,
-    description: `View your order`,
+    title: `Ordine #${order.display_id}`,
+    description: `Visualizza il tuo ordine`,
   }
 }
 

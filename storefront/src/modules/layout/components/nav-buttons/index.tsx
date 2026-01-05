@@ -36,13 +36,15 @@ export const NavButtons = ({ routes }: NavButtonsProps) => {
           key={route.href}
           asChild
           className={cn(
-            "h-11 px-4 border border-transparent rounded-full text-xl",
+            "h-11 px-4 border border-transparent rounded-full text-xl hover:shadow-[4px_4px_0px_rgba(0,0,0,1)]",
             isRouteActive(route.href)
-              ? "bg-black text-white hover:bg-gray-800"
+              ? "bg-black text-white hover:bg-green-400 hover:text-black hover:border-black"
               : "bg-transparent hover:bg-white hover:border-black text-black"
           )}
         >
-          <LocalizedClientLink href={route.href}>{route.label}</LocalizedClientLink>
+          <LocalizedClientLink href={route.href}>
+            {route.label}
+          </LocalizedClientLink>
         </Button>
       ))}
     </div>

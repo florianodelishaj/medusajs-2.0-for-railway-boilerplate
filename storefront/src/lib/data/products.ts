@@ -21,7 +21,9 @@ export const getProductsById = cache(async function ({
         cart_id: cartId,
         fields: "*variants.calculated_price,+variants.inventory_quantity,*categories",
       },
-      { next: { tags: ["products"], revalidate: 300 } as any }
+      {
+        next: { tags: ["products"] }
+      } as any
     )
     .then(({ products }) => products)
 })
@@ -37,7 +39,9 @@ export const getProductByHandle = cache(async function (
         region_id: regionId,
         fields: "*variants.calculated_price,+variants.inventory_quantity,*categories",
       },
-      { next: { tags: ["products"], revalidate: 300 } as any }
+      {
+        next: { tags: ["products"] }
+      } as any
     )
     .then(({ products }) => products[0])
 })
@@ -75,7 +79,9 @@ export const getProductsList = cache(async function ({
         fields: "*variants.calculated_price",
         ...queryParams,
       },
-      { next: { tags: ["products"], revalidate: 300 } as any }
+      {
+        next: { tags: ["products"] }
+      } as any
     )
     .then(({ products, count }) => {
       const nextPage = count > offset + limit ? pageParam + 1 : null
@@ -100,6 +106,8 @@ export const getProductsListWithSort = cache(async function ({
   sortBy = "created_at",
   minPrice,
   maxPrice,
+  discounted,
+  includeRootFamily = false,
   countryCode,
 }: {
   page?: number
@@ -107,6 +115,8 @@ export const getProductsListWithSort = cache(async function ({
   sortBy?: SortOptions
   minPrice?: string
   maxPrice?: string
+  discounted?: string
+  includeRootFamily?: boolean
   countryCode: string
 }): Promise<{
   response: { products: HttpTypes.StoreProduct[]; count: number }
@@ -159,6 +169,14 @@ export const getProductsListWithSort = cache(async function ({
     params.append("max_price", maxPrice)
   }
 
+  if (discounted === "true") {
+    params.append("discounted", "true")
+  }
+
+  if (includeRootFamily) {
+    params.append("include_root_family", "true")
+  }
+
   const response = await fetch(
     `${
       process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL
@@ -168,7 +186,7 @@ export const getProductsListWithSort = cache(async function ({
         "x-publishable-api-key":
           process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY || "",
       },
-      next: { tags: ["products"], revalidate: 300 } as any,
+      next: { tags: ["products"] } as any
     }
   )
 
@@ -193,4 +211,47 @@ export const getProductsListWithSort = cache(async function ({
     nextPage,
     queryParams,
   }
+})
+
+/**
+ * Recupera i prodotti scontati (con price_list_type === "sale" o original_amount > calculated_amount)
+ * Usa un endpoint custom per filtrare lato server e rispettare il tag-based revalidation
+ */
+export const getDiscountedProducts = cache(async function (
+  countryCode: string,
+  limit: number = 12
+): Promise<{ products: HttpTypes.StoreProduct[]; count: number }> {
+  const region = await getRegion(countryCode)
+
+  if (!region) {
+    return { products: [], count: 0 }
+  }
+
+  // Build query params for custom API
+  const params = new URLSearchParams({
+    limit: limit.toString(),
+    region_id: region.id,
+    currency_code: region.currency_code,
+  })
+
+  const response = await fetch(
+    `${
+      process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL
+    }/store/products-discounted?${params.toString()}`,
+    {
+      headers: {
+        "x-publishable-api-key":
+          process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY || "",
+      },
+      next: { tags: ["products"] } as any
+    }
+  )
+
+  if (!response.ok) {
+    console.error("Failed to fetch discounted products:", await response.text())
+    return { products: [], count: 0 }
+  }
+
+  const data = await response.json()
+  return { products: data.products || [], count: data.count || 0 }
 })

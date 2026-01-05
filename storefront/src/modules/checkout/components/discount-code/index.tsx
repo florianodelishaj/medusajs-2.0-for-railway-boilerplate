@@ -1,18 +1,19 @@
 "use client"
 
 import { Badge, Heading, Text, Tooltip, TooltipProvider } from "@medusajs/ui"
-import React from "react"
+import React, { useState } from "react"
 import { useFormState } from "react-dom"
+import { useParams } from "next/navigation"
 
-import { applyPromotions, submitPromotionForm } from "@lib/data/cart"
+import { submitPromotionForm, removePromotionAction } from "@lib/data/cart"
 import { convertToLocale } from "@lib/util/money"
 import { InformationCircleSolid } from "@medusajs/icons"
 import { HttpTypes } from "@medusajs/types"
 import Trash from "@modules/common/icons/trash"
 import ErrorMessage from "../error-message"
-import { SubmitButton } from "../submit-button"
 import { Button } from "@components/ui/button"
 import { Input } from "@components/ui/input"
+import { useActionRedirect } from "@lib/hooks/use-action-redirect"
 
 type DiscountCodeProps = {
   cart: HttpTypes.StoreCart & {
@@ -21,25 +22,28 @@ type DiscountCodeProps = {
 }
 
 const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
-  const [isOpen, setIsOpen] = React.useState(false)
+  const [isOpen, setIsOpen] = useState(false)
+  const params = useParams()
+  const countryCode = params.countryCode as string
+  const [removeResult, setRemoveResult] = useState<any>(null)
 
-  const { items = [], promotions = [] } = cart
+  const { promotions = [] } = cart
   const removePromotionCode = async (code: string) => {
-    const validPromotions = promotions.filter(
-      (promotion) => promotion.code !== code
-    )
-
-    await applyPromotions(
-      validPromotions.filter((p) => p.code === undefined).map((p) => p.code!)
-    )
+    const result = await removePromotionAction(code, countryCode)
+    setRemoveResult(result)
   }
 
   const [message, formAction] = useFormState(submitPromotionForm, null)
+
+  // Gestisci i redirect con toast
+  useActionRedirect(message)
+  useActionRedirect(removeResult)
 
   return (
     <div className="w-full bg-white flex flex-col">
       <div className="txt-medium">
         <form action={formAction} className="w-full">
+          <input type="hidden" name="countryCode" value={countryCode} />
           <div className="flex items-center gap-x-2 my-2">
             <Button
               variant="elevated"
@@ -82,7 +86,7 @@ const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
               </div>
 
               <ErrorMessage
-                error={message}
+                error={message && typeof message === 'object' && 'error' in message ? message.error : null}
                 data-testid="discount-error-message"
               />
             </>

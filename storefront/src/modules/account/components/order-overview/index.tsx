@@ -1,20 +1,16 @@
 "use client"
 
-import { Button } from "@medusajs/ui"
-
 import OrderCard from "../order-card"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { HttpTypes } from "@medusajs/types"
+import { Button } from "@components/ui/button"
 
 const OrderOverview = ({ orders }: { orders: HttpTypes.StoreOrder[] }) => {
   if (orders?.length) {
     return (
-      <div className="flex flex-col gap-y-8 w-full">
+      <div className="flex flex-col gap-y-4 w-full mb-8">
         {orders.map((o) => (
-          <div
-            key={o.id}
-            className="border-b border-gray-200 pb-6 last:pb-0 last:border-none"
-          >
+          <div key={o.id}>
             <OrderCard order={o} />
           </div>
         ))}
@@ -24,20 +20,22 @@ const OrderOverview = ({ orders }: { orders: HttpTypes.StoreOrder[] }) => {
 
   return (
     <div
-      className="w-full flex flex-col items-center gap-y-4"
+      className="border border-black border-dashed flex items-center justify-center p-8 flex-col gap-y-4 bg-white w-full rounded-md"
       data-testid="no-orders-container"
     >
-      <h2 className="text-large-semi">Nothing to see here</h2>
-      <p className="text-base-regular">
-        You don&apos;t have any orders yet, let us change that {":)"}
+      <h2 className="text-2xl font-bold">Nessun ordine trovato</h2>
+      <p className="text-base text-gray-700">
+        Non hai ancora effettuato ordini, cambiamo la situazione {":)"}
       </p>
-      <div className="mt-4">
-        <LocalizedClientLink href="/" passHref>
-          <Button data-testid="continue-shopping-button">
-            Continue shopping
-          </Button>
-        </LocalizedClientLink>
-      </div>
+      <LocalizedClientLink href="/store" passHref>
+        <Button
+          data-testid="continue-shopping-button"
+          variant="elevated"
+          className="bg-black text-white hover:text-black hover:bg-green-400"
+        >
+          Continua lo shopping
+        </Button>
+      </LocalizedClientLink>
     </div>
   )
 }

@@ -93,6 +93,7 @@ export const addCustomerAddress = async (
   formData: FormData
 ): Promise<any> => {
   const address = {
+    address_name: formData.get("address_name") as string,
     first_name: formData.get("first_name") as string,
     last_name: formData.get("last_name") as string,
     company: formData.get("company") as string,
@@ -103,6 +104,7 @@ export const addCustomerAddress = async (
     province: formData.get("province") as string,
     country_code: formData.get("country_code") as string,
     phone: formData.get("phone") as string,
+    is_default_billing: formData.get("is_default_billing") === "on",
   }
 
   return sdk.store.customer
@@ -134,9 +136,10 @@ export const updateCustomerAddress = async (
   currentState: Record<string, unknown>,
   formData: FormData
 ): Promise<any> => {
-  const addressId = currentState.addressId as string
+  const addressId = currentState.addressId as string | undefined
 
   const address = {
+    address_name: formData.get("address_name") as string,
     first_name: formData.get("first_name") as string,
     last_name: formData.get("last_name") as string,
     company: formData.get("company") as string,
@@ -147,15 +150,114 @@ export const updateCustomerAddress = async (
     province: formData.get("province") as string,
     country_code: formData.get("country_code") as string,
     phone: formData.get("phone") as string,
+    is_default_billing: formData.get("is_default_billing") === "on",
+  }
+
+  // If no addressId or addressId is undefined/null, create a new address
+  if (!addressId || addressId === 'undefined' || addressId === 'null') {
+    return sdk.store.customer
+      .createAddress(address, {}, getAuthHeaders())
+      .then(() => {
+        revalidateTag("customer")
+        return { success: true, error: null, addressId }
+      })
+      .catch((err) => {
+        return { success: false, error: err.toString(), addressId }
+      })
   }
 
   return sdk.store.customer
     .updateAddress(addressId, address, {}, getAuthHeaders())
     .then(() => {
       revalidateTag("customer")
-      return { success: true, error: null }
+      return { success: true, error: null, addressId }
     })
     .catch((err) => {
-      return { success: false, error: err.toString() }
+      return { success: false, error: err.toString(), addressId }
     })
+}
+
+export const requestPasswordReset = async (
+  _currentState: unknown,
+  formData: FormData
+): Promise<any> => {
+  try {
+    const customer = await getCustomer()
+    if (!customer?.email) {
+      return { success: false, error: "Cliente non trovato" }
+    }
+
+    const BACKEND_URL = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || "http://localhost:9000"
+    const response = await fetch(`${BACKEND_URL}/auth/customer/emailpass/reset-password`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        identifier: customer.email,
+      }),
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
+      return {
+        success: false,
+        error: errorData.message || "Errore durante la richiesta di reset password"
+      }
+    }
+
+    return { success: true, error: null }
+  } catch (error: any) {
+    return { success: false, error: error.message || error.toString() }
+  }
+}
+
+export const resetPassword = async (
+  _currentState: unknown,
+  formData: FormData
+): Promise<any> => {
+  const token = formData.get("token") as string
+  const email = formData.get("email") as string
+  const newPassword = formData.get("new_password") as string
+  const confirmPassword = formData.get("confirm_password") as string
+
+  // Validazione lato server
+  if (!token || !email || !newPassword || !confirmPassword) {
+    return { success: false, error: "Tutti i campi sono obbligatori" }
+  }
+
+  if (newPassword !== confirmPassword) {
+    return { success: false, error: "Le password non coincidono" }
+  }
+
+  if (newPassword.length < 8) {
+    return { success: false, error: "La password deve essere di almeno 8 caratteri" }
+  }
+
+  try {
+    const BACKEND_URL = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || "http://localhost:9000"
+    const response = await fetch(`${BACKEND_URL}/auth/customer/emailpass/update`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        email: email,
+        password: newPassword,
+      }),
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
+      return {
+        success: false,
+        error: errorData.message || "Errore durante l'aggiornamento della password"
+      }
+    }
+
+    return { success: true, error: null }
+  } catch (error: any) {
+    return { success: false, error: error.message || error.toString() }
+  }
 }

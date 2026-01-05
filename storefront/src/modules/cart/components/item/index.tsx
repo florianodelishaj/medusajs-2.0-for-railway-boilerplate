@@ -122,17 +122,11 @@ const Item = ({ item, currencyCode, type = "full" }: ItemProps) => {
       )}
 
       <Table.Cell className="!pr-3 small:!pr-6 py-2 small:py-4 px-1 small:px-4 font-bold text-xs small:text-sm shrink-0 text-black">
-        <span
-          className={clx("!pr-0", {
-            "flex flex-col items-end h-full justify-center": type === "preview",
-          })}
-        >
-          {type === "preview" && (
-            <span className="flex gap-x-1 ">
-              <Text className="text-ui-fg-muted">{item.quantity}x </Text>
-              <LineItemUnitPrice item={item} style="tight" />
-            </span>
-          )}
+        <span className="!pr-0 flex flex-col items-end h-full justify-center">
+          <span className="flex gap-x-1 ">
+            <Text className="text-ui-fg-muted">{item.quantity}x </Text>
+            <LineItemUnitPrice item={item} style="tight" />
+          </span>
           <LineItemPrice
             item={item}
             currencyCode={currencyCode}

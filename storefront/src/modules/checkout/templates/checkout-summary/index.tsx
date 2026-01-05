@@ -5,6 +5,7 @@ import { Heading } from "@medusajs/ui"
 import ItemsPreviewTemplate from "@modules/cart/templates/preview"
 import DiscountCode from "@modules/checkout/components/discount-code"
 import CartTotals from "@modules/common/components/cart-totals"
+import FreeShippingProgress from "@modules/cart/components/free-shipping-progress"
 import { useMemo } from "react"
 import { getTotalDiscount } from "@lib/util/get-total-discount"
 
@@ -21,6 +22,9 @@ const CheckoutSummary = ({ cart }: { cart: any }) => {
         >
           Il tuo carrello
         </Heading>
+        <div className="mb-4">
+          <FreeShippingProgress cart={cart} />
+        </div>
         <CartTotals totals={{
           ...cart,
           discount_total: totalDiscount

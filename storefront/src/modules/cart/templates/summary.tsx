@@ -6,6 +6,7 @@ import CartTotals from "@modules/common/components/cart-totals"
 import Divider from "@modules/common/components/divider"
 import DiscountCode from "@modules/checkout/components/discount-code"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
+import FreeShippingProgress from "@modules/cart/components/free-shipping-progress"
 import { HttpTypes } from "@medusajs/types"
 import { Button } from "@components/ui/button"
 import { useMemo } from "react"
@@ -41,6 +42,7 @@ const Summary = ({ cart }: SummaryProps) => {
       >
         Riepilogo
       </Heading>
+      <FreeShippingProgress cart={cart} />
       <DiscountCode cart={cart} />
       <Divider />
       <CartTotals totals={{

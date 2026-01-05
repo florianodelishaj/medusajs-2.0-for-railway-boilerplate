@@ -96,57 +96,88 @@ const Shipping: React.FC<ShippingProps> = ({
       </div>
       {isOpen ? (
         <div data-testid="delivery-options-container">
-          <div className="pb-6">
-            <RadioGroup value={selectedShippingMethod?.id} onChange={set}>
-              {availableShippingMethods?.map((option) => {
-                return (
-                  <RadioGroup.Option
-                    key={option.id}
-                    value={option.id}
-                    data-testid="delivery-option-radio"
-                    className={clx(
-                      "flex items-center justify-between text-small-regular cursor-pointer py-4 border border-black rounded-md px-6 mb-3 transition-all",
-                      {
-                        "bg-green-400 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]":
-                          option.id === selectedShippingMethod?.id,
-                        "bg-white hover:bg-green-400 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-[2px] hover:-translate-y-[2px]":
-                          option.id !== selectedShippingMethod?.id,
-                      }
-                    )}
-                  >
-                    <div className="flex items-center gap-x-4">
-                      <Radio
-                        checked={option.id === selectedShippingMethod?.id}
-                      />
-                      <span className="text-base-regular">{option.name}</span>
-                    </div>
-                    <span className="justify-self-end text-ui-fg-base">
-                      {convertToLocale({
-                        amount: option.amount!,
-                        currency_code: cart?.currency_code,
-                      })}
-                    </span>
-                  </RadioGroup.Option>
-                )
-              })}
-            </RadioGroup>
-          </div>
-          <ErrorMessage
-            error={error}
-            data-testid="delivery-option-error-message"
-          />
+          {!availableShippingMethods ||
+          availableShippingMethods.length === 0 ? (
+            <div className="pb-6">
+              <div className="bg-gray-100 border-2 border-black rounded-md p-6 text-center">
+                <p className="text-gray-800 font-bold text-lg">
+                  Non consegniamo a questo indirizzo.
+                </p>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="pb-6">
+                <RadioGroup value={selectedShippingMethod?.id} onChange={set}>
+                  {availableShippingMethods.map((option) => {
+                    return (
+                      <RadioGroup.Option
+                        key={option.id}
+                        value={option.id}
+                        data-testid="delivery-option-radio"
+                        className={clx(
+                          "flex items-center justify-between text-small-regular cursor-pointer py-4 border border-black rounded-md px-6 mb-3 transition-all",
+                          {
+                            "bg-green-400 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]":
+                              option.id === selectedShippingMethod?.id,
+                            "bg-white hover:bg-green-400 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-[2px] hover:-translate-y-[2px]":
+                              option.id !== selectedShippingMethod?.id,
+                          }
+                        )}
+                      >
+                        <div className="flex items-center gap-x-4">
+                          <Radio
+                            checked={option.id === selectedShippingMethod?.id}
+                          />
+                          <span className="text-base-regular">
+                            {option.name}
+                          </span>
+                        </div>
+                        <span className="justify-self-end text-ui-fg-base font-semibold">
+                          {option.amount === 0 ? (
+                            <span
+                              className={clx(
+                                "inline-flex items-center px-3 py-1 rounded-md font-bold text-sm uppercase",
+                                {
+                                  "bg-white text-green-400":
+                                    option.id === selectedShippingMethod?.id,
+                                  "bg-green-400 text-white":
+                                    option.id !== selectedShippingMethod?.id,
+                                }
+                              )}
+                            >
+                              Gratuita
+                            </span>
+                          ) : (
+                            convertToLocale({
+                              amount: option.amount!,
+                              currency_code: cart?.currency_code,
+                            })
+                          )}
+                        </span>
+                      </RadioGroup.Option>
+                    )
+                  })}
+                </RadioGroup>
+              </div>
+              <ErrorMessage
+                error={error}
+                data-testid="delivery-option-error-message"
+              />
 
-          <Button
-            variant="elevated"
-            size="lg"
-            className="w-full bg-black text-white hover:bg-green-400 hover:text-black"
-            onClick={handleSubmit}
-            isLoading={isLoading}
-            disabled={!cart.shipping_methods?.[0]}
-            data-testid="submit-delivery-option-button"
-          >
-            Continua al pagamento
-          </Button>
+              <Button
+                variant="elevated"
+                size="lg"
+                className="w-full bg-black text-white hover:bg-green-400 hover:text-black"
+                onClick={handleSubmit}
+                isLoading={isLoading}
+                disabled={!cart.shipping_methods?.[0]}
+                data-testid="submit-delivery-option-button"
+              >
+                Continua al pagamento
+              </Button>
+            </>
+          )}
         </div>
       ) : (
         <div>
@@ -156,13 +187,23 @@ const Shipping: React.FC<ShippingProps> = ({
                 <Text className="txt-medium-plus text-ui-fg-base mb-1 font-bold uppercase">
                   Metodo
                 </Text>
-                <Text className="txt-medium text-ui-fg-subtle">
-                  {selectedShippingMethod?.name}{" "}
-                  {convertToLocale({
-                    amount: selectedShippingMethod?.amount!,
-                    currency_code: cart?.currency_code,
-                  })}
-                </Text>
+                <div className="flex items-center gap-2">
+                  <Text className="txt-medium text-ui-fg-subtle">
+                    {selectedShippingMethod?.name}
+                  </Text>
+                  {selectedShippingMethod?.amount === 0 ? (
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-green-400 text-white font-bold text-xs uppercase">
+                      Gratuita
+                    </span>
+                  ) : (
+                    <Text className="txt-medium text-ui-fg-subtle">
+                      {convertToLocale({
+                        amount: selectedShippingMethod?.amount!,
+                        currency_code: cart?.currency_code,
+                      })}
+                    </Text>
+                  )}
+                </div>
               </div>
             )}
           </div>

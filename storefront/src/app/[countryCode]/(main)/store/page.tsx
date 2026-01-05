@@ -14,6 +14,7 @@ type Params = {
     page?: string
     min_price?: string
     max_price?: string
+    discounted?: string
   }
   params: {
     countryCode: string
@@ -21,7 +22,7 @@ type Params = {
 }
 
 export default async function StorePage({ searchParams, params }: Params) {
-  const { sortBy, page, min_price, max_price } = searchParams
+  const { sortBy, page, min_price, max_price, discounted } = searchParams
 
   return (
     <StoreTemplate
@@ -29,6 +30,7 @@ export default async function StorePage({ searchParams, params }: Params) {
       page={page}
       minPrice={min_price}
       maxPrice={max_price}
+      discounted={discounted}
       countryCode={params.countryCode}
     />
   )

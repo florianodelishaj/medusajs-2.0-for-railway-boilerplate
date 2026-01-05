@@ -7,7 +7,7 @@ type OrderSummaryProps = {
 
 const OrderSummary = ({ order }: OrderSummaryProps) => {
   const getAmount = (amount?: number | null) => {
-    if (!amount) {
+    if (amount === null || amount === undefined) {
       return
     }
 
@@ -18,39 +18,45 @@ const OrderSummary = ({ order }: OrderSummaryProps) => {
   }
 
   return (
-    <div>
-      <h2 className="text-base-semi">Order Summary</h2>
-      <div className="text-small-regular text-ui-fg-base my-2">
-        <div className="flex items-center justify-between text-base-regular text-ui-fg-base mb-2">
-          <span>Subtotal</span>
-          <span>{getAmount(order.subtotal)}</span>
+    <div className="py-6 border-b border-black">
+      <h2 className="text-xl font-bold mb-4">Riepilogo ordine</h2>
+      <div className="text-base">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-gray-700">Subtotale</span>
+          <span className="font-semibold">{getAmount(order.subtotal)}</span>
         </div>
-        <div className="flex flex-col gap-y-1">
+        <div className="flex flex-col gap-y-2">
           {order.discount_total > 0 && (
             <div className="flex items-center justify-between">
-              <span>Discount</span>
-              <span>- {getAmount(order.discount_total)}</span>
+              <span className="text-gray-700">Sconto</span>
+              <span className="font-semibold text-green-600">
+                - {getAmount(order.discount_total)}
+              </span>
             </div>
           )}
           {order.gift_card_total > 0 && (
             <div className="flex items-center justify-between">
-              <span>Discount</span>
-              <span>- {getAmount(order.gift_card_total)}</span>
+              <span className="text-gray-700">Carta regalo</span>
+              <span className="font-semibold text-green-600">
+                - {getAmount(order.gift_card_total)}
+              </span>
             </div>
           )}
           <div className="flex items-center justify-between">
-            <span>Shipping</span>
-            <span>{getAmount(order.shipping_total)}</span>
+            <span className="text-gray-700">Spedizione</span>
+            <span className="font-semibold">
+              {getAmount(order.shipping_total)}
+            </span>
           </div>
           <div className="flex items-center justify-between">
-            <span>Taxes</span>
-            <span>{getAmount(order.tax_total)}</span>
+            <span className="text-gray-700">Tasse (IVA)</span>
+            <span className="font-semibold">{getAmount(order.tax_total)}</span>
           </div>
         </div>
-        <div className="h-px w-full border-b border-gray-200 border-dashed my-4" />
-        <div className="flex items-center justify-between text-base-regular text-ui-fg-base mb-2">
-          <span>Total</span>
-          <span>{getAmount(order.total)}</span>
+        <div className="h-px w-full border-b border-black my-4" />
+        <div className="flex items-center justify-between text-lg">
+          <span className="font-bold">Totale</span>
+          <span className="font-bold">{getAmount(order.total)}</span>
         </div>
       </div>
     </div>

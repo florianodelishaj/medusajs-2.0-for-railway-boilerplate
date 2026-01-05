@@ -58,16 +58,22 @@ async function getCountryCode(
   try {
     let countryCode
 
-    const vercelCountryCode = request.headers
-      .get("x-vercel-ip-country")
+    // TODO: Configurare CloudFlare come proxy per attivare la geo-detection automatica.
+    // CloudFlare fornirà l'header CF-IPCountry con il codice paese basato sull'IP del visitatore.
+    // Per configurare CloudFlare:
+    // 1. Aggiungere il dominio a CloudFlare (piano gratuito)
+    // 2. Configurare CloudFlare come proxy DNS
+    // 3. CloudFlare aggiungerà automaticamente l'header CF-IPCountry
+    const cloudflareCountryCode = request.headers
+      .get("cf-ipcountry")
       ?.toLowerCase()
 
     const urlCountryCode = request.nextUrl.pathname.split("/")[1]?.toLowerCase()
 
     if (urlCountryCode && regionMap.has(urlCountryCode)) {
       countryCode = urlCountryCode
-    } else if (vercelCountryCode && regionMap.has(vercelCountryCode)) {
-      countryCode = vercelCountryCode
+    } else if (cloudflareCountryCode && cloudflareCountryCode !== "xx" && regionMap.has(cloudflareCountryCode)) {
+      countryCode = cloudflareCountryCode
     } else if (regionMap.has(DEFAULT_REGION)) {
       countryCode = DEFAULT_REGION
     } else if (regionMap.keys().next().value) {
@@ -142,5 +148,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|favicon.ico|.*\\.png|.*\\.jpg|.*\\.gif|.*\\.svg).*)"], // prevents redirecting on static files
+  matcher: ["/((?!api|_next/static|favicon.ico|.*\\.png|.*\\.jpg|.*\\.gif|.*\\.svg|.*\\.mp4).*)"], // prevents redirecting on static files
 }

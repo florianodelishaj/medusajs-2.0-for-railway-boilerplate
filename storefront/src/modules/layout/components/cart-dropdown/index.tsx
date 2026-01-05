@@ -29,6 +29,7 @@ import {
   SheetDescription,
 } from "@components/ui/sheet"
 import useBreakpoints from "@lib/hooks/useBreakpoints"
+import FreeShippingProgress from "@modules/cart/components/free-shipping-progress"
 
 // Cart link component to avoid duplication
 const CartLink = ({ totalItems }: { totalItems: number }) => (
@@ -199,6 +200,7 @@ const CartDropdown = ({
               ))}
             </div>
             <div className="p-4 flex flex-col gap-y-3 border-t border-black bg-gray-50">
+              <FreeShippingProgress cart={cartState} />
               <div className="flex flex-col gap-y-2 p-3 border border-black rounded-md bg-white">
                 {totalDiscount > 0 && (
                   <>

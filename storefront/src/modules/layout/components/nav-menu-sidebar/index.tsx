@@ -5,6 +5,7 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
+  SheetDescription,
 } from "@components/ui/sheet"
 import { ScrollArea } from "@components/ui/scroll-area"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
@@ -18,9 +19,12 @@ interface Props {
 export const NavMenuSidebar = ({ open, onOpenChange }: Props) => {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="left" className="p-0 bg-white flex flex-col">
+      <SheetContent side="left" className="p-0 bg-white flex flex-col gap-0">
         <SheetHeader className="p-4 border-b border-black">
           <SheetTitle>Menu</SheetTitle>
+          <SheetDescription className="sr-only">
+            Navigazione principale del sito
+          </SheetDescription>
         </SheetHeader>
 
         <ScrollArea className="flex-1 overflow-y-auto">
@@ -29,7 +33,7 @@ export const NavMenuSidebar = ({ open, onOpenChange }: Props) => {
               key={item.href}
               href={item.href}
               onClick={() => onOpenChange(false)}
-              className="w-full text-left p-4 hover:bg-black hover:text-white font-medium cursor-pointer border-b border-black/10 transition-colors block"
+              className="w-full text-left p-4 hover:bg-green-400 hover:text-black font-medium cursor-pointer border-b border-black/10 transition-colors block"
             >
               {item.label}
             </LocalizedClientLink>

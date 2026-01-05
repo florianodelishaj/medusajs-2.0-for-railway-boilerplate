@@ -1,4 +1,3 @@
-import { Heading } from "@medusajs/ui"
 import { cookies } from "next/headers"
 
 import CartTotals from "@modules/common/components/cart-totals"
@@ -22,33 +21,30 @@ export default function OrderCompletedTemplate({
   const totalDiscount = getTotalDiscount(order)
 
   return (
-    <div className="py-6 min-h-[calc(100vh-64px)]">
-      <div className="content-container flex flex-col justify-center items-center gap-y-10 max-w-4xl h-full w-full">
-        {isOnboarding && <OnboardingCta orderId={order.id} />}
-        <div
-          className="flex flex-col gap-4 max-w-4xl h-full bg-white w-full py-10"
-          data-testid="order-complete-container"
-        >
-          <Heading
-            level="h1"
-            className="flex flex-col gap-y-3 text-ui-fg-base text-3xl mb-4"
-          >
-            <span>Thank you!</span>
-            <span>Your order was placed successfully.</span>
-          </Heading>
-          <OrderDetails order={order} />
-          <Heading level="h2" className="flex flex-row text-3xl-regular">
-            Summary
-          </Heading>
-          <Items items={order.items} currencyCode={order.currency_code} />
-          <CartTotals totals={{
-            ...order,
-            discount_total: totalDiscount
-          }} />
-          <ShippingDetails order={order} />
-          <PaymentDetails order={order} />
-          <Help />
+    <div className="content-container flex flex-col justify-center items-center gap-y-10 h-full w-full">
+      {isOnboarding && <OnboardingCta orderId={order.id} />}
+      <div
+        className="flex flex-col gap-4 h-full bg-white border border-black rounded-md w-full py-10 px-8"
+        data-testid="order-complete-container"
+      >
+        <div className="flex flex-col gap-y-3 mb-4">
+          <h1 className="text-4xl font-bold">Grazie!</h1>
+          <p className="text-xl text-gray-700">
+            Il tuo ordine è stato effettuato con successo.
+          </p>
         </div>
+        <OrderDetails order={order} />
+        <h2 className="text-2xl font-bold mt-4">Riepilogo</h2>
+        <Items items={order.items} currencyCode={order.currency_code} />
+        <CartTotals
+          totals={{
+            ...order,
+            discount_total: totalDiscount,
+          }}
+        />
+        <ShippingDetails order={order} />
+        <PaymentDetails order={order} />
+        <Help />
       </div>
     </div>
   )

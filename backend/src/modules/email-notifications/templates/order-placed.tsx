@@ -21,83 +21,102 @@ export const isOrderPlacedTemplateData = (data: any): data is OrderPlacedTemplat
 
 export const OrderPlacedTemplate: React.FC<OrderPlacedTemplateProps> & {
   PreviewProps: OrderPlacedPreviewProps
-} = ({ order, shippingAddress, preview = 'Your order has been placed!' }) => {
+} = ({ order, shippingAddress, preview = 'Il tuo ordine è stato effettuato!' }) => {
+  const formatPrice = (value: number, currency: string) => {
+    return new Intl.NumberFormat('it-IT', {
+      style: 'currency',
+      currency: currency
+    }).format(value / 100)
+  }
+
   return (
     <Base preview={preview}>
       <Section>
-        <Text style={{ fontSize: '24px', fontWeight: 'bold', textAlign: 'center', margin: '0 0 30px' }}>
-          Order Confirmation
+        <Text className="text-black text-[32px] font-bold text-center mt-0 mb-4">
+          Conferma Ordine
         </Text>
 
-        <Text style={{ margin: '0 0 15px' }}>
-          Dear {shippingAddress.first_name} {shippingAddress.last_name},
+        <Text className="text-gray-700 text-[16px] leading-[24px] mb-4">
+          Ciao {shippingAddress.first_name} {shippingAddress.last_name},
         </Text>
 
-        <Text style={{ margin: '0 0 30px' }}>
-          Thank you for your recent order! Here are your order details:
+        <Text className="text-gray-700 text-[16px] leading-[24px] mb-6">
+          Grazie per il tuo ordine! Ecco i dettagli:
         </Text>
 
-        <Text style={{ fontSize: '18px', fontWeight: 'bold', margin: '0 0 10px' }}>
-          Order Summary
+        <Text className="text-black text-[20px] font-bold mb-3">
+          Riepilogo Ordine
         </Text>
-        <Text style={{ margin: '0 0 5px' }}>
-          Order ID: {order.display_id}
+        <Text className="text-gray-700 text-[14px] mb-2">
+          <strong>ID Ordine:</strong> #{order.display_id}
         </Text>
-        <Text style={{ margin: '0 0 5px' }}>
-          Order Date: {new Date(order.created_at).toLocaleDateString()}
+        <Text className="text-gray-700 text-[14px] mb-2">
+          <strong>Data:</strong> {new Date(order.created_at).toLocaleDateString('it-IT')}
         </Text>
-        <Text style={{ margin: '0 0 20px' }}>
-          Total: {order.summary.raw_current_order_total.value} {order.currency_code}
+        <Text className="text-gray-700 text-[14px] mb-4">
+          <strong>Totale:</strong> {formatPrice(order.summary.raw_current_order_total.value, order.currency_code)}
         </Text>
 
-        <Hr style={{ margin: '20px 0' }} />
+        <Hr className="border-2 border-solid border-black my-6 mx-0 w-full" />
 
-        <Text style={{ fontSize: '18px', fontWeight: 'bold', margin: '0 0 10px' }}>
-          Shipping Address
+        <Text className="text-black text-[20px] font-bold mb-3">
+          Indirizzo di Spedizione
         </Text>
-        <Text style={{ margin: '0 0 5px' }}>
+        <Text className="text-gray-700 text-[14px] mb-1">
           {shippingAddress.address_1}
         </Text>
-        <Text style={{ margin: '0 0 5px' }}>
-          {shippingAddress.city}, {shippingAddress.province} {shippingAddress.postal_code}
+        <Text className="text-gray-700 text-[14px] mb-1">
+          {shippingAddress.postal_code}, {shippingAddress.city}
         </Text>
-        <Text style={{ margin: '0 0 20px' }}>
-          {shippingAddress.country_code}
+        {shippingAddress.province && (
+          <Text className="text-gray-700 text-[14px] mb-1">
+            {shippingAddress.province}
+          </Text>
+        )}
+        <Text className="text-gray-700 text-[14px] mb-4">
+          {shippingAddress.country_code?.toUpperCase()}
         </Text>
 
-        <Hr style={{ margin: '20px 0' }} />
+        <Hr className="border-2 border-solid border-black my-6 mx-0 w-full" />
 
-        <Text style={{ fontSize: '18px', fontWeight: 'bold', margin: '0 0 15px' }}>
-          Order Items
+        <Text className="text-black text-[20px] font-bold mb-4">
+          Articoli Ordinati
         </Text>
 
         <div style={{
           width: '100%',
-          borderCollapse: 'collapse',
-          border: '1px solid #ddd',
+          border: '2px solid #000',
+          borderRadius: '6px',
+          overflow: 'hidden',
           margin: '10px 0'
         }}>
           <div style={{
             display: 'flex',
             justifyContent: 'space-between',
-            backgroundColor: '#f2f2f2',
-            padding: '8px',
-            borderBottom: '1px solid #ddd'
+            backgroundColor: '#F4F4F0',
+            padding: '12px',
+            borderBottom: '2px solid #000'
           }}>
-            <Text style={{ fontWeight: 'bold' }}>Item</Text>
-            <Text style={{ fontWeight: 'bold' }}>Quantity</Text>
-            <Text style={{ fontWeight: 'bold' }}>Price</Text>
+            <Text className="font-bold text-[14px] m-0" style={{ flex: 2 }}>Prodotto</Text>
+            <Text className="font-bold text-[14px] m-0 text-center" style={{ flex: 1 }}>Qtà</Text>
+            <Text className="font-bold text-[14px] m-0 text-right" style={{ flex: 1 }}>Prezzo</Text>
           </div>
           {order.items.map((item) => (
             <div key={item.id} style={{
               display: 'flex',
               justifyContent: 'space-between',
-              padding: '8px',
+              padding: '12px',
               borderBottom: '1px solid #ddd'
             }}>
-              <Text>{item.title} - {item.product_title}</Text>
-              <Text>{item.quantity}</Text>
-              <Text>{item.unit_price} {order.currency_code}</Text>
+              <Text className="text-[14px] text-gray-700 m-0" style={{ flex: 2 }}>
+                {item.title}
+              </Text>
+              <Text className="text-[14px] text-gray-700 m-0 text-center" style={{ flex: 1 }}>
+                {item.quantity}
+              </Text>
+              <Text className="text-[14px] text-gray-700 m-0 text-right" style={{ flex: 1 }}>
+                {formatPrice(item.unit_price, order.currency_code)}
+              </Text>
             </div>
           ))}
         </div>

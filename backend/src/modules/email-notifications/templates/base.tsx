@@ -12,8 +12,8 @@ export const Base: React.FC<BaseProps> = ({ preview, children }) => {
       <Head />
       <Preview>{preview}</Preview>
       <Tailwind>
-        <Body className="bg-white my-auto mx-auto font-sans px-2">
-          <Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] max-w-[465px] w-full overflow-hidden">
+        <Body className="bg-[#F4F4F0] my-auto mx-auto font-sans px-2">
+          <Container className="border-2 border-solid border-black rounded-md my-[40px] mx-auto p-[30px] max-w-[600px] w-full overflow-hidden bg-white">
             <div className="max-w-full break-words">
               {children}
             </div>

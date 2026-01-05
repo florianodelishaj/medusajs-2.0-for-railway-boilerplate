@@ -2,22 +2,14 @@
 
 import React, { useEffect } from "react"
 
-import Input from "@modules/common/components/input"
-
 import AccountInfo from "../account-info"
 import { useFormState } from "react-dom"
-import { HttpTypes } from "@medusajs/types"
+import { requestPasswordReset } from "@lib/data/customer"
 
-type MyInformationProps = {
-  customer: HttpTypes.StoreCustomer
-}
-
-const ProfileName: React.FC<MyInformationProps> = ({ customer }) => {
+const ProfilePassword: React.FC = () => {
   const [successState, setSuccessState] = React.useState(false)
 
-  // TODO: Add support for password updates
-  const [state, formAction] = useFormState((() => {}) as any, {
-    customer,
+  const [state, formAction] = useFormState(requestPasswordReset, {
     success: false,
     error: null,
   })
@@ -27,7 +19,7 @@ const ProfileName: React.FC<MyInformationProps> = ({ customer }) => {
   }
 
   useEffect(() => {
-    setSuccessState(state.success)
+    setSuccessState(state?.success || false)
   }, [state])
 
   return (
@@ -35,40 +27,25 @@ const ProfileName: React.FC<MyInformationProps> = ({ customer }) => {
       <AccountInfo
         label="Password"
         currentInfo={
-          <span>The password is not shown for security reasons</span>
+          <span>La password non viene mostrata per motivi di sicurezza</span>
         }
         isSuccess={successState}
-        isError={!!state.error}
-        errorMessage={state.error ?? undefined}
+        isError={!!state?.error}
+        errorMessage={state?.error ?? undefined}
+        successMessage="Ti abbiamo inviato un'email con il link per reimpostare la password"
+        submitButtonText="Invia email"
         clearState={clearState}
         data-testid="account-password-editor"
       >
-        <div className="grid grid-cols-2 gap-4">
-          <Input
-            label="Old password"
-            name="old_password"
-            required
-            type="password"
-            data-testid="old-password-input"
-          />
-          <Input
-            label="New password"
-            type="password"
-            name="new_password"
-            required
-            data-testid="new-password-input"
-          />
-          <Input
-            label="Confirm password"
-            type="password"
-            name="confirm_password"
-            required
-            data-testid="confirm-password-input"
-          />
+        <div className="text-small-regular">
+          <p className="mb-3">
+            Per motivi di sicurezza, non è possibile modificare direttamente la password.
+            Clicca il pulsante qui sotto per ricevere un&apos;email con il link per reimpostare la password.
+          </p>
         </div>
       </AccountInfo>
     </form>
   )
 }
 
-export default ProfileName
+export default ProfilePassword

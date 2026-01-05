@@ -142,8 +142,17 @@ export async function deleteLineItem(lineId: string) {
 
   await sdk.store.cart
     .deleteLineItem(cartId, lineId, {}, getAuthHeaders())
-    .then(() => {
+    .then(async () => {
       revalidateTag("cart")
+
+      // Controlla se il carrello è vuoto dopo la rimozione
+      const updatedCart = await retrieveCart()
+      if (updatedCart && (!updatedCart.items || updatedCart.items.length === 0)) {
+        // Rimuovi l'ID del carrello per forzare la creazione di un nuovo carrello pulito
+        // Questo resetta anche indirizzi, metodi di spedizione, ecc.
+        removeCartId()
+        revalidateTag("cart")
+      }
     })
     .catch(medusaError)
 }
@@ -252,6 +261,21 @@ export async function applyPromotions(codes: string[]) {
       } ${codesList} ${isPlural ? "are" : "is"} invalid`
       throw new Error(translateErrorMessage(errorMessage))
     }
+
+    // Se c'è un metodo di spedizione selezionato, ri-triggeralo per forzare
+    // Medusa a ricalcolare il prezzo in base al nuovo totale del carrello
+    if (updatedCart.shipping_methods && updatedCart.shipping_methods.length > 0) {
+      const currentShippingOptionId = updatedCart.shipping_methods[0].shipping_option_id
+
+      if (currentShippingOptionId) {
+        // Ri-applica lo stesso metodo di spedizione per forzare il ricalcolo
+        await setShippingMethod({
+          cartId: cartId,
+          shippingMethodId: currentShippingOptionId,
+        })
+        revalidateTag("cart")
+      }
+    }
   } catch (error: any) {
     // Re-throw the error so it can be caught by the caller
     throw error
@@ -306,12 +330,81 @@ export async function submitPromotionForm(
   formData: FormData
 ) {
   const code = formData.get("code") as string
+  const countryCode = formData.get("countryCode") as string
+
   try {
+    // Controlla se c'era una payment session prima dell'applicazione
+    const cartBefore = await retrieveCart()
+    const hadPaymentSession = cartBefore?.payment_collection?.payment_sessions?.some(
+      (s) => s.status === "pending"
+    )
+
     await applyPromotions([code])
+
+    // Se c'era una payment session prima, controlla se è ancora presente
+    if (hadPaymentSession) {
+      const cartAfter = await retrieveCart()
+      const hasPaymentSession = cartAfter?.payment_collection?.payment_sessions?.some(
+        (s) => s.status === "pending"
+      )
+
+      // Se è scomparsa, fai redirect
+      if (!hasPaymentSession && countryCode) {
+        return {
+          success: true,
+          redirectTo: `/${countryCode}/checkout?step=payment`
+        }
+      }
+    }
+
+    return { success: true }
   } catch (e: any) {
-    // Use code-based translation (recommended by MedusaJS)
-    // This will try to use error.code or error.type first, then fallback to message
-    return translateErrorByCode(e)
+    return {
+      success: false,
+      error: translateErrorByCode(e)
+    }
+  }
+}
+
+export async function removePromotionAction(codeToRemove: string, countryCode: string) {
+  try {
+    const cartBefore = await retrieveCart()
+
+    // Controlla se c'era una payment session prima della rimozione
+    const hadPaymentSession = cartBefore?.payment_collection?.payment_sessions?.some(
+      (s) => s.status === "pending"
+    )
+
+    const validPromotions = cartBefore?.promotions?.filter(
+      (promotion) => promotion.code !== codeToRemove
+    )
+
+    await applyPromotions(
+      validPromotions?.map((p) => p.code!).filter(Boolean) || []
+    )
+
+    // Se c'era una payment session prima, controlla se è ancora presente
+    if (hadPaymentSession) {
+      const cartAfter = await retrieveCart()
+      const hasPaymentSession = cartAfter?.payment_collection?.payment_sessions?.some(
+        (s) => s.status === "pending"
+      )
+
+      // Se è scomparsa, fai redirect
+      if (!hasPaymentSession && countryCode) {
+        return {
+          success: true,
+          redirectTo: `/${countryCode}/checkout?step=payment`
+        }
+      }
+    }
+
+    return { success: true }
+  } catch (e: any) {
+    return {
+      success: false,
+      error: e.message
+    }
   }
 }
 

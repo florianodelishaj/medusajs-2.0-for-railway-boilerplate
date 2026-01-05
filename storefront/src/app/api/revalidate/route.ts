@@ -28,17 +28,24 @@ export async function POST(request: NextRequest) {
 
   try {
     if (tag) {
+      console.log(`[Revalidate] Invalidating tag: ${tag}`)
       revalidateTag(tag)
+      // Invalida anche la homepage per far ricaricare i dati
+      revalidatePath("/")
+      console.log(`[Revalidate] Successfully invalidated tag: ${tag} and path: /`)
       return NextResponse.json({
         revalidated: true,
         type: "tag",
         value: tag,
+        alsoInvalidated: "/",
         now: Date.now()
       })
     }
 
     if (path) {
+      console.log(`[Revalidate] Invalidating path: ${path}`)
       revalidatePath(path)
+      console.log(`[Revalidate] Successfully invalidated path: ${path}`)
       return NextResponse.json({
         revalidated: true,
         type: "path",

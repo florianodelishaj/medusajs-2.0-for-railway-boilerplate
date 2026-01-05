@@ -40,7 +40,7 @@ const AddressSelect = ({
         >
           <span className="block truncate text-sm">
             {selectedAddress
-              ? selectedAddress.address_1
+              ? selectedAddress.address_name || selectedAddress.address_1
               : "Scegli un indirizzo"}
           </span>
         </Listbox.Button>
@@ -68,6 +68,11 @@ const AddressSelect = ({
                       {isSelected && <Check className="h-4 w-4" strokeWidth={3} />}
                     </div>
                     <div className="flex flex-col flex-1">
+                      {address.address_name && (
+                        <span className="text-left text-sm font-bold">
+                          {address.address_name}
+                        </span>
+                      )}
                       <span className="text-left text-sm font-semibold">
                         {address.first_name} {address.last_name}
                       </span>

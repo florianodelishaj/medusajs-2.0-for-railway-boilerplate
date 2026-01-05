@@ -1,5 +1,5 @@
 # =========================
-# 1. Dependencies
+# 1. Dependencies (production + dev)
 # =========================
 FROM node:20-alpine AS deps
 WORKDIR /app
@@ -11,7 +11,18 @@ COPY package.json package-lock.json ./
 RUN npm ci
 
 # =========================
-# 2. Build
+# 2. Production Dependencies Only
+# =========================
+FROM node:20-alpine AS prod-deps
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+
+# Installa SOLO production dependencies (senza devDependencies)
+RUN npm ci --omit=dev
+
+# =========================
+# 3. Build
 # =========================
 FROM node:20-alpine AS builder
 WORKDIR /app
@@ -19,7 +30,7 @@ WORKDIR /app
 # Set NODE_ENV per saltare check-env-variables durante build
 ENV NODE_ENV=production
 
-# Copia le dipendenze installate
+# Copia le dipendenze complete (serve per build)
 COPY --from=deps /app/node_modules ./node_modules
 
 # Copia il resto del progetto
@@ -47,7 +58,7 @@ ENV MEDUSA_BACKEND_URL=$MEDUSA_BACKEND_URL
 RUN npm run build
 
 # =========================
-# 3. Runtime / Production
+# 4. Runtime / Production
 # =========================
 FROM node:20-alpine AS runner
 WORKDIR /app
@@ -58,20 +69,17 @@ ENV NODE_ENV=production
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
 
-# Copia node_modules (necessari per next start)
-COPY --from=builder /app/node_modules ./node_modules
+# Copia SOLO node_modules production (molto più leggero!)
+COPY --from=prod-deps --chown=nextjs:nodejs /app/node_modules ./node_modules
 
 # Copia package.json per npm run start
-COPY --from=builder /app/package.json ./package.json
+COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
 
 # Copia files necessari
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/next.config.js ./next.config.js
-COPY --from=builder /app/check-env-variables.js ./check-env-variables.js
-
-# Cambia ownership
-RUN chown -R nextjs:nodejs /app
+COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/next.config.js ./next.config.js
+COPY --from=builder --chown=nextjs:nodejs /app/check-env-variables.js ./check-env-variables.js
 
 USER nextjs
 

@@ -1,7 +1,6 @@
-const checkEnvVariables = require("./check-env-variables")
-
-// Salta check durante build Docker (Railway passa env vars come ARG)
+// Salta check durante build Docker e runtime production
 if (process.env.NODE_ENV !== 'production') {
+  const checkEnvVariables = require("./check-env-variables")
   checkEnvVariables()
 }
 

@@ -1,17 +1,15 @@
 const checkEnvVariables = require("./check-env-variables")
 
-checkEnvVariables()
+// Salta check durante build Docker (Railway passa env vars come ARG)
+if (process.env.NODE_ENV !== 'production') {
+  checkEnvVariables()
+}
 
 /**
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
   reactStrictMode: true,
-  output: "standalone",
-  publicRuntimeConfig: {
-    medusaBackend: process.env.MEDUSA_BACKEND_URL,
-    publishableKey: process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY,
-  },
   eslint: {
     ignoreDuringBuilds: true,
   },

@@ -2,5 +2,11 @@ node_modules
 .next
 .git
 .gitignore
-.env*
 README.md
+.env.local
+.env*.local
+*.log
+.DS_Store
+coverage
+.vscode
+.idea

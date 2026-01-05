@@ -3,7 +3,7 @@
 .DS_Store
 /uploads
 /node_modules
-yarn-error.log
+npm-error.log
 .medusa-copy
 /.idea
 static
@@ -15,14 +15,14 @@ coverage
 
 ./tsconfig.tsbuildinfo
 # package-lock.json
-yarn.lock
+npm.lock
 medusa-db.sql
 build
 .cache
 
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
+.npm/*
+!.npm/patches
+!.npm/plugins
+!.npm/releases
+!.npm/sdks
+!.npm/versions

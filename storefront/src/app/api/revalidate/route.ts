@@ -30,14 +30,30 @@ export async function POST(request: NextRequest) {
     if (tag) {
       console.log(`[Revalidate] Invalidating tag: ${tag}`)
       revalidateTag(tag)
-      // Invalida anche la homepage per far ricaricare i dati
+
+      const invalidatedPaths: string[] = ["/"]
+
+      // Quando cambiano le categorie, invalida anche i prodotti
+      // perché le pagine prodotto usano backgroundImage delle categorie
+      if (tag === "categories") {
+        revalidatePath("/[countryCode]/(main)/categories/[...category]", "page")
+        revalidatePath("/[countryCode]/(main)/products/[handle]", "page")
+        invalidatedPaths.push(
+          "/[countryCode]/(main)/categories/[...category]",
+          "/[countryCode]/(main)/products/[handle]"
+        )
+        console.log(`[Revalidate] Invalidated category and product static pages`)
+      }
+
+      // Invalida anche la homepage
       revalidatePath("/")
-      console.log(`[Revalidate] Successfully invalidated tag: ${tag} and path: /`)
+      console.log(`[Revalidate] Successfully invalidated tag: ${tag} and paths: ${invalidatedPaths.join(", ")}`)
+
       return NextResponse.json({
         revalidated: true,
         type: "tag",
         value: tag,
-        alsoInvalidated: "/",
+        invalidatedPaths,
         now: Date.now()
       })
     }

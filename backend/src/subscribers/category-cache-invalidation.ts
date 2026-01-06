@@ -29,28 +29,10 @@ export default async function categoryCacheInvalidationHandler({
       headers['x-revalidate-secret'] = revalidateSecret
     }
 
-    // Invalida sia il tag che i path
-    const tagUrl = `${frontendUrl}/api/revalidate?tag=categories`
-    console.log('[Category Cache Invalidation] Calling revalidate endpoint:', tagUrl)
+    const url = `${frontendUrl}/api/revalidate?tag=categories`
+    console.log('[Category Cache Invalidation] Calling revalidate endpoint:', url)
 
-    const tagResponse = await fetch(tagUrl, {
-      method: 'POST',
-      headers,
-    })
-
-    if (!tagResponse.ok) {
-      const errorText = await tagResponse.text()
-      console.error('[Category Cache Invalidation] Failed to revalidate tag:', tagResponse.status, errorText)
-    } else {
-      const result = await tagResponse.json()
-      console.log('[Category Cache Invalidation] Successfully revalidated tag:', result)
-    }
-
-    // Invalida anche tutti i path delle categorie
-    const pathUrl = `${frontendUrl}/api/revalidate?path=/categories`
-    console.log('[Category Cache Invalidation] Calling revalidate path endpoint:', pathUrl)
-
-    const response = await fetch(pathUrl, {
+    const response = await fetch(url, {
       method: 'POST',
       headers,
     })

@@ -60,25 +60,27 @@ const Shipping: React.FC<ShippingProps> = ({
   return (
     <div className="bg-white border border-black rounded-md p-6">
       <div
-        className={clx("flex flex-row items-center justify-between", {
+        className={clx("flex flex-row items-center justify-between gap-x-4", {
           "mb-6": isOpen,
         })}
       >
-        <Heading
-          level="h2"
-          className={clx(
-            "flex flex-row text-2xl font-black uppercase gap-x-2 items-baseline",
-            {
-              "opacity-50 pointer-events-none select-none":
-                !isOpen && cart.shipping_methods?.length === 0,
-            }
-          )}
-        >
-          Consegna
+        <div className="flex items-center gap-x-2">
+          <Heading
+            level="h2"
+            className={clx(
+              "text-2xl font-black uppercase",
+              {
+                "opacity-50 pointer-events-none select-none":
+                  !isOpen && cart.shipping_methods?.length === 0,
+              }
+            )}
+          >
+            Consegna
+          </Heading>
           {!isOpen && (cart.shipping_methods?.length ?? 0) > 0 && (
-            <CheckCircleSolid />
+            <CheckCircleSolid className="shrink-0" />
           )}
-        </Heading>
+        </div>
         {!isOpen &&
           cart?.shipping_address &&
           cart?.billing_address &&

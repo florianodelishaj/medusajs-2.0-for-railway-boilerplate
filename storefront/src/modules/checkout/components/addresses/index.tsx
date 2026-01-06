@@ -44,17 +44,19 @@ const Addresses = ({
   return (
     <div className="bg-white border border-black rounded-md p-6">
       <div
-        className={clx("flex flex-row items-center justify-between", {
+        className={clx("flex flex-row items-center justify-between gap-x-4", {
           "mb-6": isOpen,
         })}
       >
-        <Heading
-          level="h2"
-          className="flex flex-row text-2xl font-black uppercase gap-x-2 items-baseline"
-        >
-          Indirizzo di spedizione
-          {!isOpen && <CheckCircleSolid />}
-        </Heading>
+        <div className="flex items-center gap-x-2">
+          <Heading
+            level="h2"
+            className="text-2xl font-black uppercase"
+          >
+            Indirizzo di spedizione
+          </Heading>
+          {!isOpen && <CheckCircleSolid className="shrink-0" />}
+        </div>
         {!isOpen && cart?.shipping_address && (
           <Button
             onClick={handleEdit}

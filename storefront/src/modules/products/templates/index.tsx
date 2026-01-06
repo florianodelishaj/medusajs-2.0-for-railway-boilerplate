@@ -50,6 +50,15 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
     )
   })
 
+  // Check if product has selectable variants
+  // A product has selectable variants if:
+  // 1. It has more than one variant, OR
+  // 2. It has at least one option with more than one value
+  const hasSelectableVariants =
+    (product.variants && product.variants.length > 1) ||
+    (product.options &&
+      product.options.some((option) => option.values && option.values.length > 1))
+
   return (
     <>
       <div className="content-container py-6" data-testid="product-container">
@@ -78,16 +87,18 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
                 </div>
 
                 {/* Mobile: Selezione Varianti - order-3 */}
-                <div className="xl:hidden order-3">
-                  <ProductOnboardingCta />
-                  <ProductCentralInfo
-                    product={product}
-                    showTitle={false}
-                    showVariants={true}
-                    showDescription={false}
-                    showDetails={false}
-                  />
-                </div>
+                {hasSelectableVariants && (
+                  <div className="xl:hidden order-3">
+                    <ProductOnboardingCta />
+                    <ProductCentralInfo
+                      product={product}
+                      showTitle={false}
+                      showVariants={true}
+                      showDescription={false}
+                      showDetails={false}
+                    />
+                  </div>
+                )}
 
                 {/* Mobile: Descrizione - order-4 */}
                 <div className="xl:hidden order-4">
@@ -142,16 +153,18 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
               </div>
 
               {/* Mobile: Selezione Varianti - order-3 */}
-              <div className="xl:hidden order-3">
-                <ProductOnboardingCta />
-                <ProductCentralInfo
-                  product={product}
-                  showTitle={false}
-                  showVariants={true}
-                  showDescription={false}
-                  showDetails={false}
-                />
-              </div>
+              {hasSelectableVariants && (
+                <div className="xl:hidden order-3">
+                  <ProductOnboardingCta />
+                  <ProductCentralInfo
+                    product={product}
+                    showTitle={false}
+                    showVariants={true}
+                    showDescription={false}
+                    showDetails={false}
+                  />
+                </div>
+              )}
 
               {/* Mobile: Descrizione - order-4 */}
               <div className="xl:hidden order-4">

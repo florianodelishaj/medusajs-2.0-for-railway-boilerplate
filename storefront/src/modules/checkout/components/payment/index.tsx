@@ -114,23 +114,25 @@ const Payment = ({
   return (
     <div className="bg-white border border-black rounded-md p-6">
       <div
-        className={clx("flex flex-row items-center justify-between", {
+        className={clx("flex flex-row items-center justify-between gap-x-4", {
           "mb-6": isOpen,
         })}
       >
-        <Heading
-          level="h2"
-          className={clx(
-            "flex flex-row text-2xl font-black uppercase gap-x-2 items-baseline",
-            {
-              "opacity-50 pointer-events-none select-none":
-                !isOpen && !paymentReady,
-            }
-          )}
-        >
-          Pagamento
-          {!isOpen && paymentReady && <CheckCircleSolid />}
-        </Heading>
+        <div className="flex items-center gap-x-2">
+          <Heading
+            level="h2"
+            className={clx(
+              "text-2xl font-black uppercase",
+              {
+                "opacity-50 pointer-events-none select-none":
+                  !isOpen && !paymentReady,
+              }
+            )}
+          >
+            Pagamento
+          </Heading>
+          {!isOpen && paymentReady && <CheckCircleSolid className="shrink-0" />}
+        </div>
         {!isOpen && paymentReady && (
           <Button
             onClick={handleEdit}

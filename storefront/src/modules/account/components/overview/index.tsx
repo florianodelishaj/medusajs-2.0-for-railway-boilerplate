@@ -18,7 +18,7 @@ const Overview = ({ customer, orders }: OverviewProps) => {
           <span data-testid="welcome-message" data-value={customer?.first_name}>
             Ciao {customer?.first_name}
           </span>
-          <span className="text-sm font-normal text-gray-700">
+          <span className="text-sm font-normal text-gray-700 text-right">
             Connesso come:{" "}
             <span
               className="font-semibold text-black"
@@ -34,7 +34,7 @@ const Overview = ({ customer, orders }: OverviewProps) => {
             <div className="grid grid-cols-2 gap-6 mb-6">
               <div className="flex flex-col gap-y-4 bg-white border border-black rounded-md p-6">
                 <h3 className="text-xl font-bold">Profilo</h3>
-                <div className="flex items-end gap-x-2">
+                <div className="flex flex-wrap items-end gap-x-2">
                   <span
                     className="text-4xl font-bold leading-none"
                     data-testid="customer-profile-completion"
@@ -50,7 +50,7 @@ const Overview = ({ customer, orders }: OverviewProps) => {
 
               <div className="flex flex-col gap-y-4 bg-white border border-black rounded-md p-6">
                 <h3 className="text-xl font-bold">Indirizzi</h3>
-                <div className="flex items-end gap-x-2">
+                <div className="flex flex-wrap items-end gap-x-2">
                   <span
                     className="text-4xl font-bold leading-none"
                     data-testid="addresses-count"

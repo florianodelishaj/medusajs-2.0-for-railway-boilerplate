@@ -214,44 +214,23 @@ export const getProductsListWithSort = cache(async function ({
 })
 
 /**
- * Recupera i prodotti scontati (con price_list_type === "sale" o original_amount > calculated_amount)
- * Usa un endpoint custom per filtrare lato server e rispettare il tag-based revalidation
+ * Recupera i prodotti scontati usando getProductsListWithSort
+ * Riusa la logica esistente per coerenza
  */
 export const getDiscountedProducts = cache(async function (
   countryCode: string,
   limit: number = 12
 ): Promise<{ products: HttpTypes.StoreProduct[]; count: number }> {
-  const region = await getRegion(countryCode)
-
-  if (!region) {
-    return { products: [], count: 0 }
-  }
-
-  // Build query params for custom API
-  const params = new URLSearchParams({
-    limit: limit.toString(),
-    region_id: region.id,
-    currency_code: region.currency_code,
+  const {
+    response: { products, count },
+  } = await getProductsListWithSort({
+    page: 1,
+    queryParams: {
+      limit,
+    },
+    discounted: "true",
+    countryCode,
   })
 
-  const response = await fetch(
-    `${
-      process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL
-    }/store/products-discounted?${params.toString()}`,
-    {
-      headers: {
-        "x-publishable-api-key":
-          process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY || "",
-      },
-      next: { tags: ["products"] } as any
-    }
-  )
-
-  if (!response.ok) {
-    console.error("Failed to fetch discounted products:", await response.text())
-    return { products: [], count: 0 }
-  }
-
-  const data = await response.json()
-  return { products: data.products || [], count: data.count || 0 }
+  return { products, count }
 })

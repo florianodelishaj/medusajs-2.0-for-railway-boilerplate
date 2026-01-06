@@ -4,6 +4,9 @@ import { notFound } from "next/navigation"
 import ProductTemplate from "@modules/products/templates"
 import { getRegion, listRegions } from "@lib/data/regions"
 import { getProductByHandle, getProductsList } from "@lib/data/products"
+import { getTopLevelCategories } from "@lib/data/categories"
+import DynamicBackground from "@modules/layout/components/dynamic-background"
+import { findTopLevelCategory, getCategoryBackground } from "@lib/util/get-category-background"
 
 type Props = {
   params: { countryCode: string; handle: string }
@@ -79,11 +82,25 @@ export default async function ProductPage({ params }: Props) {
     notFound()
   }
 
+  // Calculate background image server-side
+  const categories = await getTopLevelCategories()
+  let backgroundImage: string | null = null
+
+  if (pricedProduct.categories && pricedProduct.categories.length > 0) {
+    const topLevelCategory = findTopLevelCategory(
+      pricedProduct.categories[0].id,
+      categories || []
+    )
+    backgroundImage = getCategoryBackground(topLevelCategory)
+  }
+
   return (
-    <ProductTemplate
-      product={pricedProduct}
-      region={region}
-      countryCode={params.countryCode}
-    />
+    <DynamicBackground backgroundImage={backgroundImage}>
+      <ProductTemplate
+        product={pricedProduct}
+        region={region}
+        countryCode={params.countryCode}
+      />
+    </DynamicBackground>
   )
 }

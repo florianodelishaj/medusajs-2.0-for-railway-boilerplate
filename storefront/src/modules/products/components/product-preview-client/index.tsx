@@ -23,7 +23,12 @@ export default function ProductPreviewClient({
   const isOutOfStock = product.variants?.every((variant) => {
     if (!variant.manage_inventory) return false
     if (variant.allow_backorder) return false
-    return (variant.inventory_quantity || 0) <= 0
+    // Se inventory_quantity è undefined, non considerare il prodotto esaurito
+    // (significa che i dati inventory non sono disponibili)
+    if (variant.inventory_quantity === undefined || variant.inventory_quantity === null) {
+      return false
+    }
+    return variant.inventory_quantity <= 0
   })
 
   // Check if product has discount
@@ -31,7 +36,8 @@ export default function ProductPreviewClient({
     cheapestPrice?.price_type === "sale" ||
     (cheapestPrice?.original_price_number &&
       cheapestPrice?.calculated_price_number &&
-      cheapestPrice.original_price_number > cheapestPrice.calculated_price_number)
+      cheapestPrice.original_price_number >
+        cheapestPrice.calculated_price_number)
 
   const hasDiscountPercentage =
     hasDiscount &&
@@ -85,7 +91,10 @@ export default function ProductPreviewClient({
             {cheapestPrice && (
               <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <Text className="text-black font-bold text-lg" data-testid="price">
+                  <Text
+                    className="text-black font-bold text-lg"
+                    data-testid="price"
+                  >
                     {cheapestPrice.calculated_price}
                   </Text>
                   {hasDiscount && hasDiscountPercentage > 0 && (

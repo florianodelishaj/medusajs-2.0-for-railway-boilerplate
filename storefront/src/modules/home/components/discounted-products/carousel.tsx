@@ -17,6 +17,33 @@ export default function DiscountedProductsCarousel({
   products,
   totalCount,
 }: CarouselProps) {
+  // Filtra i prodotti esauriti dal carosello
+  const availableProducts = useMemo(() => {
+    return products.filter((product) => {
+      // Se non ha varianti, consideralo non disponibile
+      if (!product.variants || product.variants.length === 0) {
+        return false
+      }
+
+      // Il prodotto è disponibile se ALMENO UNA variante è disponibile
+      return product.variants.some((variant) => {
+        // Se non gestisce l'inventario, è sempre disponibile
+        if (!variant.manage_inventory) return true
+        // Se permette backorder, è disponibile
+        if (variant.allow_backorder) return true
+        // Se inventory_quantity è undefined/null, consideriamolo disponibile
+        if (
+          variant.inventory_quantity === undefined ||
+          variant.inventory_quantity === null
+        ) {
+          return true
+        }
+        // Altrimenti controlla che sia > 0
+        return variant.inventory_quantity > 0
+      })
+    })
+  }, [products])
+
   const autoplayPlugin = useMemo(
     () => Autoplay({ delay: 4000, stopOnInteraction: true }),
     []
@@ -101,7 +128,7 @@ export default function DiscountedProductsCarousel({
       {/* Carousel Container */}
       <div className="overflow-hidden py-2" ref={emblaRef}>
         <div className="flex gap-6">
-          {products.map((product) => (
+          {availableProducts.map((product) => (
             <div
               key={product.id}
               className="flex-[0_0_calc(50%-12px)] min-w-0 md:flex-[0_0_calc(33.333%-16px)] lg:flex-[0_0_calc(25%-18px)]"
@@ -129,7 +156,7 @@ export default function DiscountedProductsCarousel({
       </div>
 
       {/* Navigation Arrows - Inside carousel */}
-      {products.length > 4 && (
+      {availableProducts.length > 4 && (
         <>
           <button
             onClick={scrollPrev}

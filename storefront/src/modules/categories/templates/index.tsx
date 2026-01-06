@@ -6,6 +6,7 @@ import RefinementList from "@modules/store/components/refinement-list"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
 import PaginatedProducts from "@modules/store/templates/paginated-products"
 import { HttpTypes } from "@medusajs/types"
+import DynamicBackground from "@modules/layout/components/dynamic-background"
 
 export default function CategoryTemplate({
   categories,
@@ -30,21 +31,25 @@ export default function CategoryTemplate({
   // Get background color from the root category (first in the array)
   const categoryColor = (categories[0]?.metadata?.color as string) || "white"
 
+  // Get background image from the root category (first in the array)
+  const backgroundImage = (categories[0]?.metadata?.backgroundImage as string) || null
+
   if (!category || !countryCode) notFound()
 
   return (
-    <div
-      className="flex flex-col small:flex-row small:items-start content-container"
-      data-testid="category-container"
-    >
-      <RefinementList
-        sortBy={sort}
-        minPrice={minPrice}
-        maxPrice={maxPrice}
-        data-testid="sort-by-container"
-      />
-      <div className="w-full">
-        {/* {category.description && (
+    <DynamicBackground backgroundImage={backgroundImage}>
+      <div
+        className="flex flex-col flex-1 small:flex-row w-full px-4 lg:px-12 py-8"
+        data-testid="category-container"
+      >
+        <RefinementList
+          sortBy={sort}
+          minPrice={minPrice}
+          maxPrice={maxPrice}
+          data-testid="sort-by-container"
+        />
+        <div className="w-full flex flex-col flex-1">
+          {/* {category.description && (
           <div className="mb-8 text-base-regular">
             <p>{category.description}</p>
           </div>
@@ -62,18 +67,19 @@ export default function CategoryTemplate({
             </ul>
           </div>
         )} */}
-        <Suspense fallback={<SkeletonProductGrid />}>
-          <PaginatedProducts
-            sortBy={sort}
-            page={pageNumber}
-            categoryId={category.id}
-            categoryColor={categoryColor}
-            minPrice={minPrice}
-            maxPrice={maxPrice}
-            countryCode={countryCode}
-          />
-        </Suspense>
+          <Suspense fallback={<SkeletonProductGrid />}>
+            <PaginatedProducts
+              sortBy={sort}
+              page={pageNumber}
+              categoryId={category.id}
+              categoryColor={categoryColor}
+              minPrice={minPrice}
+              maxPrice={maxPrice}
+              countryCode={countryCode}
+            />
+          </Suspense>
+        </div>
       </div>
-    </div>
+    </DynamicBackground>
   )
 }

@@ -2,6 +2,8 @@ import { MedusaRequest, MedusaResponse } from "@medusajs/framework/http";
 import {
   ContainerRegistrationKeys,
   QueryContext,
+  getVariantAvailability,
+  MedusaContext,
 } from "@medusajs/framework/utils";
 
 /**
@@ -125,7 +127,10 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
     // Scegli la strategia in base al parametro include_root_family
     const categoryIds =
       include_root_family === "true"
-        ? await getAllCategoryIdsIncludingRoot(query, singleCategoryId as string)
+        ? await getAllCategoryIdsIncludingRoot(
+            query,
+            singleCategoryId as string
+          )
         : await getAllCategoryIds(query, singleCategoryId as string);
 
     filters.categories = {
@@ -146,6 +151,29 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
   }
 
   try {
+    // 1. Recupera il sales channel di default (primo attivo)
+    // Per web-only, usiamo il primo sales channel abilitato
+    // Il Sales Channel serve per aggregare i dati dai magazzini (Stock Locations)
+    let salesChannelId: string | undefined;
+    try {
+      const { data: salesChannels } = await query.graph({
+        entity: "sales_channel",
+        fields: ["id", "name"],
+        filters: { is_disabled: false }, // Solo canali attivi
+      });
+
+      salesChannelId = salesChannels?.[0]?.id;
+
+      if (!salesChannelId) {
+        console.warn(
+          `No active Sales Channel found - out-of-stock products will not be filtered`
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching sales channel:", error);
+      salesChannelId = undefined;
+    }
+
     // Fetch all products matching base filters (category/collection)
     const { data: allProducts } = await query.graph({
       entity: "product",
@@ -160,6 +188,9 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
         "status",
         "variants.*",
         "variants.calculated_price.*",
+        "variants.manage_inventory",
+        "variants.allow_backorder",
+        "variants.inventory_quantity",
         "categories.*",
         "tags.*",
         "images.*",
@@ -176,6 +207,35 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
     });
 
     let filteredProducts = allProducts || [];
+
+    // 2. Calcola la disponibilità per tutte le varianti usando getVariantAvailability
+    const variantIds = filteredProducts.flatMap(
+      (p: any) => p.variants?.map((v: any) => v.id) || []
+    );
+
+    let availabilityMap: Record<string, { availability: number }> = {};
+
+    if (variantIds.length > 0 && salesChannelId) {
+      try {
+        availabilityMap = await getVariantAvailability(query, {
+          variant_ids: variantIds,
+          sales_channel_id: salesChannelId,
+        });
+      } catch (error) {
+        console.error("Error fetching variant availability:", error);
+        // Se getVariantAvailability fallisce, continuiamo senza filtrare per inventory
+      }
+    }
+
+    // Popola inventory_quantity nelle varianti usando availabilityMap
+    // Questo permette al frontend di mostrare il badge "Esaurito" o filtrare i prodotti
+    filteredProducts.forEach((product: any) => {
+      product.variants?.forEach((variant: any) => {
+        if (availabilityMap[variant.id]) {
+          variant.inventory_quantity = availabilityMap[variant.id].availability;
+        }
+      });
+    });
 
     // Apply discounted filter if provided
     if (discounted === "true") {

@@ -5,12 +5,6 @@ const endpoint =
 
 const apiKey = process.env.NEXT_PUBLIC_SEARCH_API_KEY || "test_key"
 
-console.log(
-  "[TEST] - MEILISEARCH",
-  process.env.NEXT_PUBLIC_SEARCH_ENDPOINT,
-  process.env.NEXT_PUBLIC_SEARCH_API_KEY
-)
-
 export const searchClient = instantMeiliSearch(endpoint, apiKey)
 
 export const SEARCH_INDEX_NAME =

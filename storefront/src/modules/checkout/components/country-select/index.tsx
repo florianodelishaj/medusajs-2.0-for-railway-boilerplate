@@ -149,6 +149,7 @@ const CountrySelect = ({
       <input
         type="hidden"
         name={name}
+        id={name}
         value={selectedCountry}
         autoComplete={props.autoComplete}
       />
@@ -173,7 +174,6 @@ const CountrySelect = ({
               </span>
             </Listbox.Button>
             <label
-              htmlFor={name}
               className={cn(
                 "flex items-center justify-center mx-3 px-1 transition-all absolute duration-300 origin-0 text-black font-medium pointer-events-none",
                 open || hasValue
@@ -206,6 +206,9 @@ const CountrySelect = ({
                   <input
                     ref={searchInputCallbackRef}
                     type="text"
+                    id={`${name}-search`}
+                    name={`${name}-search`}
+                    autoComplete="off"
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 text-sm"
                     placeholder="Cerca paese..."
                     value={searchQuery}

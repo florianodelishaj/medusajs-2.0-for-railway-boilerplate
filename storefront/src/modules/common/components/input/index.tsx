@@ -42,6 +42,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <input
             type={inputType}
             name={name}
+            id={name}
             placeholder=" "
             required={required}
             className="pt-4 pb-1 block w-full h-12 px-4 mt-0 bg-white border border-black rounded-md appearance-none focus:outline-none focus:ring-0 transition-none font-medium"

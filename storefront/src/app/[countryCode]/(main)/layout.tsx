@@ -17,7 +17,7 @@ export default async function PageLayout(props: { children: React.ReactNode }) {
     <div className="flex flex-col min-h-screen">
       <Nav />
       <SearchFilters categories={categories || []} />
-      <div className="flex flex-col flex-1">{props.children}</div>
+      <div className="flex flex-col flex-1 bg-[#F4F4F0]">{props.children}</div>
       <Footer />
     </div>
   )

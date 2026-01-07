@@ -45,7 +45,7 @@ export default function DiscountedProductsCarousel({
   }, [products])
 
   const autoplayPlugin = useMemo(
-    () => Autoplay({ delay: 4000, stopOnInteraction: true }),
+    () => Autoplay({ delay: 2000, stopOnInteraction: true }),
     []
   )
 

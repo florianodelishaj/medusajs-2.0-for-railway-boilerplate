@@ -82,12 +82,13 @@ export default async function ProductPage({ params }: Props) {
     notFound()
   }
 
-  // Calculate background image server-side
+  // Calculate background image and category server-side
   const categories = await getTopLevelCategories()
   let backgroundImage: string | null = null
+  let topLevelCategory = null
 
   if (pricedProduct.categories && pricedProduct.categories.length > 0) {
-    const topLevelCategory = findTopLevelCategory(
+    topLevelCategory = findTopLevelCategory(
       pricedProduct.categories[0].id,
       categories || []
     )
@@ -100,6 +101,7 @@ export default async function ProductPage({ params }: Props) {
         product={pricedProduct}
         region={region}
         countryCode={params.countryCode}
+        topLevelCategory={topLevelCategory}
       />
     </DynamicBackground>
   )

@@ -24,7 +24,7 @@ const BenefitsBar = () => {
           <BenefitItem
             icon={<Truck className="w-10 h-10" />}
             title="Spedizione Gratuita"
-            text="Ordini sopra €50"
+            text="Su ordini idonei"
           />
           <BenefitItem
             icon={<Package className="w-10 h-10" />}

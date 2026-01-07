@@ -12,17 +12,20 @@ import { notFound } from "next/navigation"
 import ProductActionsWrapper from "./product-actions-wrapper"
 import { HttpTypes } from "@medusajs/types"
 import { Heading } from "@medusajs/ui"
+import { ProductCategoryContext } from "@modules/products/components/product-category-context"
 
 type ProductTemplateProps = {
   product: HttpTypes.StoreProduct
   region: HttpTypes.StoreRegion
   countryCode: string
+  topLevelCategory?: HttpTypes.StoreProductCategory | null
 }
 
 const ProductTemplate: React.FC<ProductTemplateProps> = ({
   product,
   region,
   countryCode,
+  topLevelCategory,
 }) => {
   if (!product || !product.id) {
     return notFound()
@@ -61,6 +64,7 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
 
   return (
     <>
+      <ProductCategoryContext category={topLevelCategory || null} />
       <div className="content-container py-6" data-testid="product-container">
         <Suspense
           fallback={

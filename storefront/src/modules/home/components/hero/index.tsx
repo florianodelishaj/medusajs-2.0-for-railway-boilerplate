@@ -29,7 +29,7 @@ const Hero = () => {
             Scopri il Mondo dei Collezionabili
           </h1>
           <p className="text-lg md:text-xl text-white/90 mb-8">
-            Funko Pop, Pokémon e molto altro. Spedizione gratuita sopra i €50
+            Funko Pop, Pokémon e molto altro. Spedizione gratuita disponibile
           </p>
 
           {/* CTA Buttons */}

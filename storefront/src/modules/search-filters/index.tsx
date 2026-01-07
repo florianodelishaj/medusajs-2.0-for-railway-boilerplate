@@ -10,12 +10,14 @@ import LocalizedClientLink from "@modules/common/components/localized-client-lin
 import { Input } from "@components/ui/input"
 import { Button } from "@components/ui/button"
 import { MagnifyingGlassMini, Funnel } from "@medusajs/icons"
+import { useSearchFilters } from "@lib/context/search-filters-context"
 
 interface Props {
   categories: HttpTypes.StoreProductCategory[]
 }
 
 export const SearchFilters = ({ categories }: Props) => {
+  const { productCategory } = useSearchFilters()
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [isSearchMounted, setIsSearchMounted] = useState(false)
   const params = useParams()
@@ -61,8 +63,11 @@ export const SearchFilters = ({ categories }: Props) => {
   }, [params, categories])
 
   // Get background color from active category metadata
+  // Priority: productCategory (if on product page) > activeCategory (if on category page) > default
   const backgroundColor =
-    (activeCategory?.metadata?.color as string) || "#F4F4F0"
+    (productCategory?.metadata?.color as string) ||
+    (activeCategory?.metadata?.color as string) ||
+    "#F4F4F0"
 
   return (
     <>

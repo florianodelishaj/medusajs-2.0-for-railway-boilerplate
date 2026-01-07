@@ -10,9 +10,9 @@ import { getRegion } from "@lib/data/regions"
 import { getDiscountedProducts } from "@lib/data/products"
 
 export const metadata: Metadata = {
-  title: "Nox E-commerce - Collezionabili Funko Pop e Pokémon",
+  title: "Il Covo di Xur",
   description:
-    "Scopri la nostra collezione di Funko Pop, carte Pokémon e collezionabili. Spedizione gratuita sopra i €50.",
+    "Scopri la nostra collezione di Funko Pop, carte Pokémon e collezionabili. Spedizione gratuita disponibile.",
 }
 
 export default async function Home({

@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server"
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL
 const PUBLISHABLE_API_KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY
-const DEFAULT_REGION = process.env.NEXT_PUBLIC_DEFAULT_REGION || "us"
+const DEFAULT_REGION = process.env.NEXT_PUBLIC_DEFAULT_REGION || "it"
 
 const regionMapCache = {
   regionMap: new Map<string, HttpTypes.StoreRegion>(),
@@ -72,7 +72,11 @@ async function getCountryCode(
 
     if (urlCountryCode && regionMap.has(urlCountryCode)) {
       countryCode = urlCountryCode
-    } else if (cloudflareCountryCode && cloudflareCountryCode !== "xx" && regionMap.has(cloudflareCountryCode)) {
+    } else if (
+      cloudflareCountryCode &&
+      cloudflareCountryCode !== "xx" &&
+      regionMap.has(cloudflareCountryCode)
+    ) {
       countryCode = cloudflareCountryCode
     } else if (regionMap.has(DEFAULT_REGION)) {
       countryCode = DEFAULT_REGION
@@ -148,5 +152,7 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|favicon.ico|.*\\.png|.*\\.jpg|.*\\.gif|.*\\.svg|.*\\.mp4).*)"], // prevents redirecting on static files
+  matcher: [
+    "/((?!api|_next/static|favicon.ico|.*\\.png|.*\\.jpg|.*\\.gif|.*\\.svg|.*\\.mp4).*)",
+  ], // prevents redirecting on static files
 }

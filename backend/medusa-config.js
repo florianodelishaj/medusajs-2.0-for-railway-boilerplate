@@ -154,7 +154,7 @@ const medusaConfig = {
                   options: {
                     apiKey: STRIPE_API_KEY,
                     webhookSecret: STRIPE_WEBHOOK_SECRET,
-                    capture: STRIPE_CAPTURE,
+                    capture: STRIPE_CAPTURE === "true",
                   },
                 },
               ],

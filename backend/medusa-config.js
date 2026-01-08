@@ -22,6 +22,7 @@ import {
   MINIO_BUCKET,
   MEILISEARCH_HOST,
   MEILISEARCH_ADMIN_KEY,
+  STRIPE_CAPTURE,
 } from "lib/constants";
 
 loadEnv(process.env.NODE_ENV, process.cwd());

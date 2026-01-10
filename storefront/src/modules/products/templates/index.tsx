@@ -66,7 +66,23 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
   const hasSelectableVariants =
     (product.variants && product.variants.length > 1) ||
     (product.options &&
-      product.options.some((option) => option.values && option.values.length > 1))
+      product.options.some(
+        (option) => option.values && option.values.length > 1
+      ))
+
+  // Ensure thumbnail is included in images array
+  const allImages = [...(product.images || [])]
+  if (
+    product.thumbnail &&
+    !allImages.find((img) => img.url === product.thumbnail)
+  ) {
+    allImages.unshift({
+      id: "thumbnail",
+      url: product.thumbnail,
+    } as HttpTypes.StoreProductImage)
+  }
+
+  console.log("images", product.images)
 
   return (
     <>
@@ -79,7 +95,7 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
                 {/* Immagine - order-1 */}
                 <div className="w-full xl:w-auto xl:min-w-[300px] xl:max-w-[650px] xl:shrink xl:grow-0 xl:basis-[650px] order-1">
                   <ImageGallery
-                    images={product?.images || []}
+                    images={allImages}
                     isOutOfStock={isOutOfStock}
                     hasDiscount={hasDiscount}
                     isBackorder={isBackorder}
@@ -146,7 +162,7 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
               {/* Immagine - order-1 */}
               <div className="w-full xl:w-auto xl:min-w-[300px] xl:max-w-[650px] xl:shrink xl:grow-0 xl:basis-[650px] order-1">
                 <ImageGallery
-                  images={product?.images || []}
+                  images={allImages}
                   isOutOfStock={isOutOfStock}
                   hasDiscount={hasDiscount}
                 />

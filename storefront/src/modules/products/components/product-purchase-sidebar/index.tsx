@@ -26,7 +26,7 @@ const ProductPurchaseSidebar = ({
   product: _product,
   region,
 }: ProductPurchaseSidebarProps) => {
-  const { product, selectedVariant, inStock, availableInventory, disabled } =
+  const { product, selectedVariant, inStock, isBackorder, availableInventory, disabled } =
     useProductSelection()
   const [quantity, setQuantity] = useState(1)
   const { addToCart, isAdding } = useAddToCart()
@@ -127,19 +127,25 @@ const ProductPurchaseSidebar = ({
         </div>
       )}
 
-      {/* Bottone Aggiungi al Carrello */}
+      {/* Bottone Aggiungi al Carrello / Preordina */}
       <Button
         onClick={handleAddToCart}
         disabled={!inStock || !selectedVariant || disabled || isAdding}
         variant="elevated"
         isLoading={isAdding}
         data-testid="add-product-button"
-        className="w-full h-12 bg-black text-white hover:bg-green-400 hover:text-black"
+        className={
+          isBackorder
+            ? "w-full h-12 bg-yellow-400 text-black hover:bg-green-400 hover:text-black"
+            : "w-full h-12 bg-black text-white hover:bg-green-400 hover:text-black"
+        }
       >
         {!selectedVariant
           ? "Seleziona variante"
           : !inStock
           ? "Esaurito"
+          : isBackorder
+          ? "Preordina"
           : "Aggiungi al carrello"}
       </Button>
 

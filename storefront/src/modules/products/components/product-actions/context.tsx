@@ -27,11 +27,12 @@ type ProductSelectionContextType = {
   setOptionValue: (title: string, value: string) => void
   selectedVariant?: HttpTypes.StoreProductVariant
   inStock: boolean
+  isBackorder: boolean
   availableInventory: number
   disabled?: boolean
 }
 
-const ProductSelectionContext = createContext<ProductSelectionContextType | null>(null)
+export const ProductSelectionContext = createContext<ProductSelectionContextType | null>(null)
 
 export const useProductSelection = () => {
   const context = useContext(ProductSelectionContext)
@@ -106,6 +107,13 @@ export const ProductSelectionProvider = ({
     return Math.max(0, (selectedVariant.inventory_quantity || 0) - quantityInCart)
   }, [selectedVariant, quantityInCart])
 
+  // Check if the selected variant is in backorder
+  const isBackorder = useMemo(() => {
+    if (!selectedVariant) return false
+    if (!selectedVariant.manage_inventory) return false
+    return !!(selectedVariant.allow_backorder && (selectedVariant.inventory_quantity || 0) <= 0)
+  }, [selectedVariant])
+
   // Check if the selected variant is in stock
   const inStock = useMemo(() => {
     if (!selectedVariant) {
@@ -145,6 +153,7 @@ export const ProductSelectionProvider = ({
     setOptionValue,
     selectedVariant,
     inStock,
+    isBackorder,
     availableInventory,
     disabled,
   }

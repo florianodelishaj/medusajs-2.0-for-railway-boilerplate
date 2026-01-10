@@ -1,19 +1,19 @@
 "use client"
 
-import { useCallback, useContext, useEffect, useMemo, useState } from "react"
+import { useCallback, useContext, useEffect, useState } from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { RadioGroup } from "@headlessui/react"
 import ErrorMessage from "@modules/checkout/components/error-message"
 import { CheckCircleSolid, CreditCard } from "@medusajs/icons"
 import { Container, Heading, Text, clx } from "@medusajs/ui"
-import { CardElement } from "@stripe/react-stripe-js"
-import { StripeCardElementOptions } from "@stripe/stripe-js"
+import { PaymentElement } from "@stripe/react-stripe-js"
 
 import { Button } from "@components/ui/button"
 import PaymentContainer from "@modules/checkout/components/payment-container"
 import { isStripe as isStripeFunc, paymentInfoMap } from "@lib/constants"
 import { StripeContext } from "@modules/checkout/components/payment-wrapper"
 import { useInitiatePaymentSession } from "@lib/hooks/use-checkout-actions"
+import PaymentButton from "@modules/checkout/components/payment-button"
 
 const Payment = ({
   cart,
@@ -28,11 +28,10 @@ const Payment = ({
 
   const { initiatePaymentSession, isLoading } = useInitiatePaymentSession()
   const [error, setError] = useState<string | null>(null)
-  const [cardBrand, setCardBrand] = useState<string | null>(null)
-  const [cardComplete, setCardComplete] = useState(false)
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(
     activeSession?.provider_id ?? ""
   )
+  const [hasInitialized, setHasInitialized] = useState(false)
 
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -48,23 +47,6 @@ const Payment = ({
 
   const paymentReady =
     (activeSession && cart?.shipping_methods.length !== 0) || paidByGiftcard
-
-  const useOptions: StripeCardElementOptions = useMemo(() => {
-    return {
-      style: {
-        base: {
-          fontFamily: "Inter, sans-serif",
-          color: "#424270",
-          "::placeholder": {
-            color: "rgb(107 114 128)",
-          },
-        },
-      },
-      classes: {
-        base: "pt-3 pb-1 block w-full h-11 px-4 mt-0 bg-ui-bg-field border rounded-md appearance-none focus:outline-none focus:ring-0 focus:shadow-borders-interactive-with-active border-ui-border-base hover:bg-ui-bg-field-hover transition-all duration-300 ease-in-out",
-      },
-    }
-  }, [])
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -82,34 +64,44 @@ const Payment = ({
     })
   }
 
-  const handleSubmit = async () => {
-    try {
-      const shouldInputCard =
-        isStripeFunc(selectedPaymentMethod) && !activeSession
-
-      if (!activeSession) {
-        await initiatePaymentSession(cart, {
-          provider_id: selectedPaymentMethod,
-        })
-      }
-
-      if (!shouldInputCard) {
-        return router.push(
-          pathname + "?" + createQueryString("step", "review"),
-          {
-            scroll: false,
-          }
-        )
-      }
-    } catch (err: any) {
-      // Error toast is already handled by useInitiatePaymentSession hook
-      setError(err.message)
-    }
-  }
-
   useEffect(() => {
     setError(null)
+    setHasInitialized(false)
   }, [isOpen])
+
+  // Auto-inizializza la sessione di pagamento se c'è solo Stripe e non c'è ancora una sessione attiva
+  useEffect(() => {
+    const initializeStripeSession = async () => {
+      if (
+        isOpen &&
+        !activeSession &&
+        !hasInitialized &&
+        availablePaymentMethods.length === 1 &&
+        isStripeFunc(availablePaymentMethods[0].id) &&
+        !isLoading
+      ) {
+        setHasInitialized(true)
+        setSelectedPaymentMethod(availablePaymentMethods[0].id)
+        try {
+          await initiatePaymentSession(cart, {
+            provider_id: availablePaymentMethods[0].id,
+          })
+        } catch (err: any) {
+          setError(err.message)
+          setHasInitialized(false)
+        }
+      }
+    }
+
+    initializeStripeSession()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    isOpen,
+    activeSession?.id,
+    hasInitialized,
+    availablePaymentMethods.length,
+    isLoading,
+  ])
 
   return (
     <div className="bg-white border border-black rounded-md p-6">
@@ -121,13 +113,10 @@ const Payment = ({
         <div className="flex items-center gap-x-2">
           <Heading
             level="h2"
-            className={clx(
-              "text-2xl font-black uppercase",
-              {
-                "opacity-50 pointer-events-none select-none":
-                  !isOpen && !paymentReady,
-              }
-            )}
+            className={clx("text-2xl font-black uppercase", {
+              "opacity-50 pointer-events-none select-none":
+                !isOpen && !paymentReady,
+            })}
           >
             Pagamento
           </Heading>
@@ -149,40 +138,38 @@ const Payment = ({
         <div className={isOpen ? "block" : "hidden"}>
           {!paidByGiftcard && availablePaymentMethods?.length && (
             <>
-              <RadioGroup
-                value={selectedPaymentMethod}
-                onChange={(value: string) => setSelectedPaymentMethod(value)}
-              >
-                {availablePaymentMethods
-                  .sort((a, b) => {
-                    return a.provider_id > b.provider_id ? 1 : -1
-                  })
-                  .map((paymentMethod) => {
-                    return (
-                      <PaymentContainer
-                        paymentInfoMap={paymentInfoMap}
-                        paymentProviderId={paymentMethod.id}
-                        key={paymentMethod.id}
-                        selectedPaymentOptionId={selectedPaymentMethod}
-                      />
-                    )
-                  })}
-              </RadioGroup>
+              {/* Mostra RadioGroup solo se ci sono più metodi o non è solo Stripe */}
+              {availablePaymentMethods.length > 1 && (
+                <RadioGroup
+                  value={selectedPaymentMethod}
+                  onChange={(value: string) => setSelectedPaymentMethod(value)}
+                >
+                  {availablePaymentMethods
+                    .sort((a, b) => {
+                      return a.provider_id > b.provider_id ? 1 : -1
+                    })
+                    .map((paymentMethod) => {
+                      return (
+                        <PaymentContainer
+                          paymentInfoMap={paymentInfoMap}
+                          paymentProviderId={paymentMethod.id}
+                          key={paymentMethod.id}
+                          selectedPaymentOptionId={selectedPaymentMethod}
+                        />
+                      )
+                    })}
+                </RadioGroup>
+              )}
+              {/* Mostra direttamente il PaymentElement per Stripe */}
               {isStripe && stripeReady && (
                 <div className="mt-5 transition-all duration-150 ease-in-out">
                   <Text className="txt-medium-plus text-ui-fg-base mb-1 font-bold uppercase">
-                    Inserisci i dettagli della carta:
+                    Seleziona il metodo di pagamento:
                   </Text>
 
-                  <CardElement
-                    options={useOptions as StripeCardElementOptions}
-                    onChange={(e) => {
-                      setCardBrand(
-                        e.brand &&
-                          e.brand.charAt(0).toUpperCase() + e.brand.slice(1)
-                      )
-                      setError(e.error?.message || null)
-                      setCardComplete(e.complete)
+                  <PaymentElement
+                    options={{
+                      layout: "accordion",
                     }}
                   />
                 </div>
@@ -209,22 +196,15 @@ const Payment = ({
             data-testid="payment-method-error-message"
           />
 
-          <Button
-            variant="elevated"
-            size="lg"
-            className="mt-6 w-full bg-black text-white hover:bg-green-400 hover:text-black"
-            onClick={handleSubmit}
-            isLoading={isLoading}
-            disabled={
-              (isStripe && !cardComplete) ||
-              (!selectedPaymentMethod && !paidByGiftcard)
-            }
-            data-testid="submit-payment-button"
-          >
-            {!activeSession && isStripeFunc(selectedPaymentMethod)
-              ? "Inserisci i dettagli della carta"
-              : "Continua al riepilogo"}
-          </Button>
+          <div className="mt-6">
+            <Text className="txt-medium text-ui-fg-base mb-4">
+              Cliccando il pulsante Effettua Ordine, confermi di aver letto,
+              compreso e accettato i nostri Termini di Utilizzo, Termini di
+              Vendita e Politica di Reso e riconosci di aver letto la Politica
+              sulla Privacy di Il Covo di Xur.
+            </Text>
+            <PaymentButton cart={cart} data-testid="submit-order-button" />
+          </div>
         </div>
 
         <div className={isOpen ? "hidden" : "block"}>
@@ -256,8 +236,8 @@ const Payment = ({
                     )}
                   </Container>
                   <Text>
-                    {isStripeFunc(selectedPaymentMethod) && cardBrand
-                      ? cardBrand
+                    {isStripeFunc(selectedPaymentMethod)
+                      ? "Metodo configurato"
                       : "Apparirà un altro passaggio"}
                   </Text>
                 </div>

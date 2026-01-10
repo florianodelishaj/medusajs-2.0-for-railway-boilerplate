@@ -9,7 +9,7 @@ export default function CheckoutLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="w-full bg-white relative small:min-h-screen">
+    <div className="w-full bg-white relative small:min-h-screen flex flex-col">
       <div className="h-16 bg-white border-b ">
         <nav className="flex h-full items-center content-container justify-between">
           <LocalizedClientLink
@@ -35,7 +35,10 @@ export default function CheckoutLayout({
           <div className="flex-1 basis-0" />
         </nav>
       </div>
-      <div className="relative" data-testid="checkout-container">
+      <div
+        className="relative flex-1 flex flex-col bg-[#F4F4F0]"
+        data-testid="checkout-container"
+      >
         {children}
       </div>
       <Footer />

@@ -33,6 +33,12 @@ const Item = ({ item, currencyCode, type = "full" }: ItemProps) => {
 
   const { handle } = item.variant?.product ?? {}
 
+  // Check if item is in backorder
+  const isBackorder =
+    item.variant?.manage_inventory &&
+    item.variant?.allow_backorder &&
+    (item.variant?.inventory_quantity || 0) <= 0
+
   const changeQuantity = async (quantity: number) => {
     setError(null)
 
@@ -122,7 +128,12 @@ const Item = ({ item, currencyCode, type = "full" }: ItemProps) => {
       )}
 
       <Table.Cell className="!pr-3 small:!pr-6 py-2 small:py-4 px-1 small:px-4 font-bold text-xs small:text-sm shrink-0 text-black">
-        <span className="!pr-0 flex flex-col items-end h-full justify-center">
+        <span className="!pr-0 flex flex-col items-end h-full justify-center gap-1">
+          {isBackorder && (
+            <span className="text-[10px] small:text-[12px] font-bold uppercase px-2 py-0.5 bg-yellow-400 border border-black">
+              Preordine
+            </span>
+          )}
           <span className="flex gap-x-1 ">
             <Text className="text-ui-fg-muted">{item.quantity}x </Text>
             <LineItemUnitPrice item={item} style="tight" />

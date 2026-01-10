@@ -17,17 +17,6 @@ const PaymentDetails = ({ order }: PaymentDetailsProps) => {
           <div className="flex flex-col small:flex-row items-start gap-6">
             <div className="flex flex-col flex-1">
               <p className="text-sm font-bold text-gray-700 mb-2 uppercase">
-                Metodo di pagamento
-              </p>
-              <p
-                className="text-base"
-                data-testid="payment-method"
-              >
-                {paymentInfoMap[payment.provider_id].title}
-              </p>
-            </div>
-            <div className="flex flex-col flex-1">
-              <p className="text-sm font-bold text-gray-700 mb-2 uppercase">
                 Dettagli pagamento
               </p>
               <div className="flex gap-2 text-base items-center">

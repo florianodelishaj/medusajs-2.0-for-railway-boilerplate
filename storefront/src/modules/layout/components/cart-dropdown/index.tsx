@@ -134,70 +134,85 @@ const CartDropdown = ({
         {cartState && cartState.items?.length ? (
           <>
             <div className="overflow-y-auto flex-1 p-4 grid grid-cols-1 gap-y-4 no-scrollbar">
-              {sortedItems.map((item) => (
-                <div
-                  className="border border-black rounded-md p-3 bg-white hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-shadow"
-                  key={item.id}
-                  data-testid="cart-item"
-                >
-                  <div className="flex gap-3">
-                    <LocalizedClientLink
-                      href={`/products/${item.variant?.product?.handle}`}
-                      className="flex-shrink-0"
-                    >
-                      <div className="w-20 h-20 border border-black rounded-md overflow-hidden">
-                        <Thumbnail
-                          thumbnail={item.variant?.product?.thumbnail}
-                          images={item.variant?.product?.images}
-                          size="square"
-                        />
-                      </div>
-                    </LocalizedClientLink>
-                    <div className="flex-1 min-w-0 flex flex-col gap-1">
-                      <h3 className="font-bold text-sm truncate">
-                        <LocalizedClientLink
-                          href={`/products/${item.variant?.product?.handle}`}
-                          data-testid="product-link"
-                        >
-                          {item.title}
-                        </LocalizedClientLink>
-                      </h3>
-                      {item.variant &&
-                        (item.variant.title !== "Default variant" ||
-                          item.product_title !== item.variant.title) && (
-                          <LineItemOptions
-                            variant={item.variant}
-                            data-testid="cart-item-variant"
-                            data-value={item.variant}
-                          />
-                        )}
-                      <div className="flex items-center justify-between gap-2">
-                        <span
-                          className="text-xs font-medium"
-                          data-testid="cart-item-quantity"
-                          data-value={item.quantity}
-                        >
-                          Quantità: {item.quantity}
-                        </span>
-                        <div className="font-bold text-sm shrink-0">
-                          <LineItemPrice
-                            item={item}
-                            currencyCode={cartState.currency_code}
-                            style="tight"
+              {sortedItems.map((item) => {
+                // Check if item is in backorder
+                const isBackorder =
+                  item.variant?.manage_inventory &&
+                  item.variant?.allow_backorder &&
+                  (item.variant?.inventory_quantity || 0) <= 0
+
+                return (
+                  <div
+                    className="border border-black rounded-md p-3 bg-white hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-shadow"
+                    key={item.id}
+                    data-testid="cart-item"
+                  >
+                    <div className="flex gap-3">
+                      <LocalizedClientLink
+                        href={`/products/${item.variant?.product?.handle}`}
+                        className="flex-shrink-0"
+                      >
+                        <div className="w-20 h-20 border border-black rounded-md overflow-hidden">
+                          <Thumbnail
+                            thumbnail={item.variant?.product?.thumbnail}
+                            images={item.variant?.product?.images}
+                            size="square"
                           />
                         </div>
+                      </LocalizedClientLink>
+                      <div className="flex-1 min-w-0 flex flex-col gap-1">
+                        <h3 className="font-bold text-sm truncate">
+                          <LocalizedClientLink
+                            href={`/products/${item.variant?.product?.handle}`}
+                            data-testid="product-link"
+                          >
+                            {item.title}
+                          </LocalizedClientLink>
+                        </h3>
+                        {item.variant &&
+                          (item.variant.title !== "Default variant" ||
+                            item.product_title !== item.variant.title) && (
+                            <LineItemOptions
+                              variant={item.variant}
+                              data-testid="cart-item-variant"
+                              data-value={item.variant}
+                            />
+                          )}
+                        <div className="flex items-center justify-between gap-2">
+                          <span
+                            className="text-xs font-medium"
+                            data-testid="cart-item-quantity"
+                            data-value={item.quantity}
+                          >
+                            Quantità: {item.quantity}
+                          </span>
+                          <div className="flex flex-col items-end gap-1">
+                            {isBackorder && (
+                              <span className="text-[12px] font-bold uppercase px-2 py-0.5 bg-yellow-400 border border-black">
+                                Preordine
+                              </span>
+                            )}
+                            <div className="font-bold text-sm">
+                              <LineItemPrice
+                                item={item}
+                                currencyCode={cartState.currency_code}
+                                style="tight"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <DeleteButton
+                          id={item.id}
+                          className="mt-1 text-xs"
+                          data-testid="cart-item-remove-button"
+                        >
+                          Rimuovi
+                        </DeleteButton>
                       </div>
-                      <DeleteButton
-                        id={item.id}
-                        className="mt-1 text-xs"
-                        data-testid="cart-item-remove-button"
-                      >
-                        Rimuovi
-                      </DeleteButton>
                     </div>
                   </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
             <div className="p-4 flex flex-col gap-y-3 border-t border-black bg-gray-50">
               <FreeShippingProgress cart={cartState} />

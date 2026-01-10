@@ -2,13 +2,31 @@
 
 import { Heading, Text, clx } from "@medusajs/ui"
 
-import PaymentButton from "../payment-button"
-import { useSearchParams } from "next/navigation"
+import { useSearchParams, useRouter, usePathname } from "next/navigation"
+import { Button } from "@components/ui/button"
+import { useCallback } from "react"
 
 const Review = ({ cart }: { cart: any }) => {
   const searchParams = useSearchParams()
+  const router = useRouter()
+  const pathname = usePathname()
 
   const isOpen = searchParams.get("step") === "review"
+
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams)
+      params.set(name, value)
+      return params.toString()
+    },
+    [searchParams]
+  )
+
+  const handleContinueToPayment = () => {
+    router.push(pathname + "?" + createQueryString("step", "payment"), {
+      scroll: false,
+    })
+  }
 
   const paidByGiftcard =
     cart?.gift_cards && cart?.gift_cards?.length > 0 && cart?.total === 0
@@ -42,14 +60,19 @@ const Review = ({ cart }: { cart: any }) => {
           <div className="flex items-start gap-x-1 w-full mb-6">
             <div className="w-full">
               <Text className="txt-medium-plus text-ui-fg-base mb-1">
-                Cliccando il pulsante Effettua Ordine, confermi di aver letto,
-                compreso e accettato i nostri Termini di Utilizzo, Termini di
-                Vendita e Politica di Reso e riconosci di aver letto la Politica
-                sulla Privacy di Medusa Store.
+                Rivedi il tuo ordine prima di procedere al pagamento.
               </Text>
             </div>
           </div>
-          <PaymentButton cart={cart} data-testid="submit-order-button" />
+          <Button
+            variant="elevated"
+            size="lg"
+            className="w-full bg-black text-white hover:bg-green-400 hover:text-black"
+            onClick={handleContinueToPayment}
+            data-testid="continue-to-payment-button"
+          >
+            Continua al pagamento
+          </Button>
         </>
       )}
     </div>

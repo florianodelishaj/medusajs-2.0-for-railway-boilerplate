@@ -2,20 +2,27 @@
 
 import { HttpTypes } from "@medusajs/types"
 import Image from "next/image"
-import { useState } from "react"
+import { useState, useContext } from "react"
+import { ProductSelectionContext } from "@modules/products/components/product-actions/context"
 
 type ImageGalleryProps = {
   images: HttpTypes.StoreProductImage[]
   isOutOfStock?: boolean
   hasDiscount?: boolean
+  isBackorder?: boolean
 }
 
 const ImageGallery = ({
   images,
   isOutOfStock,
   hasDiscount,
+  isBackorder: isBackorderProp,
 }: ImageGalleryProps) => {
   const [selectedImage, setSelectedImage] = useState(0)
+
+  // Use context value if available (product detail page), otherwise use prop (product lists)
+  const context = useContext(ProductSelectionContext)
+  const isBackorder = context ? context.isBackorder : isBackorderProp
 
   if (!images || images.length === 0) {
     return null
@@ -32,7 +39,14 @@ const ImageGallery = ({
             </span>
           </div>
         )}
-        {!isOutOfStock && hasDiscount && (
+        {!isOutOfStock && isBackorder && (
+          <div className="absolute top-4 -left-10 z-10 w-40 text-center bg-yellow-400 border-2 border-black py-1 transform -rotate-45 shadow-lg">
+            <span className="text-xs font-bold uppercase text-black">
+              Preordina
+            </span>
+          </div>
+        )}
+        {!isOutOfStock && !isBackorder && hasDiscount && (
           <div className="absolute top-4 -left-10 z-10 w-40 text-center bg-red-500 border-2 border-black py-1 transform -rotate-45 shadow-lg">
             <span className="text-xs font-bold uppercase text-white">
               Sconto

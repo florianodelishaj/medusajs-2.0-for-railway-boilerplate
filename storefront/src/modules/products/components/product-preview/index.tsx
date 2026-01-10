@@ -38,6 +38,12 @@ export default async function ProductPreview({
     return (variant.inventory_quantity || 0) <= 0
   })
 
+  // Check if any variant is in backorder (inventory ≤ 0 but allow_backorder is true)
+  const isBackorder = pricedProduct.variants?.some((variant) => {
+    if (!variant.manage_inventory) return false
+    return variant.allow_backorder && (variant.inventory_quantity || 0) <= 0
+  })
+
   // Check if product has discount
   const hasDiscount =
     cheapestPrice?.price_type === "sale" ||
@@ -60,7 +66,14 @@ export default async function ProductPreview({
               </span>
             </div>
           )}
-          {!isOutOfStock && hasDiscount && (
+          {!isOutOfStock && isBackorder && (
+            <div className="absolute top-4 -left-10 z-10 w-40 text-center bg-yellow-400 border-2 border-black py-1 transform -rotate-45 shadow-lg">
+              <span className="text-xs font-bold uppercase text-black">
+                Preordina
+              </span>
+            </div>
+          )}
+          {!isOutOfStock && !isBackorder && hasDiscount && (
             <div className="absolute top-4 -left-10 z-10 w-40 text-center bg-red-500 border-2 border-black py-1 transform -rotate-45 shadow-lg">
               <span className="text-xs font-bold uppercase text-white">
                 Sconto

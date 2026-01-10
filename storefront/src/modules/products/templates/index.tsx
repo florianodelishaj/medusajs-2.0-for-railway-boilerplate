@@ -38,6 +38,12 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
     return (variant.inventory_quantity || 0) <= 0
   })
 
+  // Check if any variant is in backorder (inventory ≤ 0 but allow_backorder is true)
+  const isBackorder = product.variants?.some((variant) => {
+    if (!variant.manage_inventory) return false
+    return variant.allow_backorder && (variant.inventory_quantity || 0) <= 0
+  })
+
   // Check if any variant has discount (sale price)
   const hasDiscount = product.variants?.some((variant) => {
     const calculatedAmount = variant.calculated_price?.calculated_amount
@@ -76,6 +82,7 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
                     images={product?.images || []}
                     isOutOfStock={isOutOfStock}
                     hasDiscount={hasDiscount}
+                    isBackorder={isBackorder}
                   />
                 </div>
 

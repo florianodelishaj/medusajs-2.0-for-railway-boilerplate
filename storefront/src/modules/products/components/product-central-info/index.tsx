@@ -6,6 +6,7 @@ import LocalizedClientLink from "@modules/common/components/localized-client-lin
 import ProductPrice from "@modules/products/components/product-price"
 import OptionSelect from "@modules/products/components/product-actions/option-select"
 import ProductDetails from "./product-details"
+import ProductExtendedDescription from "./product-extended-description"
 import { useProductSelection } from "@modules/products/components/product-actions/context"
 
 type ProductCentralInfoProps = {
@@ -82,9 +83,9 @@ const ProductCentralInfo = ({
       {/* Descrizione */}
       {showDescription && product.description && (
         <div className="bg-white border border-black rounded-md p-6">
-          <h3 className="text-lg font-black uppercase mb-4 text-black">
+          {/* <h3 className="text-lg font-black uppercase mb-4 text-black">
             Descrizione
-          </h3>
+          </h3> */}
           <Text
             className="text-base text-gray-800 whitespace-pre-line leading-relaxed"
             data-testid="product-description"
@@ -93,6 +94,9 @@ const ProductCentralInfo = ({
           </Text>
         </div>
       )}
+
+      {/* Descrizione Estesa */}
+      {showDescription && <ProductExtendedDescription product={product} />}
 
       {/* Dettagli Prodotto */}
       {showDetails && <ProductDetails product={product} />}

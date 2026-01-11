@@ -307,6 +307,63 @@ const ProductExtendedDescriptionWidget = ({
 
   return (
     <Container className="divide-y p-0">
+      <style>{`
+    .tiptap {
+      line-height: 1.6;
+      color: #fff;
+    }
+
+    .tiptap h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .tiptap h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-top: 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .tiptap ul {
+      list-style-type: disc !important;
+      margin-left: 1.5rem;
+      padding-left: 0.5rem;
+      margin-top: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .tiptap ol {
+      list-style-type: decimal !important;
+      margin-left: 1.5rem;
+      padding-left: 0.5rem;
+      margin-top: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .tiptap ul ul,
+    .tiptap ol ol,
+    .tiptap ul ol,
+    .tiptap ol ul {
+      margin-top: 0.25rem;
+      margin-bottom: 0.25rem;
+      margin-left: 1.25rem;
+    }
+
+    .tiptap li {
+      margin: 0.25rem 0;
+    }
+
+    .tiptap strong {
+      font-weight: 700;
+    }
+
+    .tiptap em {
+      font-style: italic;
+    }
+  `}</style>
       <div className="flex items-center justify-between px-6 py-4">
         <Heading level="h2">Descrizione Estesa</Heading>
         <div className="flex gap-2">

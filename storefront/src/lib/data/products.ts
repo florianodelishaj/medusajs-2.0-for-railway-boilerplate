@@ -19,7 +19,7 @@ export const getProductsById = cache(async function ({
         id: ids,
         region_id: regionId,
         cart_id: cartId,
-        fields: "*variants.calculated_price,+variants.inventory_quantity,*categories",
+        fields: "*variants.calculated_price,+variants.inventory_quantity,*categories,+metadata",
       },
       {
         next: { tags: ["products"] }
@@ -37,7 +37,7 @@ export const getProductByHandle = cache(async function (
       {
         handle,
         region_id: regionId,
-        fields: "*variants.calculated_price,+variants.inventory_quantity,*categories",
+        fields: "*variants.calculated_price,+variants.inventory_quantity,*categories,+metadata",
       },
       {
         next: { tags: ["products"] }

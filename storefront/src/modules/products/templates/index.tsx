@@ -82,8 +82,6 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
     } as HttpTypes.StoreProductImage)
   }
 
-  console.log("images", product.images)
-
   return (
     <>
       <ProductCategoryContext category={topLevelCategory || null} />

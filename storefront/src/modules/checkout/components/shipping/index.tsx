@@ -67,13 +67,10 @@ const Shipping: React.FC<ShippingProps> = ({
         <div className="flex items-center gap-x-2">
           <Heading
             level="h2"
-            className={clx(
-              "text-2xl font-black uppercase",
-              {
-                "opacity-50 pointer-events-none select-none":
-                  !isOpen && cart.shipping_methods?.length === 0,
-              }
-            )}
+            className={clx("text-2xl font-black uppercase", {
+              "opacity-50 pointer-events-none select-none":
+                !isOpen && cart.shipping_methods?.length === 0,
+            })}
           >
             Consegna
           </Heading>
@@ -110,7 +107,10 @@ const Shipping: React.FC<ShippingProps> = ({
           ) : (
             <>
               <div className="pb-6">
-                <RadioGroup value={selectedShippingMethod?.id || ""} onChange={set}>
+                <RadioGroup
+                  value={selectedShippingMethod?.id || ""}
+                  onChange={set}
+                >
                   {availableShippingMethods.map((option) => {
                     return (
                       <RadioGroup.Option

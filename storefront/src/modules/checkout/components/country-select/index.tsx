@@ -32,7 +32,10 @@ const CountrySelect = ({
   const [selectedCountry, setSelectedCountry] = useState<string>(value || "")
   const [searchQuery, setSearchQuery] = useState<string>("")
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [showError, setShowError] = useState(false)
   const openStateRef = useRef(false)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const selectedCountryRef = useRef<string>(selectedCountry)
 
   const searchInputCallbackRef = (node: HTMLInputElement | null) => {
     if (node && isDropdownOpen) {
@@ -55,11 +58,47 @@ const CountrySelect = ({
     }
   }, [isDropdownOpen])
 
+  // Sync ref with state
+  useEffect(() => {
+    selectedCountryRef.current = selectedCountry
+    if (selectedCountry) {
+      setShowError(false)
+    }
+  }, [selectedCountry])
+
   useEffect(() => {
     if (value) {
       setSelectedCountry(value)
     }
   }, [value])
+
+  // Intercept form submit and validate (only set up once)
+  useEffect(() => {
+    const form = containerRef.current?.closest("form")
+
+    if (!form || !required) return
+
+    const handleSubmit = (e: SubmitEvent) => {
+      // Use ref instead of state to avoid recreating listener
+      if (!selectedCountryRef.current) {
+        e.preventDefault()
+        e.stopPropagation()
+        setShowError(true)
+
+        // Scroll to this field
+        containerRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        })
+      }
+    }
+
+    form.addEventListener("submit", handleSubmit)
+
+    return () => {
+      form.removeEventListener("submit", handleSubmit)
+    }
+  }, [required]) // Only depends on required, not selectedCountry
 
   // Registra le locali necessarie basandosi sui paesi nella region
   useEffect(() => {
@@ -144,7 +183,7 @@ const CountrySelect = ({
   const hasValue = !!selectedCountry
 
   return (
-    <div className="flex flex-col w-full">
+    <div ref={containerRef} className="flex flex-col w-full">
       {/* Hidden input per inviare il valore nel form */}
       <input
         type="hidden"
@@ -166,7 +205,12 @@ const CountrySelect = ({
           return (
             <div className="relative z-50">
               <Listbox.Button
-                className="relative w-full flex justify-between items-center pt-4 pb-1 px-4 h-12 text-left bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 border border-black rounded-md hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-green-400 transition-all font-medium"
+                className={cn(
+                  "relative w-full flex justify-between items-center pt-4 pb-1 px-4 h-12 text-left bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-md hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-green-400 transition-all font-medium border",
+                  showError
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-black focus:ring-green-400"
+                )}
                 data-testid={props["data-testid"]}
               >
               <span className="block truncate text-sm opacity-0">
@@ -248,6 +292,11 @@ const CountrySelect = ({
           )
         }}
       </Listbox>
+      {showError && (
+        <p className="text-sm text-red-500 mt-1 font-medium">
+          Seleziona un paese
+        </p>
+      )}
     </div>
   )
 }

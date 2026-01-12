@@ -26,8 +26,13 @@ const ProductExtendedDescription = ({
   return (
     <Accordion type="single" collapsible>
       <Accordion.Item title="Descrizione" value="extended-description">
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `.extended-desc strong, .extended-desc em, .extended-desc b, .extended-desc i { color: inherit; }`,
+          }}
+        />
         <div
-          className="prose prose-sm max-w-none text-gray-800 prose-headings:text-black prose-h2:text-2xl prose-h2:font-bold prose-h3:text-xl prose-h3:font-semibold prose-ul:list-disc prose-ol:list-decimal prose-li:my-1 prose-p:my-2"
+          className="extended-desc prose prose-sm max-w-none text-gray-800 prose-headings:text-black prose-h2:text-2xl prose-h2:font-bold prose-h3:text-xl prose-h3:font-semibold prose-ul:list-disc prose-ol:list-decimal prose-li:my-1 prose-p:my-2"
           dangerouslySetInnerHTML={{
             __html: extendedDescription,
           }}

@@ -32,7 +32,7 @@ const ProductExtendedDescription = ({
           }}
         />
         <div
-          className="extended-desc prose prose-sm max-w-none text-gray-800 prose-headings:text-black prose-h2:text-2xl prose-h2:font-bold prose-h3:text-xl prose-h3:font-semibold prose-ul:list-disc prose-ol:list-decimal prose-li:my-1 prose-p:my-2"
+          className="extended-desc prose max-w-none text-gray-800 prose-headings:text-black prose-h2:text-2xl prose-h2:font-bold prose-h3:text-xl prose-h3:font-semibold prose-ul:list-disc prose-ul:ml-6 prose-ol:list-decimal prose-ol:ml-6 prose-li:my-1 prose-p:my-2"
           dangerouslySetInnerHTML={{
             __html: extendedDescription,
           }}

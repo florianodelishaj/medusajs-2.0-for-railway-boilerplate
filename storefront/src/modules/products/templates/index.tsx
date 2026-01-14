@@ -70,17 +70,16 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
         (option) => option.values && option.values.length > 1
       ))
 
-  // Ensure thumbnail is included in images array
-  const allImages = [...(product.images || [])]
-  if (
-    product.thumbnail &&
-    !allImages.find((img) => img.url === product.thumbnail)
-  ) {
+  let allImages = [...(product.images || [])]
+  if (product.thumbnail) {
+    allImages = allImages.filter((img) => img.url !== product.thumbnail)
+
     allImages.unshift({
       id: "thumbnail",
       url: product.thumbnail,
     } as HttpTypes.StoreProductImage)
   }
+
   if (product.id == "prod_01KCF9F7G9RW106DA5QJGP6GFK") {
     console.log("allImages", allImages)
     console.log("product", product)

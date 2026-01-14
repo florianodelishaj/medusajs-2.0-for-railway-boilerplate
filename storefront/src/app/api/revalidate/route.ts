@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
           `[Revalidate] Invalidated category and product static pages`
         )
       } else if (tag === "products") {
-        revalidatePath("/[countryCode]/products/[handle]", "page")
+        revalidatePath("/[countryCode]/(main)/products/[handle]", "page")
         invalidatedPaths.push("/[countryCode]/(main)/products/[handle]")
         console.log(`[Revalidate] Invalidated product static pages`)
       }

@@ -6,7 +6,10 @@ import { getRegion, listRegions } from "@lib/data/regions"
 import { getProductByHandle, getProductsList } from "@lib/data/products"
 import { getTopLevelCategories } from "@lib/data/categories"
 import DynamicBackground from "@modules/layout/components/dynamic-background"
-import { findTopLevelCategory, getCategoryBackground } from "@lib/util/get-category-background"
+import {
+  findTopLevelCategory,
+  getCategoryBackground,
+} from "@lib/util/get-category-background"
 
 type Props = {
   params: { countryCode: string; handle: string }
@@ -60,10 +63,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: `${product.title} | Medusa Store`,
+    title: `${product.title} | Il Covo di XUr`,
     description: `${product.title}`,
     openGraph: {
-      title: `${product.title} | Medusa Store`,
+      title: `${product.title} | Il Covo di Xur`,
       description: `${product.title}`,
       images: product.thumbnail ? [product.thumbnail] : [],
     },

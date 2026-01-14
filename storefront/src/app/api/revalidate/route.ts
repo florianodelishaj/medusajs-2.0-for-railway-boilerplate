@@ -12,7 +12,10 @@ import { NextRequest, NextResponse } from "next/server"
  */
 export async function POST(request: NextRequest) {
   const secret = request.headers.get("x-revalidate-secret")
-  if (process.env.REVALIDATE_SECRET && secret !== process.env.REVALIDATE_SECRET) {
+  if (
+    process.env.REVALIDATE_SECRET &&
+    secret !== process.env.REVALIDATE_SECRET
+  ) {
     return NextResponse.json({ error: "Invalid secret" }, { status: 401 })
   }
 
@@ -42,19 +45,29 @@ export async function POST(request: NextRequest) {
           "/[countryCode]/(main)/categories/[...category]",
           "/[countryCode]/(main)/products/[handle]"
         )
-        console.log(`[Revalidate] Invalidated category and product static pages`)
+        console.log(
+          `[Revalidate] Invalidated category and product static pages`
+        )
+      } else if (tag === "products") {
+        revalidatePath("/[countryCode]/(main)/products/[handle]", "page")
+        invalidatedPaths.push("/[countryCode]/(main)/products/[handle]")
+        console.log(`[Revalidate] Invalidated product static pages`)
       }
 
       // Invalida anche la homepage
       revalidatePath("/")
-      console.log(`[Revalidate] Successfully invalidated tag: ${tag} and paths: ${invalidatedPaths.join(", ")}`)
+      console.log(
+        `[Revalidate] Successfully invalidated tag: ${tag} and paths: ${invalidatedPaths.join(
+          ", "
+        )}`
+      )
 
       return NextResponse.json({
         revalidated: true,
         type: "tag",
         value: tag,
         invalidatedPaths,
-        now: Date.now()
+        now: Date.now(),
       })
     }
 
@@ -66,7 +79,7 @@ export async function POST(request: NextRequest) {
         revalidated: true,
         type: "path",
         value: path,
-        now: Date.now()
+        now: Date.now(),
       })
     }
   } catch (error) {

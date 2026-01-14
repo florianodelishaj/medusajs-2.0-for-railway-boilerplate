@@ -81,7 +81,7 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
       url: product.thumbnail,
     } as HttpTypes.StoreProductImage)
   }
-  if (product.id == "prod_01KCF8TVKPSV7WWCETJCKPZ6SG") {
+  if (product.id == "prod_01KCF9F7G9RW106DA5QJGP6GFK") {
     console.log("allImages", allImages)
   }
   return (

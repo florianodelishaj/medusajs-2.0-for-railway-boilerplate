@@ -83,6 +83,7 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
   }
   if (product.id == "prod_01KCF9F7G9RW106DA5QJGP6GFK") {
     console.log("allImages", allImages)
+    console.log("product", product)
   }
   return (
     <>

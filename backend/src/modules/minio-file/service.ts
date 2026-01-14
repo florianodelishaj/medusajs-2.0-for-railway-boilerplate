@@ -21,6 +21,7 @@ interface MinioServiceConfig {
   accessKey: string
   secretKey: string
   bucket?: string
+  prefix?: string
 }
 
 export interface MinioFileProviderOptions {
@@ -28,6 +29,7 @@ export interface MinioFileProviderOptions {
   accessKey: string
   secretKey: string
   bucket?: string
+  prefix?: string
 }
 
 const DEFAULT_BUCKET = 'medusa-media'
@@ -49,12 +51,13 @@ class MinioFileProviderService extends AbstractFileProviderService {
       endPoint: options.endPoint,
       accessKey: options.accessKey,
       secretKey: options.secretKey,
-      bucket: options.bucket
+      bucket: options.bucket,
+      prefix: options.prefix
     }
 
     // Use provided bucket or default
     this.bucket = this.config_.bucket || DEFAULT_BUCKET
-    this.logger_.info(`MinIO service initialized with bucket: ${this.bucket}`)
+    this.logger_.info(`MinIO service initialized with bucket: ${this.bucket}, prefix: ${this.config_.prefix || 'none'}`)
 
     // Initialize Minio client with hardcoded SSL settings
     this.client = new Client({
@@ -162,7 +165,10 @@ class MinioFileProviderService extends AbstractFileProviderService {
 
     try {
       const parsedFilename = path.parse(file.filename)
-      const fileKey = `${parsedFilename.name}-${ulid()}${parsedFilename.ext}`
+      const filename = `${parsedFilename.name}-${ulid()}${parsedFilename.ext}`
+      const fileKey = this.config_.prefix
+        ? `${this.config_.prefix}/${filename}`
+        : filename
       const content = Buffer.from(file.content, 'binary')
 
       // Upload file with public-read access
@@ -257,7 +263,9 @@ class MinioFileProviderService extends AbstractFileProviderService {
 
     try {
       // Use the filename directly as the key (matches S3 provider behavior for presigned uploads)
-      const fileKey = fileData.filename
+      const fileKey = this.config_.prefix
+        ? `${this.config_.prefix}/${fileData.filename}`
+        : fileData.filename
 
       // Generate presigned PUT URL that expires in 15 minutes
       const url = await this.client.presignedPutObject(

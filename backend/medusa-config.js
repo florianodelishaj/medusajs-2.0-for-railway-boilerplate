@@ -66,6 +66,7 @@ const medusaConfig = {
                     accessKey: MINIO_ACCESS_KEY,
                     secretKey: MINIO_SECRET_KEY,
                     bucket: MINIO_BUCKET, // Optional, default: medusa-media
+                    prefix: "products/images", // Files will be saved in bucket/products/images/
                   },
                 },
               ]

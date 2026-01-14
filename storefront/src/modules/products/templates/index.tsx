@@ -81,7 +81,9 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
       url: product.thumbnail,
     } as HttpTypes.StoreProductImage)
   }
-
+  if (product.id == "prod_01KCF8TVKPSV7WWCETJCKPZ6SG") {
+    console.log("allImages", allImages)
+  }
   return (
     <>
       <ProductCategoryContext category={topLevelCategory || null} />

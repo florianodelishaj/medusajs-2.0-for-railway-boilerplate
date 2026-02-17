@@ -19,8 +19,10 @@ export default function RootLayout(props: { children: React.ReactNode }) {
   return (
     <html lang="it" data-mode="light">
       <head>
-        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
-        <script src="https://embeds.iubenda.com/widgets/ef91f9b1-a19f-439f-bc46-130340a152f0.js" />
+        <Script
+          src="https://embeds.iubenda.com/widgets/ef91f9b1-a19f-439f-bc46-130340a152f0.js"
+          strategy="afterInteractive"
+        />
         <Script
           src="https://cdn.iubenda.com/iubenda.js"
           strategy="lazyOnload"

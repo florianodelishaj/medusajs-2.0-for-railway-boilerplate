@@ -19,18 +19,19 @@ export default function RootLayout(props: { children: React.ReactNode }) {
   return (
     <html lang="it" data-mode="light">
       <head>
-        <Script
+        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+        <script
+          type="text/javascript"
           src="https://embeds.iubenda.com/widgets/ef91f9b1-a19f-439f-bc46-130340a152f0.js"
-          strategy="afterInteractive"
-        />
-        <Script
-          src="https://cdn.iubenda.com/iubenda.js"
-          strategy="lazyOnload"
         />
       </head>
       <body className={dmSans.className}>
         <main className="relative">{props.children}</main>
         <Toaster position="bottom-right" richColors />
+        <Script
+          src="https://cdn.iubenda.com/iubenda.js"
+          strategy="lazyOnload"
+        />
       </body>
     </html>
   )

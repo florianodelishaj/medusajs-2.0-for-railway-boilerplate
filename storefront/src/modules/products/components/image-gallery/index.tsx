@@ -10,6 +10,7 @@ type ImageGalleryProps = {
   isOutOfStock?: boolean
   hasDiscount?: boolean
   isBackorder?: boolean
+  isTrending?: boolean
 }
 
 const ImageGallery = ({
@@ -17,6 +18,7 @@ const ImageGallery = ({
   isOutOfStock,
   hasDiscount,
   isBackorder: isBackorderProp,
+  isTrending,
 }: ImageGalleryProps) => {
   const [selectedImage, setSelectedImage] = useState(0)
 
@@ -31,7 +33,7 @@ const ImageGallery = ({
   return (
     <div className="flex flex-col gap-4">
       {/* Immagine principale */}
-      <div className="relative aspect-square w-full overflow-hidden bg-gray-100 border border-black rounded-md">
+      <div className="relative aspect-square w-full overflow-hidden bg-white border border-black rounded-md">
         {isOutOfStock && (
           <div className="absolute top-4 -left-10 z-10 w-40 text-center bg-gray-800 border-2 border-black py-1 transform -rotate-45 shadow-lg">
             <span className="text-xs font-bold uppercase text-white">
@@ -53,16 +55,23 @@ const ImageGallery = ({
             </span>
           </div>
         )}
+        {!isOutOfStock && !isBackorder && !hasDiscount && isTrending && (
+          <div className="absolute top-4 -left-10 z-10 w-40 text-center bg-pink-400 border-2 border-black py-1 transform -rotate-45 shadow-lg">
+            <span className="text-xs font-bold uppercase text-white">
+              Tendenza
+            </span>
+          </div>
+        )}
         {images[selectedImage]?.url && (
           <Image
             src={images[selectedImage].url}
             priority
-            className="absolute inset-0"
+            className="absolute inset-0 p-2"
             alt={`Product image ${selectedImage + 1}`}
             fill
             sizes="(max-width: 768px) 100vw, 600px"
             style={{
-              objectFit: "cover",
+              objectFit: "contain",
             }}
           />
         )}

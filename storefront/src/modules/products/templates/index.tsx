@@ -70,6 +70,8 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
         (option) => option.values && option.values.length > 1
       ))
 
+  const isTrending = product.tags?.some((tag: any) => tag.value === "Tendenze") ?? false
+
   let allImages = [...(product.images || [])]
   if (product.thumbnail) {
     allImages = allImages.filter((img) => img.url !== product.thumbnail)
@@ -99,6 +101,7 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
                     isOutOfStock={isOutOfStock}
                     hasDiscount={hasDiscount}
                     isBackorder={isBackorder}
+                    isTrending={isTrending}
                   />
                 </div>
 
@@ -165,6 +168,7 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
                   images={allImages}
                   isOutOfStock={isOutOfStock}
                   hasDiscount={hasDiscount}
+                  isTrending={isTrending}
                 />
               </div>
 

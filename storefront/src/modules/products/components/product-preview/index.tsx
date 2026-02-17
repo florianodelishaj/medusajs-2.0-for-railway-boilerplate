@@ -49,7 +49,8 @@ export default async function ProductPreview({
     cheapestPrice?.price_type === "sale" ||
     (cheapestPrice?.original_price_number &&
       cheapestPrice?.calculated_price_number &&
-      cheapestPrice.original_price_number > cheapestPrice.calculated_price_number)
+      cheapestPrice.original_price_number >
+        cheapestPrice.calculated_price_number)
 
   return (
     <LocalizedClientLink href={`/products/${product.handle}`} className="group">
@@ -80,6 +81,16 @@ export default async function ProductPreview({
               </span>
             </div>
           )}
+          {!isOutOfStock &&
+            !isBackorder &&
+            !hasDiscount &&
+            product.tags?.some((tag: any) => tag.value === "Tendenze") && (
+              <div className="absolute top-4 -left-10 z-10 w-40 text-center bg-pink-400 border-2 border-black py-1 transform -rotate-45 shadow-lg">
+                <span className="text-xs font-bold uppercase text-white">
+                  Tendenza
+                </span>
+              </div>
+            )}
           <Thumbnail
             className="rounded-tl-lg rounded-tr-lg rounded-b-none"
             thumbnail={product.thumbnail}

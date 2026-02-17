@@ -18,7 +18,7 @@ export default function DiscountedProducts({
   }
 
   return (
-    <section className="content-container py-12">
+    <section className="content-container pt-4 pb-8">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-9 mb-8">
         <div className="flex items-center gap-3">
           <div className="bg-green-400 border border-black p-3 rounded-md">

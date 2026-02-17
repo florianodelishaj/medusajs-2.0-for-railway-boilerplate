@@ -25,7 +25,10 @@ export default function ProductPreviewClient({
     if (variant.allow_backorder) return false
     // Se inventory_quantity è undefined, non considerare il prodotto esaurito
     // (significa che i dati inventory non sono disponibili)
-    if (variant.inventory_quantity === undefined || variant.inventory_quantity === null) {
+    if (
+      variant.inventory_quantity === undefined ||
+      variant.inventory_quantity === null
+    ) {
       return false
     }
     return variant.inventory_quantity <= 0
@@ -73,6 +76,15 @@ export default function ProductPreviewClient({
               </span>
             </div>
           )}
+          {!isOutOfStock &&
+            !hasDiscount &&
+            product.tags?.some((tag: any) => tag.value === "Tendenze") && (
+              <div className="absolute top-4 -left-10 z-10 w-40 text-center bg-pink-400 border-2 border-black py-1 transform -rotate-45 shadow-lg">
+                <span className="text-xs font-bold uppercase text-white">
+                  Tendenza
+                </span>
+              </div>
+            )}
           <Thumbnail
             className="rounded-tl-lg rounded-tr-lg rounded-b-none"
             thumbnail={product.thumbnail}

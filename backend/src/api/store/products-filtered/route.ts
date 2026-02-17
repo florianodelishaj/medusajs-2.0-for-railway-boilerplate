@@ -107,6 +107,7 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
     min_price,
     max_price,
     discounted,
+    tag_value,
     include_root_family, // Se true, risale alla root e include tutti i fratelli
   } = req.query;
 
@@ -263,6 +264,14 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
 
           return isSaleType || hasDiscount;
         });
+      });
+    }
+
+    // Apply tag filter if provided
+    if (tag_value) {
+      const tagVal = tag_value as string;
+      filteredProducts = filteredProducts.filter((product) => {
+        return product.tags?.some((tag: any) => tag.value === tagVal);
       });
     }
 

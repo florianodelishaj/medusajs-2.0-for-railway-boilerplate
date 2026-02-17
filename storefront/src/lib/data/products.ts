@@ -107,6 +107,7 @@ export const getProductsListWithSort = cache(async function ({
   minPrice,
   maxPrice,
   discounted,
+  tagValue,
   includeRootFamily = false,
   countryCode,
 }: {
@@ -115,6 +116,7 @@ export const getProductsListWithSort = cache(async function ({
   sortBy?: SortOptions
   minPrice?: string
   maxPrice?: string
+  tagValue?: string
   discounted?: string
   includeRootFamily?: boolean
   countryCode: string
@@ -173,6 +175,10 @@ export const getProductsListWithSort = cache(async function ({
     params.append("discounted", "true")
   }
 
+  if (tagValue) {
+    params.append("tag_value", tagValue)
+  }
+
   if (includeRootFamily) {
     params.append("include_root_family", "true")
   }
@@ -229,6 +235,25 @@ export const getDiscountedProducts = cache(async function (
       limit,
     },
     discounted: "true",
+    countryCode,
+  })
+
+  return { products, count }
+})
+
+export const getProductsByTag = cache(async function (
+  countryCode: string,
+  tagValue: string,
+  limit: number = 12
+): Promise<{ products: HttpTypes.StoreProduct[]; count: number }> {
+  const {
+    response: { products, count },
+  } = await getProductsListWithSort({
+    page: 1,
+    queryParams: {
+      limit,
+    },
+    tagValue,
     countryCode,
   })
 

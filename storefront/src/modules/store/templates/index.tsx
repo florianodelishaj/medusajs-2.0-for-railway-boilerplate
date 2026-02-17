@@ -12,6 +12,7 @@ const StoreTemplate = ({
   minPrice,
   maxPrice,
   discounted,
+  tagValue,
   countryCode,
 }: {
   sortBy?: SortOptions
@@ -19,6 +20,7 @@ const StoreTemplate = ({
   minPrice?: string
   maxPrice?: string
   discounted?: string
+  tagValue?: string
   countryCode: string
 }) => {
   const pageNumber = page ? parseInt(page) : 1
@@ -38,6 +40,7 @@ const StoreTemplate = ({
             minPrice={minPrice}
             maxPrice={maxPrice}
             discounted={discounted}
+            tagValue={tagValue}
             countryCode={countryCode}
           />
         </Suspense>

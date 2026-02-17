@@ -16,6 +16,7 @@ type Params = {
     min_price?: string
     max_price?: string
     discounted?: string
+    tag?: string
   }
   params: {
     countryCode: string
@@ -23,7 +24,7 @@ type Params = {
 }
 
 export default async function StorePage({ searchParams, params }: Params) {
-  const { sortBy, page, min_price, max_price, discounted } = searchParams
+  const { sortBy, page, min_price, max_price, discounted, tag } = searchParams
 
   return (
     <DynamicBackground backgroundImage={null}>
@@ -33,6 +34,7 @@ export default async function StorePage({ searchParams, params }: Params) {
         minPrice={min_price}
         maxPrice={max_price}
         discounted={discounted}
+        tagValue={tag}
         countryCode={params.countryCode}
       />
     </DynamicBackground>

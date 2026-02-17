@@ -41,16 +41,26 @@ export async function POST(request: NextRequest) {
       if (tag === "categories") {
         revalidatePath("/[countryCode]/(main)/categories/[...category]", "page")
         revalidatePath("/[countryCode]/(main)/products/[handle]", "page")
+        revalidatePath("/[countryCode]/(main)/store", "page")
+        revalidatePath("/[countryCode]/(main)/", "page")
         invalidatedPaths.push(
           "/[countryCode]/(main)/categories/[...category]",
-          "/[countryCode]/(main)/products/[handle]"
+          "/[countryCode]/(main)/products/[handle]",
+          "/[countryCode]/(main)/store",
+          "/[countryCode]/(main)/"
         )
         console.log(
           `[Revalidate] Invalidated category and product static pages`
         )
       } else if (tag === "products") {
         revalidatePath("/[countryCode]/(main)/products/[handle]", "page")
-        invalidatedPaths.push("/[countryCode]/(main)/products/[handle]")
+        revalidatePath("/[countryCode]/(main)/store", "page")
+        revalidatePath("/[countryCode]/(main)/", "page")
+        invalidatedPaths.push(
+          "/[countryCode]/(main)/products/[handle]",
+          "/[countryCode]/(main)/store",
+          "/[countryCode]/(main)/"
+        )
         console.log(`[Revalidate] Invalidated product static pages`)
       }
 

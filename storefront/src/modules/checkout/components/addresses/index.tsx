@@ -97,6 +97,15 @@ const Addresses = ({
             Continua alla consegna
           </SubmitButton>
           <ErrorMessage error={message} data-testid="address-error-message" />
+          <p className="text-xs text-black/70 mt-4">
+            Hai bisogno della fattura? Scrivici a{" "}
+            <a
+              href="mailto:amministrazione@ilcovodixur.com"
+              className="underline hover:text-green-600"
+            >
+              amministrazione@ilcovodixur.com
+            </a>
+          </p>
         </form>
       ) : (
         <div>

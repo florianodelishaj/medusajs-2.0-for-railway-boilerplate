@@ -26,7 +26,7 @@ function SearchResults({ isFocused }: SearchResultsProps) {
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   if (!isFocused || hits.length === 0) return null
-  console.log("HIT", hit)
+  console.log("HIT", hits)
   return (
     <div
       ref={dropdownRef}

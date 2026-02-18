@@ -186,7 +186,7 @@ const medusaConfig = {
                     "handle",
                     "variant_sku",
                     "thumbnail",
-                    "images",
+                    "images.*",
                   ],
                   indexSettings: {
                     searchableAttributes: [

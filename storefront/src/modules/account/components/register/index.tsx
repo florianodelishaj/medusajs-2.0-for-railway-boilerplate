@@ -60,18 +60,20 @@ const Register = ({ setCurrentView }: Props) => {
         <ErrorMessage error={message} data-testid="register-error" />
         <span className="text-sm text-gray-700">
           Creando un account, accetti la{" "}
-          <LocalizedClientLink
-            href="/content/privacy-policy"
-            className="underline hover:text-green-600"
+          <a
+            href="https://www.iubenda.com/privacy-policy/27581848"
+            className="underline hover:text-green-600 iubenda-white iubenda-noiframe iubenda-embed"
+            target="_blank"
+            rel="noopener noreferrer"
           >
             Informativa sulla Privacy
-          </LocalizedClientLink>{" "}
+          </a>{" "}
           e i{" "}
           <LocalizedClientLink
-            href="/content/terms-of-use"
+            href="/termini-e-condizioni"
             className="underline hover:text-green-600"
           >
-            Termini di utilizzo
+            Termini e Condizioni
           </LocalizedClientLink>
           .
         </span>

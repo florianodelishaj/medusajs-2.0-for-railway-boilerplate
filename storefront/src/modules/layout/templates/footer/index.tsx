@@ -27,13 +27,13 @@ export default async function Footer() {
               </span>
               <LocalizedClientLink
                 href="/chi-siamo"
-                className="text-sm text-ui-fg-subtle hover:text-ui-fg-base"
+                className="text-sm text-ui-fg-subtle hover:text-green-400"
               >
                 Chi Siamo
               </LocalizedClientLink>
               <LocalizedClientLink
                 href="/spedizioni"
-                className="text-sm text-ui-fg-subtle hover:text-ui-fg-base"
+                className="text-sm text-ui-fg-subtle hover:text-green-400"
               >
                 Spedizioni
               </LocalizedClientLink>
@@ -45,26 +45,26 @@ export default async function Footer() {
               </span>
               <LocalizedClientLink
                 href="/termini-e-condizioni"
-                className="text-sm text-ui-fg-subtle hover:text-ui-fg-base"
+                className="text-sm text-ui-fg-subtle hover:text-green-400"
               >
                 Termini e Condizioni
               </LocalizedClientLink>
               <LocalizedClientLink
                 href="/politica-resi"
-                className="text-sm text-ui-fg-subtle hover:text-ui-fg-base"
+                className="text-sm text-ui-fg-subtle hover:text-green-400"
               >
                 Politica di Reso e Rimborsi
               </LocalizedClientLink>
               <a
                 href="https://www.iubenda.com/privacy-policy/27581848"
-                className="iubenda-white iubenda-noiframe iubenda-embed text-sm text-ui-fg-subtle hover:text-ui-fg-base"
+                className="iubenda-white iubenda-noiframe iubenda-embed text-sm text-ui-fg-subtle hover:text-green-400"
                 title="Privacy Policy"
               >
                 Privacy Policy
               </a>
               <a
                 href="https://www.iubenda.com/privacy-policy/27581848/cookie-policy"
-                className="iubenda-white iubenda-noiframe iubenda-embed text-sm text-ui-fg-subtle hover:text-ui-fg-base"
+                className="iubenda-white iubenda-noiframe iubenda-embed text-sm text-ui-fg-subtle hover:text-green-400"
                 title="Cookie Policy"
               >
                 Cookie Policy
@@ -77,7 +77,7 @@ export default async function Footer() {
               </span>
               <a
                 href="mailto:info@ilcovodixur.com"
-                className="text-sm text-ui-fg-subtle hover:text-ui-fg-base"
+                className="text-sm text-ui-fg-subtle hover:text-green-400"
               >
                 info@ilcovodixur.com
               </a>
@@ -85,7 +85,7 @@ export default async function Footer() {
                 href="https://www.instagram.com/ilcovodixur/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm text-ui-fg-subtle hover:text-ui-fg-base"
+                className="text-sm text-ui-fg-subtle hover:text-green-400"
               >
                 Instagram
               </a>

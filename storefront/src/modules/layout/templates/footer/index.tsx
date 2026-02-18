@@ -9,7 +9,7 @@ const poppins = Poppins({
 
 export default async function Footer() {
   return (
-    <footer className="w-full">
+    <footer className="w-full border-t border-black">
       <div className="content-container flex flex-col gap-8">
         <div className="flex flex-col small:flex-row small:justify-between gap-8">
           <LocalizedClientLink

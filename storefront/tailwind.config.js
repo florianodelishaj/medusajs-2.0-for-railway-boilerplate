@@ -192,6 +192,10 @@ module.exports = {
           "0%": { transform: "translateX(0)" },
           "100%": { transform: "translateX(100%)" },
         },
+        "hero-fade-up": {
+          "0%": { opacity: "0", transform: "translateY(20px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
       },
       animation: {
         ring: "ring 2.2s cubic-bezier(0.5, 0, 0.5, 1) infinite",
@@ -211,6 +215,7 @@ module.exports = {
         "slide-in-from-right": "slide-in-from-right 300ms ease-out",
         "slide-out-to-right": "slide-out-to-right 300ms ease-in",
         leave: "leave 150ms ease-in forwards",
+        "hero-fade-up": "hero-fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards",
       },
     },
   },

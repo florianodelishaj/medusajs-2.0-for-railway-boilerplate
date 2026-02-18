@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState, useMemo } from "react"
 import useEmblaCarousel from "embla-carousel-react"
 import Autoplay from "embla-carousel-autoplay"
 import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react"
+import { Button } from "@components/ui/button"
 import { HttpTypes } from "@medusajs/types"
 import Link from "next/link"
 import ProductPreviewClient from "@modules/products/components/product-preview-client"
@@ -17,35 +18,28 @@ export default function DiscountedProductsCarousel({
   products,
   totalCount,
 }: CarouselProps) {
-  // Filtra i prodotti esauriti dal carosello
   const availableProducts = useMemo(() => {
     return products.filter((product) => {
-      // Se non ha varianti, consideralo non disponibile
       if (!product.variants || product.variants.length === 0) {
         return false
       }
 
-      // Il prodotto è disponibile se ALMENO UNA variante è disponibile
       return product.variants.some((variant) => {
-        // Se non gestisce l'inventario, è sempre disponibile
         if (!variant.manage_inventory) return true
-        // Se permette backorder, è disponibile
         if (variant.allow_backorder) return true
-        // Se inventory_quantity è undefined/null, consideriamolo disponibile
         if (
           variant.inventory_quantity === undefined ||
           variant.inventory_quantity === null
         ) {
           return true
         }
-        // Altrimenti controlla che sia > 0
         return variant.inventory_quantity > 0
       })
     })
   }, [products])
 
   const autoplayPlugin = useMemo(
-    () => Autoplay({ delay: 2000, stopOnInteraction: true }),
+    () => Autoplay({ delay: 3000, stopOnInteraction: true }),
     []
   )
 
@@ -111,7 +105,6 @@ export default function DiscountedProductsCarousel({
     }
   }, [emblaApi, onSelect])
 
-  // Handle viewport resize to update dots
   useEffect(() => {
     if (!emblaApi) return
 
@@ -124,56 +117,73 @@ export default function DiscountedProductsCarousel({
   }, [emblaApi])
 
   return (
-    <div className="relative py-4">
-      {/* Carousel Container */}
-      <div className="overflow-hidden py-2" ref={emblaRef}>
-        <div className="flex gap-6">
+    <div className="relative">
+      <div className="overflow-hidden -mx-2 px-2" ref={emblaRef}>
+        <div className="flex gap-5 py-2">
           {availableProducts.map((product) => (
             <div
               key={product.id}
-              className="flex-[0_0_calc(50%-12px)] min-w-0 md:flex-[0_0_calc(33.333%-16px)] lg:flex-[0_0_calc(25%-18px)]"
+              className="flex-[0_0_calc(50%-10px)] min-w-0 md:flex-[0_0_calc(33.333%-14px)] lg:flex-[0_0_calc(25%-15px)]"
             >
               <ProductPreviewClient product={product} isFeatured />
             </div>
           ))}
 
           {/* "Vedi tutti" Card */}
-          <div className="flex-[0_0_calc(50%-12px)] min-w-0 md:flex-[0_0_calc(33.333%-16px)] lg:flex-[0_0_calc(25%-18px)]">
+          <div className="flex-[0_0_calc(50%-10px)] min-w-0 md:flex-[0_0_calc(33.333%-14px)] lg:flex-[0_0_calc(25%-15px)]">
             <Link
               href="/store?discounted=true"
-              className="group h-full flex flex-col items-center justify-center gap-4 bg-green-400 border border-black rounded-md p-8 hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:-translate-x-[4px] hover:-translate-y-[4px] transition-all"
+              className="group/cta relative h-full flex flex-col bg-green-400 border border-black rounded-md overflow-hidden hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:-translate-x-[2px] hover:-translate-y-[2px] transition-all duration-200"
             >
-              <div className="text-center flex-1 flex flex-col items-center justify-center">
-                <p className="text-sm font-bold uppercase mb-2">
-                  Scopri tutti i prodotti in sconto
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  backgroundImage:
+                    "repeating-linear-gradient(-45deg, transparent, transparent 7px, rgba(0,0,0,0.06) 7px, rgba(0,0,0,0.06) 8px)",
+                }}
+              />
+              <div className="relative flex-1 flex flex-col items-center justify-center p-6 text-center">
+                <p className="text-7xl font-black leading-none">
+                  {totalCount}
                 </p>
-                <p className="text-4xl font-black">{totalCount}</p>
-                <p className="text-sm font-bold uppercase mt-1">Prodotti</p>
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] mt-2">
+                  prodotti
+                </p>
+              </div>
+              <div className="relative border-t border-black bg-black/5 px-4 py-3 flex items-center justify-center gap-2">
+                <span className="text-sm font-black uppercase tracking-wide">
+                  Vedi tutti
+                </span>
+                <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover/cta:translate-x-1" />
               </div>
             </Link>
           </div>
         </div>
       </div>
 
-      {/* Navigation Arrows - Inside carousel */}
+      {/* Navigation Arrows */}
       {availableProducts.length > 4 && (
         <>
-          <button
+          <Button
             onClick={scrollPrev}
             disabled={!prevBtnEnabled}
-            className="hidden lg:flex absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white border-2 border-black items-center justify-center hover:bg-green-400 disabled:opacity-30 disabled:cursor-not-allowed transition-all hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:-translate-x-[2px] hover:-translate-y-[calc(50%+2px)]"
+            variant="elevated"
+            size="icon"
+            className="hidden lg:flex absolute -left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white hover:bg-green-400 items-center justify-center disabled:opacity-0 disabled:pointer-events-none"
             aria-label="Previous products"
           >
-            <ChevronLeft className="w-6 h-6" />
-          </button>
-          <button
+            <ChevronLeft className="w-5 h-5" />
+          </Button>
+          <Button
             onClick={scrollNext}
             disabled={!nextBtnEnabled}
-            className="hidden lg:flex absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white border-2 border-black items-center justify-center hover:bg-green-400 disabled:opacity-30 disabled:cursor-not-allowed transition-all hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:-translate-y-[calc(50%+2px)]"
+            variant="elevated"
+            size="icon"
+            className="hidden lg:flex absolute -right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white hover:bg-green-400 items-center justify-center disabled:opacity-0 disabled:pointer-events-none"
             aria-label="Next products"
           >
-            <ChevronRight className="w-6 h-6" />
-          </button>
+            <ChevronRight className="w-5 h-5" />
+          </Button>
         </>
       )}
 
@@ -184,10 +194,10 @@ export default function DiscountedProductsCarousel({
             <button
               key={index}
               onClick={() => scrollTo(index)}
-              className={`w-3 h-3 rounded-full border-2 border-black transition-all ${
+              className={`rounded-full transition-all duration-300 ${
                 index === selectedIndex
-                  ? "bg-green-400 scale-110"
-                  : "bg-white hover:bg-green-400/50"
+                  ? "bg-black w-6 h-2"
+                  : "bg-black/20 w-2 h-2 hover:bg-black/40"
               }`}
               aria-label={`Go to slide ${index + 1}`}
             />

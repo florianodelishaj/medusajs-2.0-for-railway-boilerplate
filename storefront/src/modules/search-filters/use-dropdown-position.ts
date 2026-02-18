@@ -9,13 +9,13 @@ export const useDropdownPosition = (
     const rect = ref.current.getBoundingClientRect()
     const dropdownWidth = 240 // Width of dropdown (w-60 = 15rem = 240px)
 
-    // Calculate the initial position
-    let left = rect.left + window.scrollX
-    const top = rect.bottom + window.scrollY
+    // Calculate the initial position (relative to viewport for fixed positioning)
+    let left = rect.left
+    const top = rect.bottom
 
     // Check if dropdown would go off the right edge of the viewport
     if (left + dropdownWidth > window.innerWidth) {
-      left = rect.right + window.scrollX - dropdownWidth
+      left = rect.right - dropdownWidth
 
       // If still off-screen, align to the right edge of viewport with some padding
       if (left < 0) {

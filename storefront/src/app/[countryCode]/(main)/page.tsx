@@ -41,23 +41,33 @@ export default async function Home({
   return (
     <>
       <Hero />
-      <TrendingProducts
-        products={trendingProducts}
-        totalCount={trendingCount}
-        region={region}
-      />
-      <DiscountedProducts
-        products={discountedProducts}
-        totalCount={discountedCount}
-        region={region}
-      />
+      {trendingProducts && trendingProducts.length > 0 && (
+        <div className="bg-gradient-to-b from-green-400 via-green-200 to-green-100">
+          <TrendingProducts
+            products={trendingProducts}
+            totalCount={trendingCount}
+            region={region}
+          />
+        </div>
+      )}
+      <div
+        className={`bg-gradient-to-b ${
+          trendingProducts && trendingProducts.length > 0
+            ? "from-green-100"
+            : "from-red-400"
+        }`}
+      >
+        <DiscountedProducts
+          products={discountedProducts}
+          totalCount={discountedCount}
+          region={region}
+        />
+      </div>
       <BenefitsBar />
       {/* <SponsorCarousel /> */}
-      <div>
-        <ul className="flex flex-col gap-x-6">
-          <FeaturedProducts collections={collections} region={region} />
-        </ul>
-      </div>
+      <ul className="flex flex-col">
+        <FeaturedProducts collections={collections} region={region} />
+      </ul>
     </>
   )
 }

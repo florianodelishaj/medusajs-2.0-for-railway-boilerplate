@@ -25,20 +25,20 @@ const Hero = () => {
       {/* Content */}
       <div className="relative h-full content-container flex items-center">
         <div className="max-w-2xl">
-          <h1 className="text-4xl md:text-6xl font-black uppercase text-white mb-4 leading-tight">
+          <h1 className="text-4xl md:text-6xl font-black uppercase text-white mb-4 leading-tight opacity-0 animate-hero-fade-up">
             Scopri il Mondo dei Collezionabili
           </h1>
-          <p className="text-lg md:text-xl text-white/90 mb-8">
+          <p className="text-lg md:text-xl text-white/90 mb-8 opacity-0 animate-hero-fade-up [animation-delay:0.15s]">
             Funko Pop, Pokémon e molto altro. Spedizione gratuita disponibile
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col sm:flex-row gap-4 opacity-0 animate-hero-fade-up [animation-delay:0.3s]">
             <Link href="/store">
               <Button
                 variant="elevated"
                 size="lg"
-                className="bg-green-400 text-black hover:bg-white hover:text-black font-bold uppercase"
+                className="bg-green-400 text-black hover:bg-white hover:text-black font-bold uppercase transition-all duration-200"
               >
                 Esplora Catalogo
               </Button>

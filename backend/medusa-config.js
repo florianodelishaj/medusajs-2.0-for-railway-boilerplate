@@ -186,6 +186,7 @@ const medusaConfig = {
                     "handle",
                     "variant_sku",
                     "thumbnail",
+                    "images",
                   ],
                   indexSettings: {
                     searchableAttributes: [
@@ -200,6 +201,7 @@ const medusaConfig = {
                       "description",
                       "variant_sku",
                       "thumbnail",
+                      "images",
                     ],
                     filterableAttributes: ["id", "handle"],
                   },

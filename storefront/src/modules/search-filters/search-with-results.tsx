@@ -26,7 +26,7 @@ function SearchResults({ isFocused }: SearchResultsProps) {
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   if (!isFocused || hits.length === 0) return null
-
+  console.log("HIT", hit)
   return (
     <div
       ref={dropdownRef}
@@ -39,7 +39,10 @@ function SearchResults({ isFocused }: SearchResultsProps) {
           className="flex items-center gap-4 p-4 hover:bg-gray-100 border-b border-gray-200 last:border-b-0"
         >
           <div className="w-16 h-16 shrink-0">
-            <Thumbnail thumbnail={hit.thumbnail || hit.images?.[0]?.url} size="square" />
+            <Thumbnail
+              thumbnail={hit.thumbnail || hit.images?.[0]?.url}
+              size="square"
+            />
           </div>
           <div className="flex-1 min-w-0">
             <h3 className="font-medium text-sm truncate">{hit.title}</h3>

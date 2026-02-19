@@ -1,6 +1,6 @@
 "use client"
 
-import { Heading, Text, clx } from "@medusajs/ui"
+import { cn } from "@lib/util/cn"
 
 import { useSearchParams, useRouter, usePathname } from "next/navigation"
 import { Button } from "@components/ui/button"
@@ -39,13 +39,12 @@ const Review = ({ cart }: { cart: any }) => {
   return (
     <div className="bg-white border border-black rounded-md p-6">
       <div
-        className={clx("flex flex-row items-center justify-between", {
+        className={cn("flex flex-row items-center justify-between", {
           "mb-6": isOpen,
         })}
       >
-        <Heading
-          level="h2"
-          className={clx(
+        <h2
+          className={cn(
             "flex flex-row text-2xl font-black uppercase gap-x-2 items-baseline",
             {
               "opacity-50 pointer-events-none select-none": !isOpen,
@@ -53,15 +52,15 @@ const Review = ({ cart }: { cart: any }) => {
           )}
         >
           Riepilogo
-        </Heading>
+        </h2>
       </div>
       {isOpen && previousStepsCompleted && (
         <>
           <div className="flex items-start gap-x-1 w-full mb-6">
             <div className="w-full">
-              <Text className="txt-medium-plus text-ui-fg-base mb-1">
+              <p className="text-sm text-black mb-1">
                 Rivedi il tuo ordine prima di procedere al pagamento.
-              </Text>
+              </p>
             </div>
           </div>
           <Button

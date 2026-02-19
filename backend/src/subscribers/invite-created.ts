@@ -22,11 +22,11 @@ export default async function userInviteHandler({
       template: EmailTemplates.INVITE_USER,
       data: {
         emailOptions: {
-          replyTo: 'info@example.com',
-          subject: "You've been invited to Medusa!"
+          replyTo: 'assistenza@ilcovodixur.com',
+          subject: 'Il Covo di Xur — Invito come amministratore',
         },
         inviteLink: `${BACKEND_URL}/app/invite?token=${invite.token}`,
-        preview: 'The administration dashboard awaits...'
+        preview: 'Sei stato invitato come amministratore su Il Covo di Xur'
       }
     })
   } catch (error) {

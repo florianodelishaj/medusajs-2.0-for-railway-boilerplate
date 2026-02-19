@@ -212,6 +212,31 @@ export const requestPasswordReset = async (
   }
 }
 
+export const forgotPassword = async (
+  _currentState: unknown,
+  formData: FormData
+): Promise<{ success: boolean; error: string | null }> => {
+  const email = formData.get("email") as string
+
+  if (!email) {
+    return { success: false, error: "Inserisci la tua email" }
+  }
+
+  try {
+    const BACKEND_URL = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || "http://localhost:9000"
+    await fetch(`${BACKEND_URL}/auth/customer/emailpass/reset-password`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ identifier: email }),
+    })
+
+    // Always return success to avoid email enumeration
+    return { success: true, error: null }
+  } catch {
+    return { success: true, error: null }
+  }
+}
+
 export const resetPassword = async (
   _currentState: unknown,
   formData: FormData

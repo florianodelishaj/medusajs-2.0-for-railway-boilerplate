@@ -1,7 +1,5 @@
 "use client"
 
-import { Heading } from "@medusajs/ui"
-
 import CartTotals from "@modules/common/components/cart-totals"
 import Divider from "@modules/common/components/divider"
 import DiscountCode from "@modules/checkout/components/discount-code"
@@ -36,12 +34,9 @@ const Summary = ({ cart }: SummaryProps) => {
 
   return (
     <div className="flex flex-col gap-y-4">
-      <Heading
-        level="h2"
-        className="flex flex-row text-2xl font-black uppercase items-baseline"
-      >
+      <h2 className="flex flex-row text-2xl font-black uppercase items-baseline">
         Riepilogo
-      </Heading>
+      </h2>
       <FreeShippingProgress cart={cart} />
       <DiscountCode cart={cart} />
       <Divider />

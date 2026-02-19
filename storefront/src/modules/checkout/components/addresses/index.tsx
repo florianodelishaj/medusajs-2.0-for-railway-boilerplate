@@ -1,7 +1,8 @@
 "use client"
 
 import { CheckCircleSolid } from "@medusajs/icons"
-import { Heading, Text, useToggleState, clx } from "@medusajs/ui"
+import useToggleState from "@lib/hooks/use-toggle-state"
+import { cn } from "@lib/util/cn"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
 import Spinner from "@modules/common/icons/spinner"
@@ -44,17 +45,14 @@ const Addresses = ({
   return (
     <div className="bg-white border border-black rounded-md p-6">
       <div
-        className={clx("flex flex-row items-center justify-between gap-x-4", {
+        className={cn("flex flex-row items-center justify-between gap-x-4", {
           "mb-6": isOpen,
         })}
       >
         <div className="flex items-center gap-x-2">
-          <Heading
-            level="h2"
-            className="text-2xl font-black uppercase"
-          >
+          <h2 className="text-2xl font-black uppercase">
             Indirizzo di spedizione
-          </Heading>
+          </h2>
           {!isOpen && <CheckCircleSolid className="shrink-0" />}
         </div>
         {!isOpen && cart?.shipping_address && (
@@ -80,12 +78,9 @@ const Addresses = ({
 
           {!sameAsBilling && (
             <div>
-              <Heading
-                level="h2"
-                className="text-2xl font-black uppercase gap-x-4 pb-6 pt-8"
-              >
+              <h2 className="text-2xl font-black uppercase gap-x-4 pb-6 pt-8">
                 Indirizzo di fatturazione
-              </Heading>
+              </h2>
 
               <BillingAddress cart={cart} />
             </div>
@@ -116,70 +111,70 @@ const Addresses = ({
                   className="flex flex-col w-full lg:w-1/3"
                   data-testid="shipping-address-summary"
                 >
-                  <Text className="txt-medium-plus text-ui-fg-base mb-1 font-bold uppercase">
+                  <p className="text-sm font-bold text-black mb-1 uppercase">
                     Indirizzo di spedizione
-                  </Text>
-                  <Text className="txt-medium text-ui-fg-subtle">
+                  </p>
+                  <p className="text-sm text-gray-500">
                     {cart.shipping_address.first_name}{" "}
                     {cart.shipping_address.last_name}
-                  </Text>
-                  <Text className="txt-medium text-ui-fg-subtle">
+                  </p>
+                  <p className="text-sm text-gray-500">
                     {cart.shipping_address.address_1}{" "}
                     {cart.shipping_address.address_2}
-                  </Text>
-                  <Text className="txt-medium text-ui-fg-subtle">
+                  </p>
+                  <p className="text-sm text-gray-500">
                     {cart.shipping_address.postal_code},{" "}
                     {cart.shipping_address.city}
-                  </Text>
-                  <Text className="txt-medium text-ui-fg-subtle">
+                  </p>
+                  <p className="text-sm text-gray-500">
                     {cart.shipping_address.country_code?.toUpperCase()}
-                  </Text>
+                  </p>
                 </div>
 
                 <div
                   className="flex flex-col w-full lg:w-1/3"
                   data-testid="shipping-contact-summary"
                 >
-                  <Text className="txt-medium-plus text-ui-fg-base mb-1 font-bold uppercase">
+                  <p className="text-sm font-bold text-black mb-1 uppercase">
                     Contatti
-                  </Text>
-                  <Text className="txt-medium text-ui-fg-subtle">
+                  </p>
+                  <p className="text-sm text-gray-500">
                     {cart.shipping_address.phone}
-                  </Text>
-                  <Text className="txt-medium text-ui-fg-subtle">
+                  </p>
+                  <p className="text-sm text-gray-500">
                     {cart.email}
-                  </Text>
+                  </p>
                 </div>
 
                 <div
                   className="flex flex-col w-full lg:w-1/3"
                   data-testid="billing-address-summary"
                 >
-                  <Text className="txt-medium-plus text-ui-fg-base mb-1 font-bold uppercase">
+                  <p className="text-sm font-bold text-black mb-1 uppercase">
                     Indirizzo di fatturazione
-                  </Text>
+                  </p>
 
                   {sameAsBilling ? (
-                    <Text className="txt-medium text-ui-fg-subtle">
+                    <p className="text-sm text-gray-500">
                       Indirizzo di fatturazione e spedizione coincidono.
-                    </Text>
+                    </p>
                   ) : (
                     <>
-                      <Text className="txt-medium text-ui-fg-subtle">
+                      <p className="text-sm text-gray-500">
                         {cart.billing_address?.first_name}{" "}
                         {cart.billing_address?.last_name}
-                      </Text>
-                      <Text className="txt-medium text-ui-fg-subtle">
+                      </p>
+                      <p className="text-sm text-gray-500">
                         {cart.billing_address?.address_1}{" "}
                         {cart.billing_address?.address_2}
-                      </Text>
-                      <Text className="txt-medium text-ui-fg-subtle">
+                      </p>
+                      <p className="text-sm text-gray-500">
                         {cart.billing_address?.postal_code},{" "}
                         {cart.billing_address?.city}
-                      </Text>
-                      <Text className="txt-medium text-ui-fg-subtle">
+                      </p>
+                      <p className="text-sm text-gray-500">
                         {cart.billing_address?.country_code?.toUpperCase()}
-                      </Text>
+                      </p>
                     </>
                   )}
                 </div>

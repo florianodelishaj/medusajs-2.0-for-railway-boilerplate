@@ -1,7 +1,5 @@
 "use client"
 
-import { Table, Text, clx } from "@medusajs/ui"
-
 import { useUpdateLineItem } from "@lib/hooks/use-cart-actions"
 import { HttpTypes } from "@medusajs/types"
 import ErrorMessage from "@modules/checkout/components/error-message"
@@ -48,8 +46,6 @@ const Item = ({ item, currencyCode, type = "full" }: ItemProps) => {
         quantity,
       })
     } catch (err: any) {
-      // Error toast is already handled by useUpdateLineItem hook
-      // Keep local error message for inline display
       setError(err.message)
     }
   }
@@ -59,8 +55,8 @@ const Item = ({ item, currencyCode, type = "full" }: ItemProps) => {
   const maxQuantity = item.variant?.manage_inventory ? 10 : maxQtyFromInventory
 
   return (
-    <Table.Row className="w-full" data-testid="product-row">
-      <Table.Cell className="!pl-3 small:!pl-6 p-2 small:p-4 w-14 small:w-24">
+    <div className="flex items-center w-full py-2 small:py-4 px-3 small:px-6" data-testid="product-row">
+      <div className="w-14 small:w-24 shrink-0">
         <LocalizedClientLink href={`/products/${handle}`} className="flex">
           <div className="w-12 h-12 small:w-20 small:h-20 border border-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-md overflow-hidden">
             <Thumbnail
@@ -70,15 +66,15 @@ const Item = ({ item, currencyCode, type = "full" }: ItemProps) => {
             />
           </div>
         </LocalizedClientLink>
-      </Table.Cell>
+      </div>
 
-      <Table.Cell className="text-left py-2 small:py-4 px-2 small:px-4">
-        <Text
-          className="txt-small small:txt-medium-plus text-ui-fg-base"
+      <div className="flex-1 text-left px-2 small:px-4 min-w-0">
+        <p
+          className="text-xs small:text-sm font-medium text-black truncate"
           data-testid="product-title"
         >
           {item.product_title}
-        </Text>
+        </p>
         {item.variant &&
           (item.variant.title !== "Default variant" ||
             item.product_title !== item.variant.title) && (
@@ -87,10 +83,10 @@ const Item = ({ item, currencyCode, type = "full" }: ItemProps) => {
               data-testid="product-variant"
             />
           )}
-      </Table.Cell>
+      </div>
 
       {type === "full" && (
-        <Table.Cell className="py-2 small:py-4 px-1 small:px-4">
+        <div className="px-1 small:px-4 shrink-0">
           <div className="flex gap-1 small:gap-2 items-center w-18 small:w-28">
             <DeleteButton id={item.id} data-testid="product-delete-button" />
             <Select
@@ -124,18 +120,18 @@ const Item = ({ item, currencyCode, type = "full" }: ItemProps) => {
             {isUpdating && <Spinner />}
           </div>
           <ErrorMessage error={error} data-testid="product-error-message" />
-        </Table.Cell>
+        </div>
       )}
 
-      <Table.Cell className="!pr-3 small:!pr-6 py-2 small:py-4 px-1 small:px-4 font-bold text-xs small:text-sm shrink-0 text-black">
-        <span className="!pr-0 flex flex-col items-end h-full justify-center gap-1">
+      <div className="shrink-0 text-right px-1 small:px-4 font-bold text-xs small:text-sm text-black">
+        <span className="flex flex-col items-end h-full justify-center gap-1">
           {isBackorder && (
             <span className="text-[10px] small:text-[12px] font-bold uppercase px-2 py-0.5 bg-yellow-400 border border-black">
               Preordine
             </span>
           )}
-          <span className="flex gap-x-1 ">
-            <Text className="text-ui-fg-muted">{item.quantity}x </Text>
+          <span className="flex gap-x-1">
+            <span className="text-gray-400">{item.quantity}x </span>
             <LineItemUnitPrice item={item} style="tight" />
           </span>
           <LineItemPrice
@@ -144,8 +140,8 @@ const Item = ({ item, currencyCode, type = "full" }: ItemProps) => {
             style="tight"
           />
         </span>
-      </Table.Cell>
-    </Table.Row>
+      </div>
+    </div>
   )
 }
 

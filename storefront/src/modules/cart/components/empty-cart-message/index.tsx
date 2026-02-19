@@ -1,9 +1,6 @@
 import { Button } from "@components/ui/button"
-import { Heading, Text } from "@medusajs/ui"
-
-import InteractiveLink from "@modules/common/components/interactive-link"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
-import { ShoppingBag, ShoppingBasket, ShoppingCart } from "lucide-react"
+import { ShoppingBasket } from "lucide-react"
 
 const EmptyCartMessage = () => {
   return (

@@ -2,7 +2,7 @@
 
 import { RadioGroup } from "@headlessui/react"
 import { CheckCircleSolid } from "@medusajs/icons"
-import { Heading, Text, clx } from "@medusajs/ui"
+import { cn } from "@lib/util/cn"
 
 import { Button } from "@components/ui/button"
 import Radio from "@modules/common/components/radio"
@@ -48,7 +48,6 @@ const Shipping: React.FC<ShippingProps> = ({
     try {
       await setShippingMethod({ cartId: cart.id, shippingMethodId: id })
     } catch (err: any) {
-      // Error toast is already handled by useSetShippingMethod hook
       setError(err.message)
     }
   }
@@ -60,20 +59,19 @@ const Shipping: React.FC<ShippingProps> = ({
   return (
     <div className="bg-white border border-black rounded-md p-6">
       <div
-        className={clx("flex flex-row items-center justify-between gap-x-4", {
+        className={cn("flex flex-row items-center justify-between gap-x-4", {
           "mb-6": isOpen,
         })}
       >
         <div className="flex items-center gap-x-2">
-          <Heading
-            level="h2"
-            className={clx("text-2xl font-black uppercase", {
+          <h2
+            className={cn("text-2xl font-black uppercase", {
               "opacity-50 pointer-events-none select-none":
                 !isOpen && cart.shipping_methods?.length === 0,
             })}
           >
             Consegna
-          </Heading>
+          </h2>
           {!isOpen && (cart.shipping_methods?.length ?? 0) > 0 && (
             <CheckCircleSolid className="shrink-0" />
           )}
@@ -117,7 +115,7 @@ const Shipping: React.FC<ShippingProps> = ({
                         key={option.id}
                         value={option.id}
                         data-testid="delivery-option-radio"
-                        className={clx(
+                        className={cn(
                           "flex items-center justify-between text-small-regular cursor-pointer py-4 border border-black rounded-md px-6 mb-3 transition-all",
                           {
                             "bg-green-400 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]":
@@ -135,10 +133,10 @@ const Shipping: React.FC<ShippingProps> = ({
                             {option.name}
                           </span>
                         </div>
-                        <span className="justify-self-end text-ui-fg-base font-semibold">
+                        <span className="justify-self-end text-black font-semibold">
                           {option.amount === 0 ? (
                             <span
-                              className={clx(
+                              className={cn(
                                 "inline-flex items-center px-3 py-1 rounded-md font-bold text-sm uppercase",
                                 {
                                   "bg-white text-green-400":
@@ -186,24 +184,24 @@ const Shipping: React.FC<ShippingProps> = ({
           <div className="text-small-regular">
             {cart && (cart.shipping_methods?.length ?? 0) > 0 && (
               <div className="flex flex-col w-1/3">
-                <Text className="txt-medium-plus text-ui-fg-base mb-1 font-bold uppercase">
+                <p className="text-sm font-bold text-black mb-1 uppercase">
                   Metodo
-                </Text>
+                </p>
                 <div className="flex items-center gap-2">
-                  <Text className="txt-medium text-ui-fg-subtle">
+                  <p className="text-sm text-gray-500">
                     {selectedShippingMethod?.name}
-                  </Text>
+                  </p>
                   {selectedShippingMethod?.amount === 0 ? (
                     <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-green-400 text-white font-bold text-xs uppercase">
                       Gratuita
                     </span>
                   ) : (
-                    <Text className="txt-medium text-ui-fg-subtle">
+                    <p className="text-sm text-gray-500">
                       {convertToLocale({
                         amount: selectedShippingMethod?.amount!,
                         currency_code: cart?.currency_code,
                       })}
-                    </Text>
+                    </p>
                   )}
                 </div>
               </div>

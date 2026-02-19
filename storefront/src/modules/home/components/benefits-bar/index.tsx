@@ -12,7 +12,7 @@ const BenefitItem = ({ icon, title, text, delay }: BenefitItemProps) => {
   return (
     <ScrollReveal delay={delay}>
       <div className="flex flex-col items-center text-center gap-3">
-        <div className="bg-black border-2 border-black p-3 rounded-md">
+        <div className="bg-black border border-black p-3 rounded-md">
           {icon}
         </div>
         <div>

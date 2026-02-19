@@ -26,11 +26,11 @@ function SearchResults({ isFocused }: SearchResultsProps) {
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   if (!isFocused || hits.length === 0) return null
-  console.log("HIT", hits)
+
   return (
     <div
       ref={dropdownRef}
-      className="absolute top-full left-0 right-0 mt-2 bg-white border-2 border-black rounded-md shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] max-h-[400px] overflow-y-auto z-50"
+      className="absolute top-full left-0 right-0 mt-2 bg-white border border-black rounded-md shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] max-h-[400px] overflow-y-auto z-50"
     >
       {hits.map((hit: any) => (
         <LocalizedClientLink

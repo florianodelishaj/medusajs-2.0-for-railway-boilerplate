@@ -131,7 +131,7 @@ const ColorPicker = ({ editor }: { editor: Editor }) => {
                   key={color}
                   type="button"
                   onClick={() => applyColor(color)}
-                  className="w-8 h-8 rounded border-2 border-transparent hover:border-violet-500 transition-colors"
+                  className="w-8 h-8 rounded border border-transparent hover:border-violet-500 transition-colors"
                   style={{ backgroundColor: color }}
                   title={color}
                 />
@@ -264,7 +264,7 @@ const ProductExtendedDescriptionWidget = ({
   useEffect(() => {
     if (editor && product.metadata?.extended_description) {
       editor.commands.setContent(
-        product.metadata.extended_description as string
+        product.metadata.extended_description as string,
       );
       setHasChanges(false);
     }

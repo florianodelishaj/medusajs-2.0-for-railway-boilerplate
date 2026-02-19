@@ -5,6 +5,7 @@ import Input from "@modules/common/components/input"
 import ErrorMessage from "@modules/checkout/components/error-message"
 import { SubmitButton } from "@modules/checkout/components/submit-button"
 import { login } from "@lib/data/customer"
+import LocalizedClientLink from "@modules/common/components/localized-client-link"
 
 type Props = {
   setCurrentView: (view: LOGIN_VIEW) => void
@@ -35,6 +36,12 @@ const Login = ({ setCurrentView }: Props) => {
           data-testid="password-input"
         />
         <ErrorMessage error={message} data-testid="login-error-message" />
+        <LocalizedClientLink
+          href="/forgot-password"
+          className="text-base font-medium underline underline-offset-4 hover:text-green-600 transition-colors"
+        >
+          Hai dimenticato la password?
+        </LocalizedClientLink>
         <SubmitButton
           data-testid="sign-in-button"
           className="w-full h-12 bg-black text-white hover:bg-green-400 hover:text-black transition-all border border-black rounded-md hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-[4px] hover:-translate-y-[4px]"

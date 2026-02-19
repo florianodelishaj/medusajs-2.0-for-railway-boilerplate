@@ -1,6 +1,6 @@
 "use client"
 
-import { Badge, Heading, Text, Tooltip, TooltipProvider } from "@medusajs/ui"
+import { Tooltip, TooltipProvider } from "@medusajs/ui"
 import React, { useState } from "react"
 import { useFormState } from "react-dom"
 import { useParams } from "next/navigation"
@@ -41,7 +41,7 @@ const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
 
   return (
     <div className="w-full bg-white flex flex-col">
-      <div className="txt-medium">
+      <div className="text-sm">
         <form action={formAction} className="w-full">
           <input type="hidden" name="countryCode" value={countryCode} />
           <div className="flex items-center gap-x-2 my-2">
@@ -96,11 +96,11 @@ const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
         {promotions.length > 0 && (
           <div className="w-full flex items-center">
             <div className="flex flex-col w-full">
-              <Heading className="txt-medium my-2">
+              <p className="text-sm font-bold my-2">
                 {promotions.length === 1
                   ? "Promozione applicata:"
                   : "Promozioni applicate:"}
-              </Heading>
+              </p>
 
               {promotions.map((promotion) => {
                 // Skip if promotion was deleted from DB but still referenced in cart
@@ -112,15 +112,15 @@ const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
                     className="flex items-center justify-between w-full max-w-full mb-2"
                     data-testid="discount-row"
                   >
-                    <Text className="flex gap-x-1 items-baseline txt-small-plus w-4/5 pr-1">
+                    <p className="flex gap-x-1 items-baseline text-xs font-medium w-4/5 pr-1">
                       <span className="truncate" data-testid="discount-code">
-                        <Badge
-                          color={promotion.is_automatic ? "green" : "grey"}
-                          className="rounded-none border border-black px-2 py-1 text-black mr-1"
-                          size="small"
+                        <span
+                          className={`inline-block rounded-none border border-black px-2 py-1 text-black text-xs font-bold mr-1 ${
+                            promotion.is_automatic ? "bg-green-100" : "bg-gray-100"
+                          }`}
                         >
                           {promotion.code}
-                        </Badge>{" "}
+                        </span>{" "}
                         (
                         {promotion.application_method?.value !== undefined &&
                           promotion.application_method.currency_code !==
@@ -140,13 +140,8 @@ const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
                             </>
                           )}
                         )
-                        {/* {promotion.is_automatic && (
-                          <Tooltip content="This promotion is automatically applied">
-                            <InformationCircleSolid className="inline text-zinc-400" />
-                          </Tooltip>
-                        )} */}
                       </span>
-                    </Text>
+                    </p>
                     {!promotion.is_automatic && (
                       <button
                         className="flex items-center"

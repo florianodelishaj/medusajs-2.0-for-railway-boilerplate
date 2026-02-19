@@ -13,9 +13,13 @@ type CartTotalsProps = {
     gift_card_total?: number | null
     currency_code: string
   }
+  variant?: "default" | "order"
 }
 
-const CartTotals: React.FC<CartTotalsProps> = ({ totals }) => {
+const CartTotals: React.FC<CartTotalsProps> = ({
+  totals,
+  variant = "default",
+}) => {
   const {
     currency_code,
     total,
@@ -78,18 +82,33 @@ const CartTotals: React.FC<CartTotalsProps> = ({ totals }) => {
           </div>
         )}
       </div>
-      <div className="h-px w-full border-b border-gray-200 my-4" />
-      <div className="flex items-center justify-between text-ui-fg-base mb-2 txt-medium ">
-        <span>Totale</span>
-        <span
-          className="txt-xlarge-plus"
-          data-testid="cart-total"
-          data-value={total || 0}
-        >
-          {convertToLocale({ amount: total ?? 0, currency_code })}
-        </span>
-      </div>
-      <div className="h-px w-full border-b border-gray-200 mt-4" />
+      {variant === "order" ? (
+        <div className="bg-green-400 border border-black rounded-md p-4 mt-4 flex items-center justify-between">
+          <span className="text-base font-black uppercase">Totale</span>
+          <span
+            className="text-xl font-black"
+            data-testid="cart-total"
+            data-value={total || 0}
+          >
+            {convertToLocale({ amount: total ?? 0, currency_code })}
+          </span>
+        </div>
+      ) : (
+        <>
+          <div className="h-px w-full border-b border-gray-200 my-4" />
+          <div className="flex items-center justify-between text-ui-fg-base mb-2 txt-medium">
+            <span>Totale</span>
+            <span
+              className="txt-xlarge-plus"
+              data-testid="cart-total"
+              data-value={total || 0}
+            >
+              {convertToLocale({ amount: total ?? 0, currency_code })}
+            </span>
+          </div>
+          <div className="h-px w-full border-b border-gray-200 mt-4" />
+        </>
+      )}
     </div>
   )
 }

@@ -12,7 +12,7 @@ export default function NotFound() {
   return (
     <div className="flex flex-col gap-8 items-center justify-center min-h-[calc(100vh-64px)] px-4 bg-green-50">
       <div className="bg-white border border-black rounded-lg p-8 max-w-md w-full text-center">
-        <div className="bg-green-400 border-2 border-black rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6">
+        <div className="bg-green-400 border border-black rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6">
           <AlertCircle className="w-12 h-12" />
         </div>
 

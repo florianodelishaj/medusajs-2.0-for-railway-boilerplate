@@ -25,7 +25,7 @@ export default function TrendingProducts({
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-5 mb-10">
             <div>
               <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tight leading-none flex items-center gap-3">
-                <span className="inline-flex items-center justify-center w-9 h-9 bg-green-400 border-2 border-black rounded-md">
+                <span className="inline-flex items-center justify-center w-9 h-9 bg-green-400 border border-black rounded-md">
                   <TrendingUp className="w-5 h-5" />
                 </span>
                 Prodotti di Tendenza

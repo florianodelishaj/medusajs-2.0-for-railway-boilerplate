@@ -36,7 +36,7 @@ export function Pagination({
     <button
       key={p}
       className={clx(
-        "min-w-[44px] h-11 px-4 font-bold border-2 border-black transition-all",
+        "min-w-[44px] h-11 px-4 font-bold border border-black transition-all",
         {
           "bg-green-400 text-black cursor-default": isCurrent,
           "bg-white text-black hover:bg-green-400 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-[2px] hover:-translate-y-[2px]":

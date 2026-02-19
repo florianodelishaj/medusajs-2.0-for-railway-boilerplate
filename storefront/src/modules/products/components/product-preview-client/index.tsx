@@ -63,14 +63,14 @@ export default function ProductPreviewClient({
       >
         <div className="relative overflow-hidden rounded-tl-md rounded-tr-md">
           {isOutOfStock && (
-            <div className="absolute top-4 -left-10 z-10 w-40 text-center bg-gray-800 border-2 border-black py-1 transform -rotate-45 shadow-lg">
+            <div className="absolute top-4 -left-10 z-10 w-40 text-center bg-gray-800 border border-black py-1 transform -rotate-45 shadow-lg">
               <span className="text-xs font-bold uppercase text-white">
                 Esaurito
               </span>
             </div>
           )}
           {!isOutOfStock && hasDiscount && (
-            <div className="absolute top-4 -left-10 z-10 w-40 text-center bg-red-500 border-2 border-black py-1 transform -rotate-45 shadow-lg">
+            <div className="absolute top-4 -left-10 z-10 w-40 text-center bg-red-500 border border-black py-1 transform -rotate-45 shadow-lg">
               <span className="text-xs font-bold uppercase text-white">
                 Sconto
               </span>
@@ -79,7 +79,7 @@ export default function ProductPreviewClient({
           {!isOutOfStock &&
             !hasDiscount &&
             product.tags?.some((tag: any) => tag.value === "Tendenze") && (
-              <div className="absolute top-4 -left-10 z-10 w-40 text-center bg-pink-400 border-2 border-black py-1 transform -rotate-45 shadow-lg">
+              <div className="absolute top-4 -left-10 z-10 w-40 text-center bg-pink-400 border border-black py-1 transform -rotate-45 shadow-lg">
                 <span className="text-xs font-bold uppercase text-white">
                   Tendenza
                 </span>

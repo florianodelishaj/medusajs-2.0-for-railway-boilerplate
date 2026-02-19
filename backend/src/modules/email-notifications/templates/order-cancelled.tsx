@@ -8,40 +8,43 @@ import {
   Button,
 } from "@react-email/components"
 import * as React from "react"
-import { CircleCheckIcon } from "./icons"
+import { XCircleIcon } from "./icons"
 import { Base } from "./base"
 import { OrderDTO, OrderAddressDTO } from "@medusajs/framework/types"
 
-export const ORDER_PLACED = "order-placed"
+export const ORDER_CANCELLED = "order-cancelled"
 
-interface OrderPlacedPreviewProps {
+interface OrderCancelledPreviewProps {
   order: OrderDTO & {
     display_id: string
     summary: { raw_current_order_total: { value: number } }
   }
   shippingAddress: OrderAddressDTO
+  reason?: string
 }
 
-export interface OrderPlacedTemplateProps {
+export interface OrderCancelledTemplateProps {
   order: OrderDTO & {
     display_id: string
     summary: { raw_current_order_total: { value: number } }
   }
   shippingAddress: OrderAddressDTO
+  reason?: string
   preview?: string
 }
 
-export const isOrderPlacedTemplateData = (
+export const isOrderCancelledTemplateData = (
   data: any
-): data is OrderPlacedTemplateProps =>
+): data is OrderCancelledTemplateProps =>
   typeof data.order === "object" && typeof data.shippingAddress === "object"
 
-export const OrderPlacedTemplate: React.FC<OrderPlacedTemplateProps> & {
-  PreviewProps: OrderPlacedPreviewProps
+export const OrderCancelledTemplate: React.FC<OrderCancelledTemplateProps> & {
+  PreviewProps: OrderCancelledPreviewProps
 } = ({
   order,
   shippingAddress,
-  preview = "Il tuo ordine è stato confermato!",
+  reason,
+  preview = "Il tuo ordine è stato annullato",
 }) => {
   const formatPrice = (value: number, currency: string) => {
     return new Intl.NumberFormat("it-IT", {
@@ -53,14 +56,14 @@ export const OrderPlacedTemplate: React.FC<OrderPlacedTemplateProps> & {
   return (
     <Base preview={preview}>
       <Section>
-        {/* Success icon + heading (da A) con badge ordine (da C) */}
+        {/* Icon + heading */}
         <div style={{ textAlign: "center", marginBottom: "24px" }}>
           <div
             style={{
               width: "56px",
               height: "56px",
               borderRadius: "50%",
-              backgroundColor: "#4ade80",
+              backgroundColor: "#ef4444",
               border: "2px solid #000",
               display: "inline-block",
               marginBottom: "16px",
@@ -68,10 +71,10 @@ export const OrderPlacedTemplate: React.FC<OrderPlacedTemplateProps> & {
               textAlign: "center",
             }}
           >
-            <CircleCheckIcon size={28} color="#000" style={{ verticalAlign: "middle" }} />
+            <XCircleIcon size={28} color="#000" style={{ verticalAlign: "middle" }} />
           </div>
           <Text className="text-black text-[28px] font-black uppercase tracking-tight text-center m-0">
-            Ordine Confermato
+            Ordine Annullato
           </Text>
           <Text className="text-[#666] text-[14px] text-center m-0 mt-[6px]">
             Ordine #{order.display_id} —{" "}
@@ -83,7 +86,7 @@ export const OrderPlacedTemplate: React.FC<OrderPlacedTemplateProps> & {
           </Text>
         </div>
 
-        {/* Greeting (da A) */}
+        {/* Greeting */}
         <Text className="text-black text-[16px] leading-[24px] m-0 mb-[16px]">
           Ciao{" "}
           <strong>
@@ -92,13 +95,14 @@ export const OrderPlacedTemplate: React.FC<OrderPlacedTemplateProps> & {
           ,
         </Text>
         <Text className="text-[#444] text-[15px] leading-[24px] m-0 mb-[28px]">
-          Grazie per il tuo ordine! Lo stiamo preparando con cura. Riceverai
-          un&apos;email quando sarà stato spedito.
+          Ti confermiamo che il tuo ordine è stato annullato. Se era previsto un
+          pagamento, l&apos;importo verrà rimborsato sul tuo metodo di
+          pagamento originale.
         </Text>
 
-        {/* Items — card individuali (da C) */}
+        {/* Items — card individuali (stessa struttura di order-placed) */}
         <Text className="text-black text-[12px] font-black uppercase tracking-[0.1em] m-0 mb-[12px]">
-          I tuoi articoli
+          Articoli annullati
         </Text>
 
         {order.items.map((item) => (
@@ -149,10 +153,10 @@ export const OrderPlacedTemplate: React.FC<OrderPlacedTemplateProps> & {
           </div>
         ))}
 
-        {/* Total — mix: sfondo verde con bordo nero (A green + C box style) */}
+        {/* Total — red background */}
         <div
           style={{
-            backgroundColor: "#4ade80",
+            backgroundColor: "#ef4444",
             border: "2px solid #000",
             borderRadius: "8px",
             padding: "16px 20px",
@@ -162,12 +166,12 @@ export const OrderPlacedTemplate: React.FC<OrderPlacedTemplateProps> & {
         >
           <Row>
             <Column>
-              <Text className="text-black text-[15px] font-black uppercase m-0">
-                Totale
+              <Text className="text-white text-[15px] font-black uppercase m-0">
+                Totale annullato
               </Text>
             </Column>
             <Column style={{ textAlign: "right" }}>
-              <Text className="text-black text-[20px] font-black m-0">
+              <Text className="text-white text-[20px] font-black m-0">
                 {formatPrice(
                   order.summary.raw_current_order_total.value,
                   order.currency_code
@@ -177,33 +181,26 @@ export const OrderPlacedTemplate: React.FC<OrderPlacedTemplateProps> & {
           </Row>
         </div>
 
-        {/* Shipping address — card singola (senza pagamento) */}
-        <div
-          style={{
-            border: "2px solid #000",
-            borderRadius: "8px",
-            padding: "20px",
-            marginBottom: "28px",
-          }}
-        >
-          <Text className="text-black text-[12px] font-black uppercase tracking-[0.1em] m-0 mb-[10px]">
-            Indirizzo di Spedizione
-          </Text>
-          <Text className="text-[#444] text-[14px] leading-[22px] m-0">
-            {shippingAddress.first_name} {shippingAddress.last_name}
-            <br />
-            {shippingAddress.address_1}
-            <br />
-            {shippingAddress.postal_code}, {shippingAddress.city}
-            {shippingAddress.province && (
-              <> ({shippingAddress.province})</>
-            )}
-            <br />
-            {shippingAddress.country_code?.toUpperCase()}
-          </Text>
-        </div>
+        {/* Reason (optional) */}
+        {reason && (
+          <div
+            style={{
+              border: "2px solid #000",
+              borderRadius: "8px",
+              padding: "20px",
+              marginBottom: "28px",
+            }}
+          >
+            <Text className="text-black text-[12px] font-black uppercase tracking-[0.1em] m-0 mb-[10px]">
+              Motivo dell&apos;annullamento
+            </Text>
+            <Text className="text-[#444] text-[14px] leading-[22px] m-0">
+              {reason}
+            </Text>
+          </div>
+        )}
 
-        {/* CTA button neobrutalist (da C) */}
+        {/* CTA button */}
         <div style={{ textAlign: "center", marginBottom: "8px" }}>
           <Button
             href="https://ilcovodixur.com"
@@ -215,11 +212,11 @@ export const OrderPlacedTemplate: React.FC<OrderPlacedTemplateProps> & {
               boxShadow: "3px 3px 0px 0px #000",
             }}
           >
-            Continua lo shopping
+            Torna al negozio
           </Button>
         </div>
 
-        {/* Help note (da A) */}
+        {/* Help note */}
         <Hr className="border-[#e5e5e5] my-[20px] mx-0 w-full" />
         <Text className="text-[#999] text-[13px] leading-[20px] text-center m-0">
           Hai bisogno di aiuto? Scrivici a{" "}
@@ -235,7 +232,7 @@ export const OrderPlacedTemplate: React.FC<OrderPlacedTemplateProps> & {
   )
 }
 
-OrderPlacedTemplate.PreviewProps = {
+OrderCancelledTemplate.PreviewProps = {
   order: {
     id: "test-order-id",
     display_id: "1042",
@@ -249,7 +246,7 @@ OrderPlacedTemplate.PreviewProps = {
         product_title: "Funko Pop! Naruto",
         variant_title: "Standard",
         quantity: 2,
-        unit_price: 14.99,
+        unit_price: 1499,
       },
       {
         id: "item-2",
@@ -257,7 +254,7 @@ OrderPlacedTemplate.PreviewProps = {
         product_title: "Pokemon TCG Box",
         variant_title: null,
         quantity: 1,
-        unit_price: 149.99,
+        unit_price: 14999,
       },
       {
         id: "item-3",
@@ -265,7 +262,7 @@ OrderPlacedTemplate.PreviewProps = {
         product_title: "DBS Card Game",
         variant_title: "Display Box",
         quantity: 1,
-        unit_price: 89.99,
+        unit_price: 8999,
       },
     ],
     shipping_address: {
@@ -277,7 +274,7 @@ OrderPlacedTemplate.PreviewProps = {
       postal_code: "20100",
       country_code: "IT",
     },
-    summary: { raw_current_order_total: { value: 269.96 } },
+    summary: { raw_current_order_total: { value: 40996 } },
   },
   shippingAddress: {
     first_name: "Marco",
@@ -288,6 +285,7 @@ OrderPlacedTemplate.PreviewProps = {
     postal_code: "20100",
     country_code: "IT",
   },
-} as OrderPlacedPreviewProps
+  reason: "Richiesta dal cliente",
+} as OrderCancelledPreviewProps
 
-export default OrderPlacedTemplate
+export default OrderCancelledTemplate

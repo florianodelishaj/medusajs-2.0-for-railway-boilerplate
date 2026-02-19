@@ -5,8 +5,8 @@ import StoreTemplate from "@modules/store/templates"
 import DynamicBackground from "@modules/layout/components/dynamic-background"
 
 export const metadata: Metadata = {
-  title: "Store",
-  description: "Explore all of our products.",
+  title: "Negozio",
+  description: "Esplora tutti i nostri prodotti.",
 }
 
 type Params = {

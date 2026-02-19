@@ -1,5 +1,4 @@
 import { HttpTypes } from "@medusajs/types"
-import { Text } from "@medusajs/ui"
 
 type OrderDetailsProps = {
   order: HttpTypes.StoreOrder
@@ -43,64 +42,50 @@ const OrderDetails = ({ order, showStatus }: OrderDetailsProps) => {
     )
   }
 
-  const getStatusColor = (status: string, type: "fulfillment" | "payment") => {
-    const fulfillmentColors: Record<string, string> = {
-      not_fulfilled: "text-orange-600",
-      fulfilled: "text-green-600",
-      partially_fulfilled: "text-yellow-600",
-      shipped: "text-green-600",
-      partially_shipped: "text-yellow-600",
-      delivered: "text-green-600",
-      partially_delivered: "text-yellow-600",
-      returned: "text-blue-600",
-      canceled: "text-red-600",
-      requires_action: "text-orange-600",
-    }
-
-    const paymentColors: Record<string, string> = {
-      not_paid: "text-red-600",
-      awaiting: "text-yellow-600",
-      authorized: "text-blue-600",
-      captured: "text-green-600",
-      partially_refunded: "text-yellow-600",
-      refunded: "text-orange-600",
-      canceled: "text-red-600",
-      requires_action: "text-orange-600",
-    }
-
-    const colors = type === "fulfillment" ? fulfillmentColors : paymentColors
-    return colors[status] || "text-gray-600"
+  const getStatusBg = (status: string, type: "fulfillment" | "payment") => {
+    const greenStatuses = ["fulfilled", "shipped", "delivered", "captured"]
+    const redStatuses = ["canceled", "not_paid"]
+    if (greenStatuses.includes(status)) return "bg-green-400 text-black"
+    if (redStatuses.includes(status)) return "bg-red-500 text-white"
+    return "bg-gray-200 text-black"
   }
 
   return (
-    <div className="pb-6 border-b border-black">
-      <p className="text-base text-gray-700">
-        Abbiamo inviato i dettagli di conferma dell&apos;ordine a{" "}
-        <span className="font-semibold text-black" data-testid="order-email">
-          {order.email}
-        </span>
-        .
-      </p>
-      <p className="mt-2 text-base text-gray-700">
-        Data ordine:{" "}
-        <span className="font-semibold text-black" data-testid="order-date">
-          {new Date(order.created_at).toLocaleDateString("it-IT")}
-        </span>
-      </p>
-      <p className="mt-2 text-base">
-        Numero ordine:{" "}
-        <span className="font-semibold" data-testid="order-id">
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div className="border border-black rounded-md p-4">
+        <p className="text-[10px] font-black uppercase tracking-wider text-gray-500 mb-1">
+          Numero ordine
+        </p>
+        <p className="text-base font-bold" data-testid="order-id">
           #{order.display_id}
-        </span>
-      </p>
+        </p>
+      </div>
+      <div className="border border-black rounded-md p-4">
+        <p className="text-[10px] font-black uppercase tracking-wider text-gray-500 mb-1">
+          Data
+        </p>
+        <p className="text-base font-bold" data-testid="order-date">
+          {new Date(order.created_at).toLocaleDateString("it-IT")}
+        </p>
+      </div>
+      <div className="border border-black rounded-md p-4">
+        <p className="text-[10px] font-black uppercase tracking-wider text-gray-500 mb-1">
+          Email
+        </p>
+        <p className="text-base font-bold truncate" data-testid="order-email">
+          {order.email}
+        </p>
+      </div>
 
       {showStatus && (
-        <div className="flex items-center flex-wrap text-sm gap-x-4 gap-y-2 mt-4">
+        <>
           {(order as any).fulfillment_status && (
-            <p className="text-gray-700">
-              Stato ordine:{" "}
+            <div className="border border-black rounded-md p-4">
+              <p className="text-[10px] font-black uppercase tracking-wider text-gray-500 mb-1">
+                Stato ordine
+              </p>
               <span
-                className={`font-semibold ${getStatusColor(
+                className={`inline-block text-xs font-bold uppercase px-2 py-1 rounded border border-black ${getStatusBg(
                   (order as any).fulfillment_status,
                   "fulfillment"
                 )}`}
@@ -111,13 +96,15 @@ const OrderDetails = ({ order, showStatus }: OrderDetailsProps) => {
                   "fulfillment"
                 )}
               </span>
-            </p>
+            </div>
           )}
           {(order as any).payment_status && (
-            <p className="text-gray-700">
-              Stato pagamento:{" "}
+            <div className="border border-black rounded-md p-4">
+              <p className="text-[10px] font-black uppercase tracking-wider text-gray-500 mb-1">
+                Stato pagamento
+              </p>
               <span
-                className={`font-semibold ${getStatusColor(
+                className={`inline-block text-xs font-bold uppercase px-2 py-1 rounded border border-black ${getStatusBg(
                   (order as any).payment_status,
                   "payment"
                 )}`}
@@ -125,9 +112,9 @@ const OrderDetails = ({ order, showStatus }: OrderDetailsProps) => {
               >
                 {translateStatus((order as any).payment_status, "payment")}
               </span>
-            </p>
+            </div>
           )}
-        </div>
+        </>
       )}
     </div>
   )

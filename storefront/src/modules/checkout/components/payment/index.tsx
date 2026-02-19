@@ -5,7 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { RadioGroup } from "@headlessui/react"
 import ErrorMessage from "@modules/checkout/components/error-message"
 import { CheckCircleSolid, CreditCard } from "@medusajs/icons"
-import { Container, Heading, Text, clx } from "@medusajs/ui"
+import { cn } from "@lib/util/cn"
 import { PaymentElement } from "@stripe/react-stripe-js"
 
 import { Button } from "@components/ui/button"
@@ -106,20 +106,19 @@ const Payment = ({
   return (
     <div className="bg-white border border-black rounded-md p-6">
       <div
-        className={clx("flex flex-row items-center justify-between gap-x-4", {
+        className={cn("flex flex-row items-center justify-between gap-x-4", {
           "mb-6": isOpen,
         })}
       >
         <div className="flex items-center gap-x-2">
-          <Heading
-            level="h2"
-            className={clx("text-2xl font-black uppercase", {
+          <h2
+            className={cn("text-2xl font-black uppercase", {
               "opacity-50 pointer-events-none select-none":
                 !isOpen && !paymentReady,
             })}
           >
             Pagamento
-          </Heading>
+          </h2>
           {!isOpen && paymentReady && <CheckCircleSolid className="shrink-0" />}
         </div>
         {!isOpen && paymentReady && (
@@ -163,9 +162,9 @@ const Payment = ({
               {/* Mostra direttamente il PaymentElement per Stripe */}
               {isStripe && stripeReady && (
                 <div className="mt-5 transition-all duration-150 ease-in-out">
-                  <Text className="txt-medium-plus text-ui-fg-base mb-1 font-bold uppercase">
+                  <p className="text-sm font-bold text-black mb-1 uppercase">
                     Seleziona il metodo di pagamento:
-                  </Text>
+                  </p>
 
                   <PaymentElement
                     options={{
@@ -179,15 +178,15 @@ const Payment = ({
 
           {paidByGiftcard && (
             <div className="flex flex-col w-1/3">
-              <Text className="txt-medium-plus text-ui-fg-base mb-1 font-bold uppercase">
+              <p className="text-sm font-bold text-black mb-1 uppercase">
                 Metodo di pagamento
-              </Text>
-              <Text
-                className="txt-medium text-ui-fg-subtle"
+              </p>
+              <p
+                className="text-sm text-gray-500"
                 data-testid="payment-method-summary"
               >
                 Carta regalo
-              </Text>
+              </p>
             </div>
           )}
 
@@ -197,12 +196,12 @@ const Payment = ({
           />
 
           <div className="mt-6">
-            <Text className="txt-medium text-ui-fg-base mb-4">
+            <p className="text-sm text-black mb-4">
               Cliccando il pulsante Effettua Ordine, confermi di aver letto,
               compreso e accettato i nostri Termini di Utilizzo, Termini di
               Vendita e Politica di Reso e riconosci di aver letto la Politica
               sulla Privacy di Il Covo di Xur.
-            </Text>
+            </p>
             <PaymentButton cart={cart} data-testid="submit-order-button" />
           </div>
         </div>
@@ -211,49 +210,49 @@ const Payment = ({
           {cart && paymentReady && activeSession ? (
             <div className="flex items-start gap-x-1 w-full">
               <div className="flex flex-col w-1/3">
-                <Text className="txt-medium-plus text-ui-fg-base mb-1 font-bold uppercase">
+                <p className="text-sm font-bold text-black mb-1 uppercase">
                   Metodo di pagamento
-                </Text>
-                <Text
-                  className="txt-medium text-ui-fg-subtle"
+                </p>
+                <p
+                  className="text-sm text-gray-500"
                   data-testid="payment-method-summary"
                 >
                   {paymentInfoMap[selectedPaymentMethod]?.title ||
                     selectedPaymentMethod}
-                </Text>
+                </p>
               </div>
               <div className="flex flex-col w-1/3">
-                <Text className="txt-medium-plus text-ui-fg-base mb-1 font-bold uppercase">
+                <p className="text-sm font-bold text-black mb-1 uppercase">
                   Dettagli pagamento
-                </Text>
+                </p>
                 <div
-                  className="flex gap-2 txt-medium text-ui-fg-subtle items-center"
+                  className="flex gap-2 text-sm text-gray-500 items-center"
                   data-testid="payment-details-summary"
                 >
-                  <Container className="flex items-center h-7 w-fit p-2 bg-ui-button-neutral-hover">
+                  <div className="flex items-center h-7 w-fit p-2 bg-gray-100 rounded border border-black">
                     {paymentInfoMap[selectedPaymentMethod]?.icon || (
                       <CreditCard />
                     )}
-                  </Container>
-                  <Text>
+                  </div>
+                  <p>
                     {isStripeFunc(selectedPaymentMethod)
                       ? "Metodo configurato"
                       : "Apparirà un altro passaggio"}
-                  </Text>
+                  </p>
                 </div>
               </div>
             </div>
           ) : paidByGiftcard ? (
             <div className="flex flex-col w-1/3">
-              <Text className="txt-medium-plus text-ui-fg-base mb-1 font-bold uppercase">
+              <p className="text-sm font-bold text-black mb-1 uppercase">
                 Metodo di pagamento
-              </Text>
-              <Text
-                className="txt-medium text-ui-fg-subtle"
+              </p>
+              <p
+                className="text-sm text-gray-500"
                 data-testid="payment-method-summary"
               >
                 Carta regalo
-              </Text>
+              </p>
             </div>
           ) : null}
         </div>

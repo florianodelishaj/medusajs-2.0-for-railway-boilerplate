@@ -1,4 +1,5 @@
 import { cookies } from "next/headers"
+import { CircleCheck } from "lucide-react"
 
 import CartTotals from "@modules/common/components/cart-totals"
 import Help from "@modules/order/components/help"
@@ -21,27 +22,63 @@ export default function OrderCompletedTemplate({
   const totalDiscount = getTotalDiscount(order)
 
   return (
-    <div className="content-container flex flex-col justify-center items-center gap-y-10 h-full w-full">
+    <div className="content-container flex flex-col w-full py-10">
       {isOnboarding && <OnboardingCta orderId={order.id} />}
       <div
-        className="flex flex-col gap-4 h-full bg-white border border-black rounded-md w-full py-10 px-8"
+        className="flex flex-col gap-6 w-full"
         data-testid="order-complete-container"
       >
-        <div className="flex flex-col gap-y-3 mb-4">
-          <h1 className="text-4xl font-bold">Grazie!</h1>
-          <p className="text-xl text-gray-700">
-            Il tuo ordine è stato effettuato con successo.
+        {/* Header */}
+        <div className="flex flex-col items-center text-center gap-3 mb-2">
+          <div className="w-14 h-14 rounded-full bg-green-400 border border-black flex items-center justify-center">
+            <CircleCheck size={28} className="text-black" />
+          </div>
+          <h1 className="text-2xl md:text-3xl font-black uppercase tracking-tight">
+            Ordine Confermato
+          </h1>
+          <p className="text-sm text-gray-500">
+            Ordine #{order.display_id} —{" "}
+            {new Date(order.created_at).toLocaleDateString("it-IT", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}
           </p>
         </div>
+
+        {/* Greeting */}
+        <div>
+          <p className="text-base">
+            Ciao{" "}
+            <strong>
+              {order.shipping_address?.first_name}{" "}
+              {order.shipping_address?.last_name}
+            </strong>
+            , grazie per il tuo ordine!
+          </p>
+          <p className="text-sm text-gray-600 mt-1">
+            Abbiamo inviato i dettagli di conferma a{" "}
+            <strong className="text-black">{order.email}</strong>.
+          </p>
+        </div>
+
         <OrderDetails order={order} />
-        <h2 className="text-2xl font-bold mt-4">Riepilogo</h2>
-        <Items items={order.items} currencyCode={order.currency_code} />
+
+        <div>
+          <h2 className="text-sm font-black uppercase tracking-wider mb-3">
+            I tuoi articoli
+          </h2>
+          <Items items={order.items} currencyCode={order.currency_code} />
+        </div>
+
         <CartTotals
           totals={{
             ...order,
             discount_total: totalDiscount,
           }}
+          variant="order"
         />
+
         <ShippingDetails order={order} />
         <PaymentDetails order={order} />
         <Help />

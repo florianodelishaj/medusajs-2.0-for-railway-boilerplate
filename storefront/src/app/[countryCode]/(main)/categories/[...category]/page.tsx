@@ -75,9 +75,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function CategoryPage({ params, searchParams }: Props) {
   const { sortBy, page, min_price, max_price } = searchParams
 
-  const { product_categories } = await getCategoryByHandle(params.category)
+  const result = await getCategoryByHandle(params.category)
+  const product_categories = result?.product_categories
 
-  if (!product_categories) {
+  if (!product_categories?.length) {
     notFound()
   }
 

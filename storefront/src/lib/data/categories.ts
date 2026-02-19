@@ -50,8 +50,9 @@ export const getCategoryByHandle = cache(async function (
   )
 
   // Sort categories to match URL path order
+  const categories = result?.product_categories ?? []
   const categoryMap = new Map(
-    result.product_categories.map((cat) => [cat.handle, cat])
+    categories.map((cat) => [cat.handle, cat])
   )
   const sortedCategories = categoryHandle
     .map((handle) => categoryMap.get(handle))

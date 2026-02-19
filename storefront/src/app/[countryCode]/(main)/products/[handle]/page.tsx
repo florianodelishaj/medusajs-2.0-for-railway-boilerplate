@@ -10,6 +10,7 @@ import {
   findTopLevelCategory,
   getCategoryBackground,
 } from "@lib/util/get-category-background"
+import { getBaseURL } from "@lib/util/env"
 
 type Props = {
   params: { countryCode: string; handle: string }
@@ -62,12 +63,29 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     notFound()
   }
 
+  const title = `${product.title} | Il Covo di Xur`
+  const description =
+    product.description?.slice(0, 160) ||
+    `Acquista ${product.title} su Il Covo di Xur. Funko Pop, carte Pokémon e collezionabili.`
+  const ogImage = product.thumbnail
+    ? [{ url: product.thumbnail, width: 800, height: 800, alt: product.title }]
+    : []
+
   return {
-    title: `${product.title} | Il Covo di XUr`,
-    description: `${product.title}`,
+    title,
+    description,
+    alternates: {
+      canonical: `${getBaseURL()}/${params.countryCode}/products/${handle}`,
+    },
     openGraph: {
-      title: `${product.title} | Il Covo di Xur`,
-      description: `${product.title}`,
+      type: "website",
+      title,
+      description,
+      images: ogImage,
+    },
+    twitter: {
+      title,
+      description,
       images: product.thumbnail ? [product.thumbnail] : [],
     },
   }
@@ -98,14 +116,48 @@ export default async function ProductPage({ params }: Props) {
     backgroundImage = getCategoryBackground(topLevelCategory)
   }
 
+  const cheapestPrice = pricedProduct.variants
+    ?.flatMap((v) =>
+      v.calculated_price?.calculated_amount != null
+        ? [v.calculated_price.calculated_amount]
+        : []
+    )
+    .sort((a, b) => Number(a) - Number(b))[0]
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: pricedProduct.title,
+    ...(pricedProduct.thumbnail && { image: pricedProduct.thumbnail }),
+    description:
+      pricedProduct.description ||
+      `Acquista ${pricedProduct.title} su Il Covo di Xur.`,
+    brand: { "@type": "Brand", name: "Il Covo di Xur" },
+    ...(cheapestPrice != null && {
+      offers: {
+        "@type": "Offer",
+        price: (Number(cheapestPrice) / 100).toFixed(2),
+        priceCurrency: region.currency_code.toUpperCase(),
+        availability: "https://schema.org/InStock",
+        url: `${getBaseURL()}/${params.countryCode}/products/${pricedProduct.handle}`,
+      },
+    }),
+  }
+
   return (
-    <DynamicBackground backgroundImage={backgroundImage}>
-      <ProductTemplate
-        product={pricedProduct}
-        region={region}
-        countryCode={params.countryCode}
-        topLevelCategory={topLevelCategory}
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-    </DynamicBackground>
+      <DynamicBackground backgroundImage={backgroundImage}>
+        <ProductTemplate
+          product={pricedProduct}
+          region={region}
+          countryCode={params.countryCode}
+          topLevelCategory={topLevelCategory}
+        />
+      </DynamicBackground>
+    </>
   )
 }

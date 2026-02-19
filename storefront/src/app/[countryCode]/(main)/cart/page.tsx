@@ -8,6 +8,7 @@ import { getCustomer } from "@lib/data/customer"
 export const metadata: Metadata = {
   title: "Carrello",
   description: "Guarda il tuo carrello",
+  robots: { index: false },
 }
 
 const fetchCart = async () => {

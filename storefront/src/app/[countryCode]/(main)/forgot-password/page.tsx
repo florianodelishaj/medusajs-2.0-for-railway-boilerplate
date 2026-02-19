@@ -4,6 +4,7 @@ import ForgotPasswordTemplate from "@modules/account/templates/forgot-password-t
 export const metadata: Metadata = {
   title: "Password Dimenticata",
   description: "Richiedi il reset della password",
+  robots: { index: false },
 }
 
 export default function ForgotPassword() {

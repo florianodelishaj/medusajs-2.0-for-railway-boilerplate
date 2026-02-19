@@ -5,6 +5,7 @@ import LoginTemplate from "@modules/account/templates/login-template"
 export const metadata: Metadata = {
   title: "Accedi",
   description: "Accedi alla tua area personale.",
+  robots: { index: false },
 }
 
 export default function Login() {

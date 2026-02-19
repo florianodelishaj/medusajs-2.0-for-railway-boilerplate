@@ -10,6 +10,7 @@ import { getCustomer } from "@lib/data/customer"
 export const metadata: Metadata = {
   title: "Profilo",
   description: "Visualizza e modifica il tuo profilo.",
+  robots: { index: false },
 }
 
 export default async function Profile() {

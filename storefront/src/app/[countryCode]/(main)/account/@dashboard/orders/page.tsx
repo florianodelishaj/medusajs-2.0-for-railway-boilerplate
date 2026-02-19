@@ -7,6 +7,7 @@ import { listOrders } from "@lib/data/orders"
 export const metadata: Metadata = {
   title: "Ordini",
   description: "Panoramica dei tuoi ordini precedenti.",
+  robots: { index: false },
 }
 
 export default async function Orders() {

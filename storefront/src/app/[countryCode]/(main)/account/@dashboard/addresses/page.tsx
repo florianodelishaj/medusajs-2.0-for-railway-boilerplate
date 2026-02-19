@@ -10,6 +10,7 @@ import { getCustomer } from "@lib/data/customer"
 export const metadata: Metadata = {
   title: "Indirizzi",
   description: "Visualizza i tuoi indirizzi",
+  robots: { index: false },
 }
 
 export default async function Addresses({

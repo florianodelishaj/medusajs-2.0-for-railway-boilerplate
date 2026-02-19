@@ -6,6 +6,7 @@ import { listRegions } from "@lib/data/regions"
 import { StoreProductCategory, StoreRegion } from "@medusajs/types"
 import CategoryTemplate from "@modules/categories/templates"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
+import { getBaseURL } from "@lib/util/env"
 
 type Props = {
   params: { category: string[]; countryCode: string }
@@ -27,7 +28,7 @@ export async function generateStaticParams() {
 
     const regions = await listRegions()
     const countryCodes = (regions ?? [])
-      .flatMap((r: StoreRegion) => r.countries?.map((c) => c.iso_2) ?? [])
+      .flatMap((r: StoreRegion) => r.countries?.map((c: any) => c.iso_2) ?? [])
 
     const categoryHandles = product_categories.map(
       (category: any) => category.handle
@@ -69,7 +70,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${title} | Il Covo di Xur`,
       description,
       alternates: {
-        canonical: `${params.category.join("/")}`,
+        canonical: `${getBaseURL()}/${params.countryCode}/categories/${params.category.join("/")}`,
       },
     }
   } catch (error) {

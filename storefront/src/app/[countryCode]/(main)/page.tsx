@@ -9,11 +9,31 @@ import SponsorCarousel from "@modules/home/components/sponsor-carousel"
 import { getCollectionsWithProducts } from "@lib/data/collections"
 import { getRegion } from "@lib/data/regions"
 import { getDiscountedProducts, getProductsByTag } from "@lib/data/products"
+import { getBaseURL } from "@lib/util/env"
 
-export const metadata: Metadata = {
-  title: "Il Covo di Xur",
-  description:
-    "Scopri la nostra collezione di Funko Pop, carte Pokémon e collezionabili. Spedizione gratuita disponibile.",
+const TITLE = "Il Covo di Xur"
+const DESCRIPTION =
+  "Scopri la nostra collezione di Funko Pop, carte Pokémon e collezionabili. Spedizione gratuita disponibile."
+
+export async function generateMetadata({
+  params: { countryCode },
+}: {
+  params: { countryCode: string }
+}): Promise<Metadata> {
+  return {
+    title: TITLE,
+    description: DESCRIPTION,
+    alternates: { canonical: `${getBaseURL()}/${countryCode}` },
+    openGraph: {
+      type: "website",
+      title: TITLE,
+      description: DESCRIPTION,
+    },
+    twitter: {
+      title: TITLE,
+      description: DESCRIPTION,
+    },
+  }
 }
 
 export default async function Home({

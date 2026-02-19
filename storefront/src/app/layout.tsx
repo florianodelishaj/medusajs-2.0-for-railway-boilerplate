@@ -11,8 +11,26 @@ const dmSans = DM_Sans({
   variable: "--font-dm-sans",
 })
 
+const OG_IMAGE = `${getBaseURL()}/opengraph-image.jpg`
+
 export const metadata: Metadata = {
   metadataBase: new URL(getBaseURL()),
+  title: {
+    default: "Il Covo di Xur",
+    template: "%s | Il Covo di Xur",
+  },
+  description:
+    "Scopri la nostra collezione di Funko Pop, carte Pokémon e collezionabili. Spedizione gratuita disponibile.",
+  openGraph: {
+    type: "website",
+    siteName: "Il Covo di Xur",
+    locale: "it_IT",
+    images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: "Il Covo di Xur" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: [OG_IMAGE],
+  },
 }
 
 export default function RootLayout(props: { children: React.ReactNode }) {

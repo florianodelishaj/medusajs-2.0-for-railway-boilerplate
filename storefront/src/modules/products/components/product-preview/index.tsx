@@ -97,6 +97,7 @@ export default async function ProductPreview({
             images={product.images}
             size="square"
             isFeatured={isFeatured}
+            alt={product.title}
           />
         </div>
         <div className="p-4 flex flex-col gap-4 justify-between">

@@ -9,6 +9,7 @@ import { listRegions } from "@lib/data/regions"
 import { StoreCollection, StoreRegion } from "@medusajs/types"
 import CollectionTemplate from "@modules/collections/templates"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
+import { getBaseURL } from "@lib/util/env"
 
 type Props = {
   params: { handle: string; countryCode: string }
@@ -58,12 +59,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     notFound()
   }
 
-  const metadata = {
-    title: `${collection.title} | Il Covo di Xur`,
-    description: `${collection.title} collezione`,
-  } as Metadata
+  const title = `${collection.title} | Il Covo di Xur`
+  const description = `Esplora la collezione ${collection.title} su Il Covo di Xur. Funko Pop, carte Pokémon e collezionabili.`
 
-  return metadata
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: `${getBaseURL()}/${params.countryCode}/collections/${params.handle}`,
+    },
+    openGraph: {
+      type: "website",
+      title,
+      description,
+    },
+    twitter: {
+      title,
+      description,
+    },
+  }
 }
 
 export default async function CollectionPage({ params, searchParams }: Props) {

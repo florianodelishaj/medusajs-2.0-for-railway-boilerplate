@@ -35,6 +35,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `Ordine #${order.display_id}`,
     description: `Visualizza il tuo ordine`,
+    robots: { index: false },
   }
 }
 

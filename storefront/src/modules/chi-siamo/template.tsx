@@ -60,11 +60,11 @@ const ChiSiamoTemplate = () => {
                     ai mondi che amiamo.
                   </p>
                   <p>
-                    Da quella passione è nato{" "}
-                    <strong>Il Covo di Xur</strong>, un luogo dove ogni
-                    collezionista può trovare i pezzi che cerca, scoprire nuove
-                    uscite e far crescere la propria collezione con la certezza
-                    di acquistare solo prodotti autentici e garantiti.
+                    Da quella passione è nato <strong>Il Covo di Xur</strong>,
+                    un luogo dove ogni collezionista può trovare i pezzi che
+                    cerca, scoprire nuove uscite e far crescere la propria
+                    collezione con la certezza di acquistare solo prodotti
+                    autentici e garantiti.
                   </p>
                 </div>
               </div>

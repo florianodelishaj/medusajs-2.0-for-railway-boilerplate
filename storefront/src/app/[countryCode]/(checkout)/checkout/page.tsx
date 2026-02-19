@@ -10,6 +10,7 @@ import { getCustomer } from "@lib/data/customer"
 
 export const metadata: Metadata = {
   title: "Checkout",
+  robots: { index: false },
 }
 
 const fetchCart = async () => {

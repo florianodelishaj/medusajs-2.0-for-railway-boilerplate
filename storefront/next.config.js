@@ -51,6 +51,11 @@ const nextConfig = {
         protocol: "https",
         hostname: "medusa-server-testing.s3.us-east-1.amazonaws.com",
       },
+      {
+        // Placeholder images (rimuovere quando si usano immagini reali)
+        protocol: "https",
+        hostname: "placehold.co",
+      },
       ...(process.env.NEXT_PUBLIC_MINIO_ENDPOINT
         ? [
             {

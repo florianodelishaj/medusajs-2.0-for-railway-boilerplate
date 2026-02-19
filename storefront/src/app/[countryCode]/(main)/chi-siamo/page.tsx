@@ -1,14 +1,12 @@
 import { Metadata } from "next"
+import ChiSiamoTemplate from "@modules/chi-siamo/template"
 
 export const metadata: Metadata = {
-  title: "Chi Siamo",
-  description: "Scopri la nostra storia.",
+  title: "Chi Siamo | Il Covo di Xur",
+  description:
+    "Scopri la storia de Il Covo di Xur: la passione per Funko Pop, carte Pokémon e collezionabili.",
 }
 
-export default async function ChiSiamoPage() {
-  return (
-    <div className="flex flex-col small:flex-row small:items-start content-container">
-      <h1 className="text-4xl font-bold mb-6">Chi Siamo</h1>
-    </div>
-  )
+export default function ChiSiamoPage() {
+  return <ChiSiamoTemplate />
 }

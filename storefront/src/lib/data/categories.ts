@@ -38,28 +38,33 @@ export const getCategoriesList = cache(async function (
 export const getCategoryByHandle = cache(async function (
   categoryHandle: string[]
 ) {
-  const result = await sdk.store.category.list(
-    // TODO: Look into fixing the type
-    // @ts-ignore
-    {
-      handle: categoryHandle,
-      include_descendants_tree: true,
-      fields: "+category_children",
-    },
-    { next: { tags: ["categories"] } }
-  )
+  try {
+    const result = await sdk.store.category.list(
+      // TODO: Look into fixing the type
+      // @ts-ignore
+      {
+        handle: categoryHandle,
+        include_descendants_tree: true,
+        fields: "+category_children",
+      },
+      { next: { tags: ["categories"] } }
+    )
 
-  // Sort categories to match URL path order
-  const categories = result?.product_categories ?? []
-  const categoryMap = new Map(
-    categories.map((cat) => [cat.handle, cat])
-  )
-  const sortedCategories = categoryHandle
-    .map((handle) => categoryMap.get(handle))
-    .filter((cat): cat is NonNullable<typeof cat> => cat !== undefined)
+    // Sort categories to match URL path order
+    const categories = result?.product_categories ?? []
+    const categoryMap = new Map(
+      categories.map((cat) => [cat.handle, cat])
+    )
+    const sortedCategories = categoryHandle
+      .map((handle) => categoryMap.get(handle))
+      .filter((cat): cat is NonNullable<typeof cat> => cat !== undefined)
 
-  return {
-    ...result,
-    product_categories: sortedCategories,
+    return {
+      ...result,
+      product_categories: sortedCategories,
+    }
+  } catch (error) {
+    console.error("Error fetching category by handle:", categoryHandle, error)
+    return { product_categories: [] }
   }
 })

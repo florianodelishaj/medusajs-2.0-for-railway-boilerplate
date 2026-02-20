@@ -58,28 +58,33 @@ export default function ProductPreviewClient({
     <LocalizedClientLink href={`/products/${product.handle}`} className="group">
       <div
         data-testid="product-wrapper"
-        className="bg-white border border-black rounded-md hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:-translate-x-[2px] hover:-translate-y-[2px] transition-all"
+        className="bg-white border border-black rounded-md overflow-hidden hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:-translate-x-[2px] hover:-translate-y-[2px] transition-all"
         style={categoryColor ? { backgroundColor: categoryColor } : {}}
       >
         <div className="relative overflow-hidden rounded-tl-md rounded-tr-md">
           {isOutOfStock && (
-            <div className="absolute top-4 -left-10 z-10 w-40 text-center bg-gray-800 border border-black py-1 transform -rotate-45 shadow-lg">
+            <div className="absolute top-3 md:top-4 -left-8 md:-left-10 z-10 w-32 md:w-40 text-center bg-gray-800 border border-black py-1 transform -rotate-45 shadow-lg">
               <span className="text-xs font-bold uppercase text-white">
                 Esaurito
               </span>
             </div>
           )}
           {!isOutOfStock && hasDiscount && (
-            <div className="absolute top-4 -left-10 z-10 w-40 text-center bg-red-500 border border-black py-1 transform -rotate-45 shadow-lg">
+            <div className="absolute top-3 md:top-4 -left-8 md:-left-10 z-10 w-32 md:w-40 text-center bg-red-500 border border-black py-1 transform -rotate-45 shadow-lg">
               <span className="text-xs font-bold uppercase text-white">
                 Sconto
               </span>
             </div>
           )}
+          {!isOutOfStock && hasDiscount && hasDiscountPercentage > 0 && (
+            <div className="md:hidden absolute top-2 right-2 z-10 bg-red-500 border border-black px-2 py-1">
+              <span className="text-white font-black text-xs">-{hasDiscountPercentage}%</span>
+            </div>
+          )}
           {!isOutOfStock &&
             !hasDiscount &&
             product.tags?.some((tag: any) => tag.value === "Tendenze") && (
-              <div className="absolute top-4 -left-10 z-10 w-40 text-center bg-pink-400 border border-black py-1 transform -rotate-45 shadow-lg">
+              <div className="absolute top-3 md:top-4 -left-8 md:-left-10 z-10 w-32 md:w-40 text-center bg-pink-400 border border-black py-1 transform -rotate-45 shadow-lg">
                 <span className="text-xs font-bold uppercase text-white">
                   Tendenza
                 </span>
@@ -93,39 +98,39 @@ export default function ProductPreviewClient({
             isFeatured={isFeatured}
           />
         </div>
-        <div className="p-4 flex flex-col gap-4 justify-between">
-          <Text data-testid="product-title" className="font-bold">
+        <div className="p-4 flex flex-col gap-4 justify-between min-h-[5rem]">
+          <Text data-testid="product-title" className="font-bold line-clamp-2">
             {product.title}
           </Text>
         </div>
-        <div className="p-4 border-t">
-          <div className="relative px-2 py-1 border bg-green-400 w-fit">
-            {cheapestPrice && (
-              <div className="flex flex-col gap-1">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <Text
-                    className="text-black font-bold text-lg"
-                    data-testid="price"
-                  >
-                    {cheapestPrice.calculated_price}
-                  </Text>
-                  {hasDiscount && hasDiscountPercentage > 0 && (
-                    <span className="px-1.5 py-0.5 bg-red-500 text-white font-bold text-xs rounded border border-black">
-                      -{hasDiscountPercentage}%
-                    </span>
-                  )}
-                </div>
+        <div className="border-t border-black">
+          {cheapestPrice && (
+            <div className="flex items-stretch min-h-[2.5rem]">
+              <div className="flex-1 bg-green-400 px-4 py-2 flex items-center gap-2">
                 {hasDiscount && (
                   <Text
-                    className="line-through text-gray-800 text-sm"
+                    className="text-sm text-black/50 line-through"
                     data-testid="original-price"
                   >
                     {cheapestPrice.original_price}
                   </Text>
                 )}
+                <Text
+                  className="font-black text-base"
+                  data-testid="price"
+                >
+                  {cheapestPrice.calculated_price}
+                </Text>
               </div>
-            )}
-          </div>
+              {hasDiscount && hasDiscountPercentage > 0 && (
+                <div className="hidden md:flex bg-red-500 border-l border-black px-3 items-center justify-center shrink-0">
+                  <span className="text-white font-black text-sm whitespace-nowrap">
+                    -{hasDiscountPercentage}%
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </LocalizedClientLink>

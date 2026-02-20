@@ -63,7 +63,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     notFound()
   }
 
-  const title = `${product.title} | Il Covo di Xur`
+  const title = product.title
   const description =
     product.description?.slice(0, 160) ||
     `Acquista ${product.title} su Il Covo di Xur. Funko Pop, carte Pokémon e collezionabili.`

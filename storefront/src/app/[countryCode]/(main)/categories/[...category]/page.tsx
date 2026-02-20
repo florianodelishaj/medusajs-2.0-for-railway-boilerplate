@@ -67,7 +67,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       `${title} category.`
 
     return {
-      title: `${title} | Il Covo di Xur`,
+      title,
       description,
       alternates: {
         canonical: `${getBaseURL()}/${params.countryCode}/categories/${params.category.join("/")}`,

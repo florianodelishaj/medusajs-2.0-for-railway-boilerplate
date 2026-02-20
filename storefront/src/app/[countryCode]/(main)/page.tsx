@@ -21,7 +21,7 @@ export async function generateMetadata({
   params: { countryCode: string }
 }): Promise<Metadata> {
   return {
-    title: TITLE,
+    title: { absolute: TITLE },
     description: DESCRIPTION,
     alternates: { canonical: `${getBaseURL()}/${countryCode}` },
     openGraph: {

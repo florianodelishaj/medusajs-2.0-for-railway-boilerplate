@@ -8,7 +8,7 @@ import { getRegion } from "@lib/data/regions"
 import { getCustomer } from "@lib/data/customer"
 
 export const metadata: Metadata = {
-  title: "Indirizzi",
+  title: { absolute: "Indirizzi | Il Covo di Xur" },
   description: "Visualizza i tuoi indirizzi",
   robots: { index: false },
 }

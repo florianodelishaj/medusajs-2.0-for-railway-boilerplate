@@ -6,7 +6,7 @@ import { getCustomer } from "@lib/data/customer"
 import { listOrders } from "@lib/data/orders"
 
 export const metadata: Metadata = {
-  title: "Account",
+  title: { absolute: "Account | Il Covo di Xur" },
   description: "Panoramica dell'attività del tuo account.",
   robots: { index: false },
 }

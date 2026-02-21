@@ -1,21 +1,26 @@
 import Link from "next/link"
 import { Button } from "@components/ui/button"
 
+const VIDEO_SRC = `https://${process.env.NEXT_PUBLIC_MINIO_ENDPOINT}/medusa-media/hero-video.mp4`
+
 const Hero = () => {
   return (
-    <div className="relative w-full h-[500px] md:h-[600px] overflow-hidden border-b-2 border-black">
+    <>
+      <link rel="preload" as="video" href={VIDEO_SRC} type="video/mp4" />
+      <div className="relative w-full h-[500px] md:h-[600px] overflow-hidden border-b-2 border-black">
       {/* Background Video */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 bg-black">
         <video
           autoPlay
           muted
           loop
           playsInline
           preload="auto"
+          poster="/hero-poster.jpg"
           className="object-cover w-full h-full"
           style={{ pointerEvents: "none" }}
         >
-          <source src="/video/covo_di_xur.mp4" type="video/mp4" />
+          <source src={VIDEO_SRC} type="video/mp4" />
           Il tuo browser non supporta il tag video.
         </video>
         {/* Gradient Overlay */}
@@ -47,6 +52,7 @@ const Hero = () => {
         </div>
       </div>
     </div>
+    </>
   )
 }
 

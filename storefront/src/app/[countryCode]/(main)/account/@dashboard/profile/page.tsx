@@ -8,7 +8,7 @@ import { notFound } from "next/navigation"
 import { getCustomer } from "@lib/data/customer"
 
 export const metadata: Metadata = {
-  title: "Profilo",
+  title: { absolute: "Profilo | Il Covo di Xur" },
   description: "Visualizza e modifica il tuo profilo.",
   robots: { index: false },
 }

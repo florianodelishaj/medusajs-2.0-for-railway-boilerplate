@@ -5,7 +5,7 @@ import { notFound } from "next/navigation"
 import { listOrders } from "@lib/data/orders"
 
 export const metadata: Metadata = {
-  title: "Ordini",
+  title: { absolute: "Ordini | Il Covo di Xur" },
   description: "Panoramica dei tuoi ordini precedenti.",
   robots: { index: false },
 }

@@ -9,6 +9,10 @@ import { SearchFiltersProvider } from "@lib/context/search-filters-context"
 
 export const metadata: Metadata = {
   metadataBase: new URL(getBaseURL()),
+  title: {
+    template: "%s | Il Covo di Xur",
+    default: "Il Covo di Xur",
+  },
 }
 
 export default async function PageLayout(props: { children: React.ReactNode }) {

@@ -1,4 +1,4 @@
-import React, { Suspense } from "react"
+import { Suspense, type FC } from "react"
 
 import ImageGallery from "@modules/products/components/image-gallery"
 import ProductActions from "@modules/products/components/product-actions"
@@ -21,7 +21,7 @@ type ProductTemplateProps = {
   topLevelCategory?: HttpTypes.StoreProductCategory | null
 }
 
-const ProductTemplate: React.FC<ProductTemplateProps> = ({
+const ProductTemplate: FC<ProductTemplateProps> = ({
   product,
   region,
   countryCode,
@@ -82,10 +82,6 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
     } as HttpTypes.StoreProductImage)
   }
 
-  if (product.id == "prod_01KCF9F7G9RW106DA5QJGP6GFK") {
-    console.log("allImages", allImages)
-    console.log("product", product)
-  }
   return (
     <>
       <ProductCategoryContext category={topLevelCategory || null} />

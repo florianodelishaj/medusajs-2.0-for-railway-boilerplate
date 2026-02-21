@@ -13,7 +13,7 @@ type MyInformationProps = {
   customer: HttpTypes.StoreCustomer
 }
 
-const ProfileEmail: React.FC<MyInformationProps> = ({ customer }) => {
+const ProfilePhone: React.FC<MyInformationProps> = ({ customer }) => {
   const [successState, setSuccessState] = React.useState(false)
 
   const updateCustomerPhone = async (
@@ -72,4 +72,4 @@ const ProfileEmail: React.FC<MyInformationProps> = ({ customer }) => {
   )
 }
 
-export default ProfileEmail
+export default ProfilePhone

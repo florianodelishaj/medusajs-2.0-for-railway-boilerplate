@@ -179,7 +179,6 @@ const ProductTemplate: FC<ProductTemplateProps> = ({
               {/* Mobile: Selezione Varianti - order-3 */}
               {hasSelectableVariants && (
                 <div className="xl:hidden order-3">
-                  <ProductOnboardingCta />
                   <ProductCentralInfo
                     product={product}
                     showTitle={false}
@@ -203,7 +202,6 @@ const ProductTemplate: FC<ProductTemplateProps> = ({
 
               {/* Desktop: Info Centrale completa - order-2 */}
               <div className="hidden xl:block flex-1 w-full xl:min-w-[400px] xl:order-2">
-                <ProductOnboardingCta />
                 <ProductCentralInfo product={product} />
               </div>
 

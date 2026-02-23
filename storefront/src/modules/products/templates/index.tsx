@@ -2,7 +2,6 @@ import { Suspense, type FC } from "react"
 
 import ImageGallery from "@modules/products/components/image-gallery"
 import ProductActions from "@modules/products/components/product-actions"
-import ProductOnboardingCta from "@modules/products/components/product-onboarding-cta"
 import ProductCentralInfo from "@modules/products/components/product-central-info"
 import ProductDetails from "@modules/products/components/product-central-info/product-details"
 import ProductPurchaseSidebar from "@modules/products/components/product-purchase-sidebar"
@@ -115,7 +114,6 @@ const ProductTemplate: FC<ProductTemplateProps> = ({
                 {/* Mobile: Selezione Varianti - order-3 */}
                 {hasSelectableVariants && (
                   <div className="xl:hidden order-3">
-                    <ProductOnboardingCta />
                     <ProductCentralInfo
                       product={product}
                       showTitle={false}
@@ -139,7 +137,6 @@ const ProductTemplate: FC<ProductTemplateProps> = ({
 
                 {/* Desktop: Info Centrale completa - order-2 */}
                 <div className="hidden xl:block flex-1 w-full xl:min-w-[400px] xl:order-2">
-                  <ProductOnboardingCta />
                   <ProductCentralInfo product={product} />
                 </div>
 

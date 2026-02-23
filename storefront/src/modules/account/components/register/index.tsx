@@ -61,7 +61,7 @@ const Register = ({ setCurrentView }: Props) => {
         <span className="text-sm text-gray-700">
           Creando un account, accetti la{" "}
           <a
-            href="https://www.iubenda.com/privacy-policy/27581848"
+            href="https://www.iubenda.com/privacy-policy/28571391"
             className="underline hover:text-green-600 iubenda-white iubenda-noiframe iubenda-embed"
             target="_blank"
             rel="noopener noreferrer"

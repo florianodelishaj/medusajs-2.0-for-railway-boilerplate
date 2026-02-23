@@ -40,7 +40,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
         {/* eslint-disable-next-line @next/next/no-sync-scripts */}
         <script
           type="text/javascript"
-          src="https://embeds.iubenda.com/widgets/ef91f9b1-a19f-439f-bc46-130340a152f0.js"
+          src="https://embeds.iubenda.com/widgets/317cb40d-b815-4f96-b7e6-12321ccddd98.js"
         />
       </head>
       <body className={dmSans.className}>

@@ -56,14 +56,14 @@ export default async function Footer() {
                 Politica di Reso e Rimborsi
               </LocalizedClientLink>
               <a
-                href="https://www.iubenda.com/privacy-policy/27581848"
+                href="https://www.iubenda.com/privacy-policy/28571391"
                 className="iubenda-white iubenda-noiframe iubenda-embed text-sm text-ui-fg-subtle hover:text-green-400"
                 title="Privacy Policy"
               >
                 Privacy Policy
               </a>
               <a
-                href="https://www.iubenda.com/privacy-policy/27581848/cookie-policy"
+                href="https://www.iubenda.com/privacy-policy/28571391/cookie-policy"
                 className="iubenda-white iubenda-noiframe iubenda-embed text-sm text-ui-fg-subtle hover:text-green-400"
                 title="Cookie Policy"
               >

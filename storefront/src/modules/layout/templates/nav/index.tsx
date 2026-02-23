@@ -27,7 +27,7 @@ export default async function Nav() {
           data-testid="nav-store-link"
         >
           <Image
-            src="/images/logo.png"
+            src={`https://${process.env.NEXT_PUBLIC_MINIO_ENDPOINT}/medusa-media/logo.png`}
             alt="Anime illustration"
             width={50}
             height={50}

@@ -4,7 +4,7 @@ import ChiSiamoTemplate from "@modules/chi-siamo/template"
 export const metadata: Metadata = {
   title: "Chi Siamo",
   description:
-    "Scopri la storia de Il Covo di Xur: la passione per Funko Pop, carte Pokémon e collezionabili.",
+    "E-commerce dedicato al gaming e al collezionismo: scopri prodotti selezionati, qualità garantita e spedizioni rapide in tutta Italia. Entra nel mondo del Covo di Xur.",
 }
 
 export default function ChiSiamoPage() {

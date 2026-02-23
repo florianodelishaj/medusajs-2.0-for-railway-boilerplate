@@ -30,7 +30,9 @@ const ResetPasswordTemplate = () => {
 
   useEffect(() => {
     if (state.success) {
-      toast.success("Password reimpostata con successo! Verrai reindirizzato alla pagina di accesso...")
+      toast.success(
+        "Password reimpostata con successo! Verrai reindirizzato alla pagina di accesso..."
+      )
       setTimeout(() => {
         router.push("/account")
       }, 2000)
@@ -76,7 +78,7 @@ const ResetPasswordTemplate = () => {
               )}
             >
               <Image
-                src="/images/logo.png"
+                src={`https://${process.env.NEXT_PUBLIC_MINIO_ENDPOINT}/medusa-media/logo.png`}
                 alt="Anime illustration"
                 width={50}
                 height={50}
@@ -150,7 +152,7 @@ const ResetPasswordTemplate = () => {
       {/* Right - Background section */}
       <div className="hidden xl:block xl:w-2/5 relative overflow-hidden">
         <Image
-          src="/images/anime-8337660_1280.jpg"
+          src={`https://${process.env.NEXT_PUBLIC_MINIO_ENDPOINT}/medusa-media/login.jpg`}
           alt="Background"
           fill
           className="object-cover"

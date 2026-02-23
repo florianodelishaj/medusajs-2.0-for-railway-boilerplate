@@ -196,6 +196,10 @@ module.exports = {
           "0%": { opacity: "0", transform: "translateY(20px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
+        "hero-zoom-in": {
+          "0%": { opacity: "0", transform: "scale(1.06)" },
+          "100%": { opacity: "1", transform: "scale(1)" },
+        },
       },
       animation: {
         ring: "ring 2.2s cubic-bezier(0.5, 0, 0.5, 1) infinite",
@@ -216,6 +220,7 @@ module.exports = {
         "slide-out-to-right": "slide-out-to-right 300ms ease-in",
         leave: "leave 150ms ease-in forwards",
         "hero-fade-up": "hero-fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards",
+        "hero-zoom-in": "hero-zoom-in 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards",
       },
     },
   },

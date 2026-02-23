@@ -37,7 +37,7 @@ const LoginTemplate = () => {
               )}
             >
               <Image
-                src="/images/logo.png"
+                src={`https://${process.env.NEXT_PUBLIC_MINIO_ENDPOINT}/medusa-media/logo.png`}
                 alt="Anime illustration"
                 width={50}
                 height={50}
@@ -72,7 +72,7 @@ const LoginTemplate = () => {
       {/* Right - Background section */}
       <div className="hidden xl:block xl:w-2/5 relative overflow-hidden">
         <Image
-          src="/images/anime-8337660_1280.jpg"
+          src={`https://${process.env.NEXT_PUBLIC_MINIO_ENDPOINT}/medusa-media/login.jpg`}
           alt="Background"
           fill
           className="object-cover"

@@ -50,7 +50,12 @@ const ForgotPasswordTemplate = () => {
                 poppins.className
               )}
             >
-              <Image src="/images/logo.png" alt="Logo" width={50} height={50} />
+              <Image
+                src={`https://${process.env.NEXT_PUBLIC_MINIO_ENDPOINT}/medusa-media/logo.png`}
+                alt="Logo"
+                width={50}
+                height={50}
+              />
               IL COVO DI XUR
             </LocalizedClientLink>
             <LocalizedClientLink
@@ -115,7 +120,7 @@ const ForgotPasswordTemplate = () => {
       {/* Right - Background section */}
       <div className="hidden xl:block xl:w-2/5 relative overflow-hidden">
         <Image
-          src="/images/anime-8337660_1280.jpg"
+          src={`https://${process.env.NEXT_PUBLIC_MINIO_ENDPOINT}/medusa-media/login.jpg`}
           alt="Background"
           fill
           className="object-cover"

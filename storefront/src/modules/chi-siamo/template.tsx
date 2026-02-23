@@ -4,28 +4,30 @@ import { ShieldCheck, Heart, Users, Sparkles, Quote } from "lucide-react"
 import { Button } from "@components/ui/button"
 import ScrollReveal from "@modules/common/components/scroll-reveal"
 
+const MINIO_BASE = `https://${process.env.NEXT_PUBLIC_MINIO_ENDPOINT}/medusa-media/chi-siamo`
+
 const ChiSiamoTemplate = () => {
   return (
     <div>
       {/* Hero */}
       <section className="relative w-full h-[500px] md:h-[600px] overflow-hidden border-b border-black">
         <Image
-          src="https://placehold.co/1920x800/1a1a1a/ffffff?text=IL+COVO+DI+XUR"
+          src={`${MINIO_BASE}/hero_chisiamo.jpeg`}
           alt="Il Covo di Xur"
           fill
-          className="object-cover"
+          className="object-cover object-[50%_40%] opacity-0 animate-hero-zoom-in"
           priority
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30" />
         <div className="relative h-full content-container flex flex-col justify-end pb-12">
-          <span className="inline-block w-fit bg-green-400 text-black text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-md border border-black mb-4">
+          <span className="inline-block w-fit bg-green-400 text-black text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-md border border-black mb-4 opacity-0 animate-hero-fade-up">
             Chi siamo
           </span>
-          <h1 className="text-4xl md:text-6xl font-black uppercase text-white mb-3 leading-tight">
+          <h1 className="text-4xl md:text-6xl font-black uppercase text-white mb-3 leading-tight opacity-0 animate-hero-fade-up [animation-delay:0.15s]">
             La Nostra Storia
           </h1>
-          <p className="text-lg md:text-xl text-white/80 max-w-xl">
-            Come una passione per i collezionabili è diventata Il Covo di Xur.
+          <p className="text-lg md:text-xl text-white/80 max-w-xl opacity-0 animate-hero-fade-up [animation-delay:0.3s]">
+            Più di uno shop, una community di appassionati.
           </p>
         </div>
       </section>
@@ -37,7 +39,7 @@ const ChiSiamoTemplate = () => {
             <ScrollReveal>
               <div className="relative aspect-[4/3] border border-black rounded-md overflow-hidden shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
                 <Image
-                  src="https://placehold.co/800x600/f4f4f0/1a1a1a?text=Foto+1"
+                  src={`${MINIO_BASE}/le_origini.jpeg`}
                   alt="Come è nato il Covo di Xur"
                   fill
                   className="object-cover"
@@ -54,17 +56,24 @@ const ChiSiamoTemplate = () => {
                 </h2>
                 <div className="space-y-4 text-gray-700 leading-relaxed">
                   <p>
-                    Tutto è iniziato da una semplice passione: collezionare.
-                    Funko Pop, carte Pokémon, action figure — ogni pezzo
-                    raccontava una storia, un ricordo, un&apos;emozione legata
-                    ai mondi che amiamo.
+                    Il Covo di Xur nasce a Teramo dall’esperienza di HGE
+                    Esports, associazione fondata nel 2020 da un gruppo di amici
+                    uniti dalla{" "}
+                    <strong>passione per il gaming competitivo</strong>.
                   </p>
                   <p>
-                    Da quella passione è nato <strong>Il Covo di Xur</strong>,
-                    un luogo dove ogni collezionista può trovare i pezzi che
-                    cerca, scoprire nuove uscite e far crescere la propria
-                    collezione con la certezza di acquistare solo prodotti
-                    autentici e garantiti.
+                    Da questo progetto, i founder Fabrizio e Andrea hanno
+                    ampliato la visione creando{" "}
+                    <strong>il primo gaming bar della città</strong>: un punto
+                    di riferimento per appassionati di{" "}
+                    <strong>videogiochi, collezionismo e cultura pop</strong>.
+                  </p>
+                  <p>
+                    Il Covo è diventato nel tempo{" "}
+                    <strong>una vera community</strong>, dove gioco, socialità e
+                    passioni condivise si incontrano. Oggi questa esperienza si
+                    estende anche online, portando la stessa energia e
+                    <strong>competenza nel nuovo e-commerce</strong>.
                   </p>
                 </div>
               </div>
@@ -80,8 +89,8 @@ const ChiSiamoTemplate = () => {
             <div className="flex flex-col items-center text-center gap-4">
               <Quote className="w-10 h-10 text-green-400" />
               <blockquote className="text-xl md:text-2xl font-bold text-white max-w-2xl italic leading-relaxed">
-                &ldquo;Non vendiamo solo oggetti — vendiamo emozioni, ricordi e
-                la gioia di trovare quel pezzo che cercavi da tempo.&rdquo;
+                &ldquo;Non è una collezione. È il segno visibile del mondo a cui
+                appartieni.&rdquo;
               </blockquote>
               <span className="text-green-400 text-sm font-bold uppercase tracking-wider">
                 Il Covo di Xur
@@ -105,18 +114,32 @@ const ChiSiamoTemplate = () => {
                 </h2>
                 <div className="space-y-4 text-gray-700 leading-relaxed">
                   <p>
-                    Il Covo di Xur non è solo un e-commerce. È un punto di
-                    riferimento per chi condivide la stessa passione per il
-                    mondo del collezionismo.
+                    La missione del Covo di Xur è portare online la stessa
+                    passione che anima il nostro spazio fisico, attraverso un
+                    <strong>
+                      e-commerce dedicato al mondo del gaming e del
+                      collezionismo
+                    </strong>
+                    .
                   </p>
                   <p>
-                    Ogni prodotto viene selezionato con cura, ogni spedizione
-                    preparata con attenzione, perché sappiamo quanto vale ogni
-                    pezzo della tua collezione.
-                  </p>
-                  <p>
-                    Dalla scelta dei fornitori al packaging, ogni dettaglio è
-                    pensato per offrirti la migliore esperienza possibile.
+                    Offriamo una{" "}
+                    <strong>
+                      selezione curata di prodotti per appassionati e
+                      collezionisti
+                    </strong>
+                    , garantendo qualità, autenticità e attenzione ai dettagli.
+                    Il nostro shop online nasce per rendere semplice e sicuro
+                    acquistare articoli ricercati, con{" "}
+                    <strong>un servizio affidabile e spedizioni rapide</strong>{" "}
+                    in tutta Italia. Vogliamo diventare un punto di riferimento
+                    per chi vive queste passioni ogni giorno: non solo uno shop,
+                    ma{" "}
+                    <strong>
+                      un luogo digitale dove continuare a condividere ciò che
+                      amiamo
+                    </strong>
+                    .
                   </p>
                 </div>
               </div>
@@ -124,7 +147,7 @@ const ChiSiamoTemplate = () => {
             <ScrollReveal delay={150} className="order-1 md:order-2">
               <div className="relative aspect-[4/3] border border-black rounded-md overflow-hidden shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
                 <Image
-                  src="https://placehold.co/800x600/1a1a1a/4ade80?text=Foto+2"
+                  src={`${MINIO_BASE}/la_missione.jpeg`}
                   alt="La passione per i collezionabili"
                   fill
                   className="object-cover"
@@ -156,8 +179,9 @@ const ChiSiamoTemplate = () => {
                   Autenticità
                 </h3>
                 <p className="text-gray-600 text-sm leading-relaxed">
-                  Solo prodotti originali e garantiti. Lavoriamo esclusivamente
-                  con distributori ufficiali per assicurarti la massima qualità.
+                  Selezioniamo solo prodotti originali e certificati,
+                  provenienti da distributori ufficiali. Ogni pezzo è scelto con
+                  cura per garantire qualità, affidabilità e valore nel tempo.
                 </p>
               </div>
             </ScrollReveal>
@@ -168,8 +192,9 @@ const ChiSiamoTemplate = () => {
                 </div>
                 <h3 className="font-bold uppercase text-lg mb-2">Passione</h3>
                 <p className="text-gray-600 text-sm leading-relaxed">
-                  Siamo collezionisti prima di tutto. Capiamo l&apos;emozione di
-                  trovare quel pezzo che cercavi da tempo.
+                  Siamo collezionisti prima di tutto. Conosciamo l’emozione di
+                  trovare quel pezzo che aspettavi da tempo — ed è la stessa
+                  emozione che vogliamo farti vivere.
                 </p>
               </div>
             </ScrollReveal>
@@ -180,8 +205,9 @@ const ChiSiamoTemplate = () => {
                 </div>
                 <h3 className="font-bold uppercase text-lg mb-2">Community</h3>
                 <p className="text-gray-600 text-sm leading-relaxed">
-                  Una community di appassionati che condividono la stessa
-                  passione. Seguici sui social per restare aggiornato.
+                  Il Covo è una casa per chi condivide le stesse passioni. Un
+                  luogo dove incontrarsi, confrontarsi e sentirsi parte di
+                  qualcosa di autentico.
                 </p>
               </div>
             </ScrollReveal>
@@ -190,7 +216,7 @@ const ChiSiamoTemplate = () => {
       </section>
 
       {/* Sezione 4: Video */}
-      <section className="bg-black border-y border-black">
+      {/* <section className="bg-black border-y border-black">
         <div className="content-container py-16 md:py-24">
           <ScrollReveal>
             <div className="text-center mb-10">
@@ -221,17 +247,17 @@ const ChiSiamoTemplate = () => {
             </div>
           </ScrollReveal>
         </div>
-      </section>
+      </section> */}
 
       {/* Sezione 5: CTA */}
-      <section className="bg-gradient-to-b from-green-400 to-green-300 border-t border-black">
+      <section className="bg-black border-t border-black">
         <div className="content-container py-16 md:py-20">
           <ScrollReveal>
             <div className="flex flex-col items-center text-center gap-6">
-              <h2 className="text-2xl md:text-4xl font-black uppercase">
+              <h2 className="text-2xl md:text-4xl font-black uppercase text-white">
                 Pronto a esplorare?
               </h2>
-              <p className="text-black/70 text-lg max-w-lg">
+              <p className="text-white/70 text-lg max-w-lg">
                 Scopri la nostra collezione di Funko Pop, carte Pokémon e molto
                 altro.
               </p>
@@ -239,7 +265,7 @@ const ChiSiamoTemplate = () => {
                 <Button
                   variant="elevated"
                   size="lg"
-                  className="bg-black text-white hover:bg-white hover:text-black font-bold uppercase"
+                  className="bg-white text-black hover:bg-green-400 hover:text-black font-bold uppercase hover:shadow-[4px_4px_0px_0px_white]"
                 >
                   Esplora il catalogo
                 </Button>

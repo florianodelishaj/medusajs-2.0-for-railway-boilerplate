@@ -24,9 +24,7 @@ const Item = ({ item, currencyCode }: ItemProps) => {
         <p className="text-sm font-bold truncate" data-testid="product-name">
           {item.title}
         </p>
-        {item.variant &&
-          (item.variant.title !== "Default variant" ||
-            item.product_title !== item.variant.title) && (
+        {item.variant && item.variant.title !== "Default variant" && (
             <LineItemOptions
               variant={item.variant}
               data-testid="product-variant"

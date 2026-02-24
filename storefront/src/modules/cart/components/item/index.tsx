@@ -75,9 +75,7 @@ const Item = ({ item, currencyCode, type = "full" }: ItemProps) => {
         >
           {item.product_title}
         </p>
-        {item.variant &&
-          (item.variant.title !== "Default variant" ||
-            item.product_title !== item.variant.title) && (
+        {item.variant && item.variant.title !== "Default variant" && (
             <LineItemOptions
               variant={item.variant}
               data-testid="product-variant"

@@ -169,9 +169,7 @@ const CartDropdown = ({
                             {item.title}
                           </LocalizedClientLink>
                         </h3>
-                        {item.variant &&
-                          (item.variant.title !== "Default variant" ||
-                            item.product_title !== item.variant.title) && (
+                        {item.variant && item.variant.title !== "Default variant" && (
                             <LineItemOptions
                               variant={item.variant}
                               data-testid="cart-item-variant"

@@ -1,6 +1,12 @@
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { Poppins } from "next/font/google"
 import { cn } from "@lib/util/cn"
+import Image from "next/image"
+import Visa from "react-payment-icons-inline/es/Icons/Visa"
+import Mastercard from "react-payment-icons-inline/es/Icons/Mastercard"
+import Amex from "react-payment-icons-inline/es/Icons/Amex"
+import Applepay from "react-payment-icons-inline/es/Icons/Applepay"
+import Googlepay from "react-payment-icons-inline/es/Icons/Googlepay"
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -93,9 +99,34 @@ export default async function Footer() {
           </div>
         </div>
 
-        <div className="border-t pt-4 text-xs text-ui-fg-muted">
-          &copy; {new Date().getFullYear()} Il Covo di Xur - S.M.N. S.r.l.s.
-          (P.IVA 02183500673)
+        <div className="border-t pt-4 flex flex-col small:flex-row small:items-center small:justify-between gap-4">
+          <span className="text-xs text-ui-fg-muted">
+            &copy; {new Date().getFullYear()} Il Covo di Xur - S.M.N. S.r.l.s.
+            (P.IVA 02183500673)
+          </span>
+          <div className="flex items-center gap-2 flex-wrap">
+            <Visa className="h-7 w-auto rounded border border-gray-200" aria-label="Visa" />
+            <Mastercard className="h-7 w-auto rounded border border-gray-200" aria-label="Mastercard" />
+            <Amex className="h-7 w-auto rounded border border-gray-200" aria-label="American Express" />
+            {/* PayPal */}
+            <div className="flex items-center justify-center h-7 w-10 rounded border border-gray-200 bg-white">
+              <Image src="/icons/payment/paypal.svg" alt="PayPal" width={20} height={20} />
+            </div>
+            <Applepay className="h-7 w-auto rounded border border-gray-200" aria-label="Apple Pay" />
+            <Googlepay className="h-7 w-auto rounded border border-gray-200" aria-label="Google Pay" />
+            {/* Klarna */}
+            <div className="flex items-center justify-center h-7 w-10 rounded border border-gray-200 bg-[#FFB3C7]">
+              <Image src="/icons/payment/klarna.svg" alt="Klarna" width={20} height={20} />
+            </div>
+            {/* Revolut Pay */}
+            <div className="flex items-center justify-center h-7 w-10 rounded border border-gray-200 bg-[#191C1F]">
+              <Image src="/icons/payment/revolut.svg" alt="Revolut Pay" width={20} height={20} />
+            </div>
+            {/* Satispay */}
+            <div className="flex items-center justify-center h-7 w-20 rounded border border-gray-200 bg-white px-1">
+              <Image src="/icons/payment/satispay.png" alt="Satispay" width={64} height={15} />
+            </div>
+          </div>
         </div>
       </div>
     </footer>

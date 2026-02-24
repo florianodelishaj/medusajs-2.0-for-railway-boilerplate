@@ -57,7 +57,7 @@ const AddAddress = ({ region }: { region: HttpTypes.StoreRegion }) => {
         <Modal.Title>
           <Heading className="mb-4">Aggiungi indirizzo</Heading>
         </Modal.Title>
-        <form action={formAction}>
+        <form action={formAction} className="flex flex-col flex-1 min-h-0 overflow-hidden">
           <Modal.Body>
             <div className="flex flex-col gap-y-2">
               <Input

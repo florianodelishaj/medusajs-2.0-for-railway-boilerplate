@@ -29,15 +29,12 @@ const FreeShippingProgress = ({
             fields: "+prices.price_rules",
           })
 
-        console.log("[FreeShipping] shipping_options:", JSON.stringify(shipping_options, null, 2))
-
         // Cerca la soglia nelle shipping options
         for (const option of shipping_options || []) {
           // Cerca tra i prezzi quello che ha la regola "item_total"
           for (const price of option.prices || []) {
             // Cast a any perché il tipo StorePrice non include price_rules di default
             const priceWithRules = price as any
-            console.log(`[FreeShipping] option "${option.name}" price:`, price.amount, "rules:", JSON.stringify(priceWithRules.price_rules))
             const thresholdRule = priceWithRules.price_rules?.find(
               (rule: any) =>
                 rule.attribute === "item_total" && rule.operator === "gte"
@@ -46,13 +43,8 @@ const FreeShippingProgress = ({
             if (thresholdRule && price.amount === 0) {
               // Il valore della price_rule è in euro (es. '100' = €100)
               const value = parseFloat(thresholdRule.value)
-              console.log(`[FreeShipping] found threshold candidate: ${value} (option: ${option.name})`)
               // Salta opzioni con soglia 0 (es. ritiro in negozio sempre gratuito)
-              if (value <= 0) {
-                console.log("[FreeShipping] skipping (value <= 0)")
-                continue
-              }
-              console.log(`[FreeShipping] using threshold: ${value}€`)
+              if (value <= 0) continue
               setThreshold(value)
               setShippingName(option.name || "")
               setIsLoading(false)
@@ -60,8 +52,6 @@ const FreeShippingProgress = ({
             }
           }
         }
-
-        console.log("[FreeShipping] no threshold found, using fallback:", fallbackThreshold)
         // Se non trova la regola, usa il fallback
         setIsLoading(false)
       } catch (error) {
@@ -80,7 +70,6 @@ const FreeShippingProgress = ({
   // item_total è il totale degli articoli nel carrello (escluso tasse e spedizione)
   const currentTotal = cart.item_total ?? 0
   const missingAmount = threshold - currentTotal
-  console.log(`[FreeShipping] currentTotal: ${currentTotal}, threshold: ${threshold}, missingAmount: ${missingAmount}`)
 
   // Mostra skeleton durante il caricamento per evitare layout shift
   if (isLoading) {

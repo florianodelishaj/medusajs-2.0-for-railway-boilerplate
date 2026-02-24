@@ -2,11 +2,6 @@ import LocalizedClientLink from "@modules/common/components/localized-client-lin
 import { Poppins } from "next/font/google"
 import { cn } from "@lib/util/cn"
 import Image from "next/image"
-import Visa from "react-payment-icons-inline/es/Icons/Visa"
-import Mastercard from "react-payment-icons-inline/es/Icons/Mastercard"
-import Amex from "react-payment-icons-inline/es/Icons/Amex"
-import Applepay from "react-payment-icons-inline/es/Icons/Applepay"
-import Googlepay from "react-payment-icons-inline/es/Icons/Googlepay"
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -105,26 +100,16 @@ export default async function Footer() {
             (P.IVA 02183500673)
           </span>
           <div className="flex items-center gap-2 flex-wrap">
-            <Visa className="h-7 w-auto rounded border border-gray-200" aria-label="Visa" />
-            <Mastercard className="h-7 w-auto rounded border border-gray-200" aria-label="Mastercard" />
-            <Amex className="h-7 w-auto rounded border border-gray-200" aria-label="American Express" />
-            {/* PayPal */}
-            <div className="flex items-center justify-center h-7 w-10 rounded border border-gray-200 bg-white">
-              <Image src="/icons/payment/paypal.svg" alt="PayPal" width={20} height={20} />
-            </div>
-            <Applepay className="h-7 w-auto rounded border border-gray-200" aria-label="Apple Pay" />
-            <Googlepay className="h-7 w-auto rounded border border-gray-200" aria-label="Google Pay" />
-            {/* Klarna */}
-            <div className="flex items-center justify-center h-7 w-10 rounded border border-gray-200 bg-[#FFB3C7]">
-              <Image src="/icons/payment/klarna.svg" alt="Klarna" width={20} height={20} />
-            </div>
-            {/* Revolut Pay */}
-            <div className="flex items-center justify-center h-7 w-10 rounded border border-gray-200 bg-[#191C1F]">
-              <Image src="/icons/payment/revolut.svg" alt="Revolut Pay" width={20} height={20} />
-            </div>
-            {/* Satispay */}
-            <div className="flex items-center justify-center h-7 w-20 rounded border border-gray-200 bg-white px-1">
-              <Image src="/icons/payment/satispay.png" alt="Satispay" width={64} height={15} />
+            <Image src="/icons/payment/visa.svg" alt="Visa" width={64} height={40} className="h-10 w-auto rounded border border-gray-200" unoptimized />
+            <Image src="/icons/payment/mastercard.svg" alt="Mastercard" width={64} height={40} className="h-10 w-auto rounded border border-gray-200" unoptimized />
+            <Image src="/icons/payment/amex.svg" alt="American Express" width={64} height={40} className="h-10 w-auto rounded border border-gray-200" unoptimized />
+            <Image src="/icons/payment/paypal.svg" alt="PayPal" width={64} height={40} className="h-10 w-auto rounded border border-gray-200 bg-white p-1" unoptimized />
+            <Image src="/icons/payment/applepay.png" alt="Apple Pay" width={64} height={40} className="h-10 w-auto rounded border border-gray-200 bg-white p-1.5" unoptimized />
+            <Image src="/icons/payment/googlepay.png" alt="Google Pay" width={64} height={40} className="h-10 w-auto rounded border border-gray-200 bg-white p-1.5" unoptimized />
+            <Image src="/icons/payment/klarna.svg" alt="Klarna" width={64} height={40} className="h-10 w-auto rounded border border-gray-200 bg-[#FFB3C7] p-1.5" unoptimized />
+            <Image src="/icons/payment/revolut.svg" alt="Revolut Pay" width={64} height={40} className="h-10 w-auto rounded border border-gray-200 bg-[#191C1F] p-1.5" unoptimized />
+            <div className="flex items-center justify-center h-10 w-24 rounded border border-gray-200 bg-white px-1.5">
+              <Image src="/icons/payment/satispay.png" alt="Satispay" width={80} height={19} unoptimized />
             </div>
           </div>
         </div>

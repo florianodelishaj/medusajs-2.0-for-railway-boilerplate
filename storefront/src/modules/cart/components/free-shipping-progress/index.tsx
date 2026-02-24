@@ -41,9 +41,9 @@ const FreeShippingProgress = ({
             )
 
             if (thresholdRule && price.amount === 0) {
-              // Trovata la regola per la spedizione gratuita
-              // Il valore è già in euro (non in centesimi)
               const value = parseFloat(thresholdRule.value)
+              // Salta opzioni con soglia 0 (es. ritiro in negozio sempre gratuito)
+              if (value <= 0) continue
               setThreshold(value)
               setShippingName(option.name || "")
               setIsLoading(false)

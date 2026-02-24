@@ -129,9 +129,16 @@ const Shipping: React.FC<ShippingProps> = ({
                           <Radio
                             checked={option.id === selectedShippingMethod?.id}
                           />
-                          <span className="text-base-regular">
-                            {option.name}
-                          </span>
+                          <div className="flex flex-col">
+                            <span className="text-base-regular">
+                              {option.name}
+                            </span>
+                            {(option as any).type?.description && (
+                              <span className="text-xs text-gray-600 mt-0.5">
+                                {(option as any).type.description}
+                              </span>
+                            )}
+                          </div>
                         </div>
                         <span className="justify-self-end text-black font-semibold">
                           {option.amount === 0 ? (

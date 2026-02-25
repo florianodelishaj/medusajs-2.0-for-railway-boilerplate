@@ -1,4 +1,3 @@
-import { Suspense } from "react"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import CartButton from "@modules/layout/components/cart-button"
 import { NavMenuButton } from "@modules/layout/components/nav-menu-button"
@@ -52,19 +51,7 @@ export default async function Nav() {
         >
           Account
         </LocalizedClientLink>
-        <Suspense
-          fallback={
-            <LocalizedClientLink
-              className="flex items-center h-full px-12 py-2 border-l border-black bg-black text-white hover:bg-green-400 hover:border-green-400 hover:text-black transition-colors duration-200 font-semibold gap-2"
-              href="/cart"
-              data-testid="nav-cart-link"
-            >
-              Carrello (0)
-            </LocalizedClientLink>
-          }
-        >
-          <CartButton />
-        </Suspense>
+        <CartButton />
       </div>
     </nav>
   )

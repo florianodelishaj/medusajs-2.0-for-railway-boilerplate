@@ -59,7 +59,7 @@ export default async function ProductPreview({
         className="bg-white border border-black rounded-md overflow-hidden hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:-translate-x-[2px] hover:-translate-y-[2px] transition-all"
         style={categoryColor ? { backgroundColor: categoryColor } : {}}
       >
-        <div className="relative overflow-hidden rounded-tl-md rounded-tr-md">
+        <div className="relative overflow-hidden">
           {isOutOfStock && (
             <div className="absolute top-3 md:top-4 -left-8 md:-left-10 z-10 w-32 md:w-40 text-center bg-gray-800 border border-black py-1 transform -rotate-45 shadow-lg">
               <span className="text-xs font-bold uppercase text-white">
@@ -97,7 +97,7 @@ export default async function ProductPreview({
               </div>
             )}
           <Thumbnail
-            className="rounded-tl-lg rounded-tr-lg rounded-b-none"
+            className="!rounded-none"
             thumbnail={product.thumbnail}
             images={product.images}
             size="square"

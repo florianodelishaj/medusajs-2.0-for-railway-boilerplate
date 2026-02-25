@@ -1,9 +1,8 @@
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
 
-import { getCategoryByHandle, listCategories } from "@lib/data/categories"
-import { listRegions } from "@lib/data/regions"
-import { StoreProductCategory, StoreRegion } from "@medusajs/types"
+import { getCategoryByHandle } from "@lib/data/categories"
+import { StoreProductCategory } from "@medusajs/types"
 import CategoryTemplate from "@modules/categories/templates"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
 import { getBaseURL } from "@lib/util/env"
@@ -15,38 +14,6 @@ type Props = {
     page?: string
     min_price?: string
     max_price?: string
-  }
-}
-
-export async function generateStaticParams() {
-  try {
-    const product_categories = await listCategories()
-
-    if (!product_categories?.length) {
-      return []
-    }
-
-    const regions = await listRegions()
-    const countryCodes = (regions ?? [])
-      .flatMap((r: StoreRegion) => r.countries?.map((c: any) => c.iso_2) ?? [])
-
-    const categoryHandles = product_categories.map(
-      (category: any) => category.handle
-    )
-
-    const staticParams = (countryCodes ?? [])
-      .map((countryCode: string | undefined) =>
-        categoryHandles.map((handle: any) => ({
-          countryCode,
-          category: [handle],
-        }))
-      )
-      .flat()
-
-    return staticParams
-  } catch (error) {
-    console.error("Error generating static params for categories:", error)
-    return []
   }
 }
 

@@ -104,7 +104,7 @@ const ProductTemplate: FC<ProductTemplateProps> = ({
                 <div className="xl:hidden order-2">
                   <Heading
                     level="h1"
-                    className="text-3xl font-black uppercase text-black"
+                    className="text-3xl font-black uppercase text-black leading-snug"
                     data-testid="product-title-mobile"
                   >
                     {product.title}

@@ -43,7 +43,7 @@ const ProductCentralInfo = ({
       {showTitle && (
         <Heading
           level="h1"
-          className="hidden xl:block text-3xl font-black uppercase text-black"
+          className="hidden xl:block text-3xl font-black uppercase text-black leading-snug"
           data-testid="product-title"
         >
           {product.title}

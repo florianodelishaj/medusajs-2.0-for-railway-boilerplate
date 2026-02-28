@@ -29,7 +29,7 @@ export default function CategoryTemplate({
   const category = categories[categories.length - 1]
 
   // Get background color from the root category (first in the array)
-  const categoryColor = (categories[0]?.metadata?.color as string) || "white"
+  const categoryColor = (categories[0]?.metadata?.color as string) || null
 
   // Get background image from the root category (first in the array)
   const backgroundImage = (categories[0]?.metadata?.backgroundImage as string) || null
@@ -37,7 +37,7 @@ export default function CategoryTemplate({
   if (!category || !countryCode) notFound()
 
   return (
-    <DynamicBackground backgroundImage={backgroundImage}>
+    <DynamicBackground backgroundImage={backgroundImage} categoryColor={categoryColor}>
       <div
         className="flex flex-col flex-1 small:flex-row w-full px-4 lg:px-12 py-8"
         data-testid="category-container"
@@ -72,7 +72,7 @@ export default function CategoryTemplate({
               sortBy={sort}
               page={pageNumber}
               categoryId={category.id}
-              categoryColor={categoryColor}
+              categoryColor={categoryColor ?? undefined}
               minPrice={minPrice}
               maxPrice={maxPrice}
               countryCode={countryCode}

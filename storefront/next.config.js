@@ -56,6 +56,11 @@ const nextConfig = {
         protocol: "https",
         hostname: "placehold.co",
       },
+      {
+        // Covers all Railway MinIO buckets (dev and prod)
+        protocol: "https",
+        hostname: "*.up.railway.app",
+      },
       ...(process.env.NEXT_PUBLIC_MINIO_ENDPOINT
         ? [
             {

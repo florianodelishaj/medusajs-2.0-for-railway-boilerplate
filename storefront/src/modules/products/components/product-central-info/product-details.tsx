@@ -26,7 +26,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
   const rightColumn = customAttributes.slice(midPoint)
 
   return (
-    <Accordion type="single" collapsible>
+    <Accordion type="single" collapsible defaultValue="details">
       <Accordion.Item title="Dettagli Prodotto" value="details">
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 text-sm">
           {/* Colonna sinistra */}

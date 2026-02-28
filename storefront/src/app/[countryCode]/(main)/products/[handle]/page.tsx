@@ -9,6 +9,7 @@ import DynamicBackground from "@modules/layout/components/dynamic-background"
 import {
   findTopLevelCategory,
   getCategoryBackground,
+  getCategoryColor,
 } from "@lib/util/get-category-background"
 import { getBaseURL } from "@lib/util/env"
 
@@ -103,9 +104,10 @@ export default async function ProductPage({ params }: Props) {
     notFound()
   }
 
-  // Calculate background image and category server-side
+  // Calculate background and category server-side
   const categories = await getTopLevelCategories()
   let backgroundImage: string | null = null
+  let categoryColor: string | null = null
   let topLevelCategory = null
 
   if (pricedProduct.categories && pricedProduct.categories.length > 0) {
@@ -114,6 +116,9 @@ export default async function ProductPage({ params }: Props) {
       categories || []
     )
     backgroundImage = getCategoryBackground(topLevelCategory)
+    if (!backgroundImage) {
+      categoryColor = getCategoryColor(topLevelCategory)
+    }
   }
 
   const cheapestPrice = pricedProduct.variants
@@ -150,7 +155,7 @@ export default async function ProductPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <DynamicBackground backgroundImage={backgroundImage}>
+      <DynamicBackground backgroundImage={backgroundImage} categoryColor={categoryColor}>
         <ProductTemplate
           product={pricedProduct}
           region={region}

@@ -43,6 +43,15 @@ export function getCategoryBackground(category: any): string | null {
 }
 
 /**
+ * Get color from a category's metadata
+ */
+export function getCategoryColor(category: any): string | null {
+  return category?.metadata?.color
+    ? (category.metadata.color as string)
+    : null
+}
+
+/**
  * Find top-level category by handle and get its background
  */
 export function getBackgroundByHandle(

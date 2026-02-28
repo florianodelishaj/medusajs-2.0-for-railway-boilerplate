@@ -24,7 +24,7 @@ const ProductExtendedDescription = ({
   }
 
   return (
-    <Accordion type="single" collapsible>
+    <Accordion type="single" collapsible defaultValue="extended-description">
       <Accordion.Item title="Descrizione" value="extended-description">
         <style
           dangerouslySetInnerHTML={{

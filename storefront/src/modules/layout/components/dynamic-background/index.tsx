@@ -16,7 +16,10 @@ export default function DynamicBackground({
   categoryColor = null,
 }: DynamicBackgroundProps) {
   return (
-    <div className="flex flex-col flex-1 bg-[#F4F4F0] relative">
+    <div
+      className="flex flex-col flex-1 bg-[#F4F4F0] relative"
+      style={categoryColor ? ({ "--category-color": categoryColor } as React.CSSProperties) : {}}
+    >
       {backgroundImage ? (
         <>
           <Image

@@ -107,7 +107,7 @@ const Payment = ({
     <div className="bg-white border border-black rounded-md p-6">
       <div
         className={cn("flex flex-row items-center justify-between gap-x-4", {
-          "mb-6": isOpen,
+          "mb-6": isOpen || paymentReady,
         })}
       >
         <div className="flex items-center gap-x-2">
@@ -115,6 +115,8 @@ const Payment = ({
             className={cn("text-2xl font-black uppercase", {
               "opacity-50 pointer-events-none select-none":
                 !isOpen && !paymentReady,
+              "border-l-4 border-green-400 pl-3": isOpen,
+              "border-l-4 border-pink-400 pl-3": !isOpen && paymentReady,
             })}
           >
             Pagamento

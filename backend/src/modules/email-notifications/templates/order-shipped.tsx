@@ -144,10 +144,10 @@ export const OrderShippedTemplate = ({
         <Text className="text-[#999] text-[13px] leading-[20px] text-center m-0">
           Hai bisogno di aiuto? Scrivici a{" "}
           <Link
-            href="mailto:assistenza@ilcovodixur.com"
+            href="mailto:ordini@ilcovodixur.com"
             className="text-black font-medium no-underline"
           >
-            assistenza@ilcovodixur.com
+            ordini@ilcovodixur.com
           </Link>
         </Text>
       </Section>

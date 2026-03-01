@@ -6,22 +6,13 @@ import {
   useSearchBox,
   useHits,
 } from "react-instantsearch-hooks-web"
-import { MagnifyingGlassMini, Funnel } from "@medusajs/icons"
+import { MagnifyingGlassMini } from "@medusajs/icons"
 import { Input } from "@components/ui/input"
-import { Button } from "@components/ui/button"
 import { SEARCH_INDEX_NAME, searchClient } from "@lib/search-client"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import Thumbnail from "@modules/products/components/thumbnail"
 
-interface Props {
-  onFilterClick: () => void
-}
-
-interface SearchResultsProps {
-  isFocused: boolean
-}
-
-function SearchResults({ isFocused }: SearchResultsProps) {
+function SearchResults({ isFocused }: { isFocused: boolean }) {
   const { hits } = useHits()
   const dropdownRef = useRef<HTMLDivElement>(null)
 
@@ -58,7 +49,7 @@ function SearchResults({ isFocused }: SearchResultsProps) {
   )
 }
 
-function SearchInput({ onFilterClick }: Props) {
+function SearchInput() {
   const { refine, query } = useSearchBox()
   const [localQuery, setLocalQuery] = useState(query)
   const [isFocused, setIsFocused] = useState(false)
@@ -67,16 +58,6 @@ function SearchInput({ onFilterClick }: Props) {
     const value = e.target.value
     setLocalQuery(value)
     refine(value)
-  }
-
-  const handleFocus = () => {
-    setIsFocused(true)
-  }
-
-  const handleBlur = () => {
-    setTimeout(() => {
-      setIsFocused(false)
-    }, 200)
   }
 
   return (
@@ -88,30 +69,20 @@ function SearchInput({ onFilterClick }: Props) {
           placeholder="Cerca prodotti..."
           value={localQuery}
           onChange={handleChange}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setTimeout(() => setIsFocused(false), 200)}
           className="pl-12"
         />
         <SearchResults isFocused={isFocused} />
       </div>
-      {/* Mobile filter button */}
-      <Button
-        variant="elevated"
-        size="icon"
-        onClick={onFilterClick}
-        className="size-12 shrink-0 flex lg:hidden rounded-full"
-        aria-label="Apri filtri"
-      >
-        <Funnel className="w-5 h-5" />
-      </Button>
     </div>
   )
 }
 
-export const SearchWithResults = ({ onFilterClick }: Props) => {
+export const SearchWithResults = () => {
   return (
     <InstantSearch indexName={SEARCH_INDEX_NAME} searchClient={searchClient}>
-      <SearchInput onFilterClick={onFilterClick} />
+      <SearchInput />
     </InstantSearch>
   )
 }

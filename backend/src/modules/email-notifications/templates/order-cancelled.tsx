@@ -6,40 +6,40 @@ import {
   Column,
   Link,
   Button,
-} from "@react-email/components"
-import * as React from "react"
-import { XCircleIcon } from "./icons"
-import { Base } from "./base"
-import { OrderDTO, OrderAddressDTO } from "@medusajs/framework/types"
+} from "@react-email/components";
+import * as React from "react";
+import { XCircleIcon } from "./icons";
+import { Base } from "./base";
+import { OrderDTO, OrderAddressDTO } from "@medusajs/framework/types";
 
-export const ORDER_CANCELLED = "order-cancelled"
+export const ORDER_CANCELLED = "order-cancelled";
 
 interface OrderCancelledPreviewProps {
   order: OrderDTO & {
-    display_id: string
-    summary: { raw_current_order_total: { value: number } }
-  }
-  shippingAddress: OrderAddressDTO
-  reason?: string
+    display_id: string;
+    summary: { raw_current_order_total: { value: number } };
+  };
+  shippingAddress: OrderAddressDTO;
+  reason?: string;
 }
 
 export interface OrderCancelledTemplateProps {
   order: OrderDTO & {
-    display_id: string
-    summary: { raw_current_order_total: { value: number } }
-  }
-  shippingAddress: OrderAddressDTO
-  reason?: string
-  preview?: string
+    display_id: string;
+    summary: { raw_current_order_total: { value: number } };
+  };
+  shippingAddress: OrderAddressDTO;
+  reason?: string;
+  preview?: string;
 }
 
 export const isOrderCancelledTemplateData = (
-  data: any
+  data: any,
 ): data is OrderCancelledTemplateProps =>
-  typeof data.order === "object" && typeof data.shippingAddress === "object"
+  typeof data.order === "object" && typeof data.shippingAddress === "object";
 
 export const OrderCancelledTemplate: React.FC<OrderCancelledTemplateProps> & {
-  PreviewProps: OrderCancelledPreviewProps
+  PreviewProps: OrderCancelledPreviewProps;
 } = ({
   order,
   shippingAddress,
@@ -50,8 +50,8 @@ export const OrderCancelledTemplate: React.FC<OrderCancelledTemplateProps> & {
     return new Intl.NumberFormat("it-IT", {
       style: "currency",
       currency: currency,
-    }).format(value)
-  }
+    }).format(value);
+  };
 
   return (
     <Base preview={preview}>
@@ -71,7 +71,11 @@ export const OrderCancelledTemplate: React.FC<OrderCancelledTemplateProps> & {
               textAlign: "center",
             }}
           >
-            <XCircleIcon size={28} color="#000" style={{ verticalAlign: "middle" }} />
+            <XCircleIcon
+              size={28}
+              color="#000"
+              style={{ verticalAlign: "middle" }}
+            />
           </div>
           <Text className="text-black text-[28px] font-black uppercase tracking-tight text-center m-0">
             Ordine Annullato
@@ -96,8 +100,8 @@ export const OrderCancelledTemplate: React.FC<OrderCancelledTemplateProps> & {
         </Text>
         <Text className="text-[#444] text-[15px] leading-[24px] m-0 mb-[28px]">
           Ti confermiamo che il tuo ordine è stato annullato. Se era previsto un
-          pagamento, l&apos;importo verrà rimborsato sul tuo metodo di
-          pagamento originale.
+          pagamento, l&apos;importo verrà rimborsato sul tuo metodo di pagamento
+          originale.
         </Text>
 
         {/* Items — card individuali (stessa struttura di order-placed) */}
@@ -174,7 +178,7 @@ export const OrderCancelledTemplate: React.FC<OrderCancelledTemplateProps> & {
               <Text className="text-white text-[20px] font-black m-0">
                 {formatPrice(
                   order.summary.raw_current_order_total.value,
-                  order.currency_code
+                  order.currency_code,
                 )}
               </Text>
             </Column>
@@ -221,16 +225,16 @@ export const OrderCancelledTemplate: React.FC<OrderCancelledTemplateProps> & {
         <Text className="text-[#999] text-[13px] leading-[20px] text-center m-0">
           Hai bisogno di aiuto? Scrivici a{" "}
           <Link
-            href="mailto:assistenza@ilcovodixur.com"
+            href="mailto:ordini@ilcovodixur.com"
             className="text-black font-medium no-underline"
           >
-            assistenza@ilcovodixur.com
+            ordini@ilcovodixur.com
           </Link>
         </Text>
       </Section>
     </Base>
-  )
-}
+  );
+};
 
 OrderCancelledTemplate.PreviewProps = {
   order: {
@@ -286,6 +290,6 @@ OrderCancelledTemplate.PreviewProps = {
     country_code: "IT",
   },
   reason: "Richiesta dal cliente",
-} as OrderCancelledPreviewProps
+} as OrderCancelledPreviewProps;
 
-export default OrderCancelledTemplate
+export default OrderCancelledTemplate;

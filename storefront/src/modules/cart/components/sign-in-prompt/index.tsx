@@ -5,10 +5,10 @@ const SignInPrompt = () => {
   return (
     <div className="flex items-center justify-between">
       <div>
-        <h2 className="text-xl font-bold">
+        <h2 className="font-black uppercase border-l-4 border-green-400 pl-3">
           Hai già un account?
         </h2>
-        <p className="text-sm text-gray-500 mt-2">
+        <p className="text-sm text-black/50 mt-1">
           Accedi per un&apos;esperienza migliore.
         </p>
       </div>

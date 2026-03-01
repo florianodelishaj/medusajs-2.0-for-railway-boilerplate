@@ -1,17 +1,17 @@
-import { Text, Section, Hr, Link, Button } from "@react-email/components"
-import { UserPlusIcon } from "./icons"
-import { Base } from "./base"
+import { Text, Section, Hr, Link, Button } from "@react-email/components";
+import { UserPlusIcon } from "./icons";
+import { Base } from "./base";
 
-export const WELCOME = "welcome"
+export const WELCOME = "welcome";
 
 export interface WelcomeTemplateProps {
-  customerName: string
-  preview?: string
+  customerName: string;
+  preview?: string;
 }
 
 export const isWelcomeTemplateData = (
-  data: any
-): data is WelcomeTemplateProps => typeof data.customerName === "string"
+  data: any,
+): data is WelcomeTemplateProps => typeof data.customerName === "string";
 
 export const WelcomeTemplate = ({
   customerName,
@@ -35,7 +35,11 @@ export const WelcomeTemplate = ({
               textAlign: "center",
             }}
           >
-            <UserPlusIcon size={28} color="#000" style={{ verticalAlign: "middle" }} />
+            <UserPlusIcon
+              size={28}
+              color="#000"
+              style={{ verticalAlign: "middle" }}
+            />
           </div>
           <Text className="text-black text-[28px] font-black uppercase tracking-tight text-center m-0">
             Benvenuto!
@@ -73,19 +77,19 @@ export const WelcomeTemplate = ({
         <Text className="text-[#999] text-[13px] leading-[20px] text-center m-0">
           Hai bisogno di aiuto? Scrivici a{" "}
           <Link
-            href="mailto:assistenza@ilcovodixur.com"
+            href="mailto:ordini@ilcovodixur.com"
             className="text-black font-medium no-underline"
           >
-            assistenza@ilcovodixur.com
+            ordini@ilcovodixur.com
           </Link>
         </Text>
       </Section>
     </Base>
-  )
-}
+  );
+};
 
 WelcomeTemplate.PreviewProps = {
   customerName: "Marco",
-} as WelcomeTemplateProps
+} as WelcomeTemplateProps;
 
-export default WelcomeTemplate
+export default WelcomeTemplate;

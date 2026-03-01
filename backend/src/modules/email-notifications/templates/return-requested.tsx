@@ -1,26 +1,26 @@
-import { Text, Section, Hr, Row, Column, Link } from "@react-email/components"
-import { Undo2Icon, CircleCheckIcon } from "./icons"
-import { Base } from "./base"
+import { Text, Section, Hr, Row, Column, Link } from "@react-email/components";
+import { Undo2Icon, CircleCheckIcon } from "./icons";
+import { Base } from "./base";
 
-export const RETURN_REQUESTED = "return-requested"
+export const RETURN_REQUESTED = "return-requested";
 
 export interface ReturnRequestedTemplateProps {
-  orderDisplayId: string
-  customerName: string
+  orderDisplayId: string;
+  customerName: string;
   items: Array<{
-    title: string
-    quantity: number
-  }>
-  returnStatus: "requested" | "received"
-  preview?: string
+    title: string;
+    quantity: number;
+  }>;
+  returnStatus: "requested" | "received";
+  preview?: string;
 }
 
 export const isReturnRequestedTemplateData = (
-  data: any
+  data: any,
 ): data is ReturnRequestedTemplateProps =>
   typeof data.orderDisplayId === "string" &&
   typeof data.customerName === "string" &&
-  Array.isArray(data.items)
+  Array.isArray(data.items);
 
 export const ReturnRequestedTemplate = ({
   orderDisplayId,
@@ -29,10 +29,10 @@ export const ReturnRequestedTemplate = ({
   returnStatus,
   preview,
 }: ReturnRequestedTemplateProps) => {
-  const isReceived = returnStatus === "received"
+  const isReceived = returnStatus === "received";
   const defaultPreview = isReceived
     ? "Il tuo reso è stato ricevuto!"
-    : "Il tuo reso è stato richiesto"
+    : "Il tuo reso è stato richiesto";
 
   return (
     <Base preview={preview || defaultPreview}>
@@ -53,9 +53,17 @@ export const ReturnRequestedTemplate = ({
             }}
           >
             {isReceived ? (
-              <CircleCheckIcon size={28} color="#000" style={{ verticalAlign: "middle" }} />
+              <CircleCheckIcon
+                size={28}
+                color="#000"
+                style={{ verticalAlign: "middle" }}
+              />
             ) : (
-              <Undo2Icon size={28} color="#000" style={{ verticalAlign: "middle" }} />
+              <Undo2Icon
+                size={28}
+                color="#000"
+                style={{ verticalAlign: "middle" }}
+              />
             )}
           </div>
           <Text className="text-black text-[28px] font-black uppercase tracking-tight text-center m-0">
@@ -135,16 +143,16 @@ export const ReturnRequestedTemplate = ({
         <Text className="text-[#999] text-[13px] leading-[20px] text-center m-0">
           Hai bisogno di aiuto? Scrivici a{" "}
           <Link
-            href="mailto:assistenza@ilcovodixur.com"
+            href="mailto:ordini@ilcovodixur.com"
             className="text-black font-medium no-underline"
           >
-            assistenza@ilcovodixur.com
+            ordini@ilcovodixur.com
           </Link>
         </Text>
       </Section>
     </Base>
-  )
-}
+  );
+};
 
 ReturnRequestedTemplate.PreviewProps = {
   orderDisplayId: "1042",
@@ -154,6 +162,6 @@ ReturnRequestedTemplate.PreviewProps = {
     { title: "Pokemon TCG - Booster Box Scarlet & Violet", quantity: 1 },
   ],
   returnStatus: "requested",
-} as ReturnRequestedTemplateProps
+} as ReturnRequestedTemplateProps;
 
-export default ReturnRequestedTemplate
+export default ReturnRequestedTemplate;

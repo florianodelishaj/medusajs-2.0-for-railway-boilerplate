@@ -108,12 +108,17 @@ export default function TrendingProductsCarousel({
   useEffect(() => {
     if (!emblaApi) return
 
+    let timer: ReturnType<typeof setTimeout>
     const handleResize = () => {
-      emblaApi.reInit()
+      clearTimeout(timer)
+      timer = setTimeout(() => emblaApi.reInit(), 150)
     }
 
     window.addEventListener("resize", handleResize)
-    return () => window.removeEventListener("resize", handleResize)
+    return () => {
+      clearTimeout(timer)
+      window.removeEventListener("resize", handleResize)
+    }
   }, [emblaApi])
 
   return (

@@ -31,6 +31,13 @@ export default async function ProductPreview({
     product: pricedProduct,
   })
 
+  // Fallback: se non viene passato categoryColor, lo ricaviamo dalla prima
+  // categoria del prodotto che ha un colore impostato
+  const resolvedCategoryColor =
+    categoryColor ??
+    (pricedProduct.categories?.find((c) => c.metadata?.color)?.metadata
+      ?.color as string | undefined)
+
   // Check if all variants are out of stock
   const isOutOfStock = pricedProduct.variants?.every((variant) => {
     if (!variant.manage_inventory) return false
@@ -57,7 +64,7 @@ export default async function ProductPreview({
       <div
         data-testid="product-wrapper"
         className="bg-white border border-black rounded-md overflow-hidden hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:-translate-x-[2px] hover:-translate-y-[2px] transition-all"
-        style={categoryColor ? { backgroundColor: categoryColor } : {}}
+        // style={resolvedCategoryColor ? { backgroundColor: resolvedCategoryColor } : {}}
       >
         <div className="relative overflow-hidden">
           {isOutOfStock && (
@@ -81,11 +88,16 @@ export default async function ProductPreview({
               </span>
             </div>
           )}
-          {!isOutOfStock && !isBackorder && hasDiscount && cheapestPrice?.percentage_diff && (
-            <div className="md:hidden absolute top-2 right-2 z-10 bg-red-500 border border-black px-2 py-1">
-              <span className="text-white font-black text-xs">-{cheapestPrice.percentage_diff}%</span>
-            </div>
-          )}
+          {!isOutOfStock &&
+            !isBackorder &&
+            hasDiscount &&
+            cheapestPrice?.percentage_diff && (
+              <div className="md:hidden absolute top-2 right-2 z-10 bg-red-500 border border-black px-2 py-1">
+                <span className="text-white font-black text-xs">
+                  -{cheapestPrice.percentage_diff}%
+                </span>
+              </div>
+            )}
           {!isOutOfStock &&
             !isBackorder &&
             !hasDiscount &&
@@ -125,7 +137,12 @@ export default async function ProductPreview({
           ))} */}
         </div>
         <div className="border-t border-black">
-          {cheapestPrice && <PreviewPrice price={cheapestPrice} />}
+          {cheapestPrice && (
+            <PreviewPrice
+              price={cheapestPrice}
+              categoryColor={resolvedCategoryColor}
+            />
+          )}
         </div>
       </div>
     </LocalizedClientLink>

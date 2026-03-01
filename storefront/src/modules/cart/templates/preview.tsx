@@ -12,36 +12,29 @@ type ItemsTemplateProps = {
 }
 
 const ItemsPreviewTemplate = ({ items, currencyCode }: ItemsTemplateProps) => {
-  const hasOverflow = items && items.length > 4
-
   return (
     <div
-      className={
-        hasOverflow
-          ? "pl-[1px] overflow-y-scroll overflow-x-hidden no-scrollbar max-h-[420px]"
-          : ""
-      }
+      className="divide-y divide-black/10 border-b border-black/10"
+      data-testid="items-table"
     >
-      <div className="divide-y divide-gray-200" data-testid="items-table">
-        {items
-          ? items
-              .sort((a, b) => {
-                return (a.created_at ?? "") > (b.created_at ?? "") ? -1 : 1
-              })
-              .map((item) => {
-                return (
-                  <Item
-                    key={item.id}
-                    item={item}
-                    currencyCode={currencyCode}
-                    type="preview"
-                  />
-                )
-              })
-          : repeat(5).map((i) => {
-              return <SkeletonLineItem key={i} />
-            })}
-      </div>
+      {items
+        ? items
+            .sort((a, b) => {
+              return (a.created_at ?? "") > (b.created_at ?? "") ? -1 : 1
+            })
+            .map((item) => {
+              return (
+                <Item
+                  key={item.id}
+                  item={item}
+                  currencyCode={currencyCode}
+                  type="preview"
+                />
+              )
+            })
+        : repeat(5).map((i) => {
+            return <SkeletonLineItem key={i} />
+          })}
     </div>
   )
 }

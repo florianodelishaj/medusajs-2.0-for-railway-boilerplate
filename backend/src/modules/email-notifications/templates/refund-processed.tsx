@@ -1,25 +1,25 @@
-import { Text, Section, Hr, Row, Column, Link } from "@react-email/components"
-import { RotateCcwIcon } from "./icons"
-import { Base } from "./base"
-import { OrderDTO } from "@medusajs/framework/types"
+import { Text, Section, Hr, Row, Column, Link } from "@react-email/components";
+import { RotateCcwIcon } from "./icons";
+import { Base } from "./base";
+import { OrderDTO } from "@medusajs/framework/types";
 
-export const REFUND_PROCESSED = "refund-processed"
+export const REFUND_PROCESSED = "refund-processed";
 
 export interface RefundProcessedTemplateProps {
-  order: OrderDTO & { display_id: string }
-  refundAmount: number
-  currencyCode: string
-  customerName: string
-  reason?: string
-  preview?: string
+  order: OrderDTO & { display_id: string };
+  refundAmount: number;
+  currencyCode: string;
+  customerName: string;
+  reason?: string;
+  preview?: string;
 }
 
 export const isRefundProcessedTemplateData = (
-  data: any
+  data: any,
 ): data is RefundProcessedTemplateProps =>
   typeof data.order === "object" &&
   typeof data.refundAmount === "number" &&
-  typeof data.customerName === "string"
+  typeof data.customerName === "string";
 
 export const RefundProcessedTemplate = ({
   order,
@@ -33,8 +33,8 @@ export const RefundProcessedTemplate = ({
     return new Intl.NumberFormat("it-IT", {
       style: "currency",
       currency: currency,
-    }).format(value)
-  }
+    }).format(value);
+  };
 
   return (
     <Base preview={preview}>
@@ -54,7 +54,11 @@ export const RefundProcessedTemplate = ({
               textAlign: "center",
             }}
           >
-            <RotateCcwIcon size={28} color="#000" style={{ verticalAlign: "middle" }} />
+            <RotateCcwIcon
+              size={28}
+              color="#000"
+              style={{ verticalAlign: "middle" }}
+            />
           </div>
           <Text className="text-black text-[28px] font-black uppercase tracking-tight text-center m-0">
             Rimborso Processato
@@ -70,8 +74,8 @@ export const RefundProcessedTemplate = ({
         </Text>
         <Text className="text-[#444] text-[15px] leading-[24px] m-0 mb-[28px]">
           Ti confermiamo che il rimborso per il tuo ordine è stato processato.
-          L&apos;importo verrà accreditato sul tuo metodo di pagamento
-          originale entro 5-10 giorni lavorativi.
+          L&apos;importo verrà accreditato sul tuo metodo di pagamento originale
+          entro 5-10 giorni lavorativi.
         </Text>
 
         {/* Refund details */}
@@ -121,16 +125,16 @@ export const RefundProcessedTemplate = ({
         <Text className="text-[#999] text-[13px] leading-[20px] text-center m-0">
           Hai bisogno di aiuto? Scrivici a{" "}
           <Link
-            href="mailto:assistenza@ilcovodixur.com"
+            href="mailto:ordini@ilcovodixur.com"
             className="text-black font-medium no-underline"
           >
-            assistenza@ilcovodixur.com
+            ordini@ilcovodixur.com
           </Link>
         </Text>
       </Section>
     </Base>
-  )
-}
+  );
+};
 
 RefundProcessedTemplate.PreviewProps = {
   order: {
@@ -141,6 +145,6 @@ RefundProcessedTemplate.PreviewProps = {
   currencyCode: "EUR",
   customerName: "Marco Rossi",
   reason: "Prodotto non conforme alla descrizione",
-} as RefundProcessedTemplateProps
+} as RefundProcessedTemplateProps;
 
-export default RefundProcessedTemplate
+export default RefundProcessedTemplate;

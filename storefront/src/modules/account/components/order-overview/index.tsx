@@ -23,8 +23,8 @@ const OrderOverview = ({ orders }: { orders: HttpTypes.StoreOrder[] }) => {
       className="border border-black border-dashed flex items-center justify-center p-8 flex-col gap-y-4 bg-white w-full rounded-md"
       data-testid="no-orders-container"
     >
-      <h2 className="text-2xl font-bold">Nessun ordine trovato</h2>
-      <p className="text-base text-gray-700">
+      <h2 className="text-2xl font-black uppercase">Nessun ordine trovato</h2>
+      <p className="text-base text-black/50">
         Non hai ancora effettuato ordini, cambiamo la situazione {":)"}
       </p>
       <LocalizedClientLink href="/store" passHref>

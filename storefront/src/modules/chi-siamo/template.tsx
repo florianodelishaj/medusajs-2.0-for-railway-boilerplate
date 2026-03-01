@@ -250,14 +250,14 @@ const ChiSiamoTemplate = () => {
       </section> */}
 
       {/* Sezione 5: CTA */}
-      <section className="bg-black border-t border-black">
+      <section className="bg-white border-t-2 border-black">
         <div className="content-container py-16 md:py-20">
           <ScrollReveal>
             <div className="flex flex-col items-center text-center gap-6">
-              <h2 className="text-2xl md:text-4xl font-black uppercase text-white">
+              <h2 className="text-2xl md:text-4xl font-black uppercase text-black">
                 Pronto a esplorare?
               </h2>
-              <p className="text-white/70 text-lg max-w-lg">
+              <p className="text-black/60 text-lg max-w-lg">
                 Scopri la nostra collezione di Funko Pop, carte Pokémon e molto
                 altro.
               </p>
@@ -265,7 +265,7 @@ const ChiSiamoTemplate = () => {
                 <Button
                   variant="elevated"
                   size="lg"
-                  className="bg-white text-black hover:bg-green-400 hover:text-black font-bold uppercase hover:shadow-[4px_4px_0px_0px_white]"
+                  className="bg-black text-white hover:bg-green-400 hover:text-black font-bold uppercase"
                 >
                   Esplora il catalogo
                 </Button>

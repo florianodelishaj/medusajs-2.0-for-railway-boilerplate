@@ -1,7 +1,13 @@
 import { Text, clx } from "@medusajs/ui"
 import { VariantPrice } from "types/global"
 
-export default async function PreviewPrice({ price }: { price: VariantPrice }) {
+export default async function PreviewPrice({
+  price,
+  categoryColor,
+}: {
+  price: VariantPrice
+  categoryColor?: string
+}) {
   if (!price) {
     return null
   }
@@ -12,7 +18,10 @@ export default async function PreviewPrice({ price }: { price: VariantPrice }) {
 
   return (
     <div className="flex items-stretch min-h-[2.5rem]">
-      <div className="flex-1 bg-green-400 px-4 py-2 flex items-center gap-2">
+      <div
+        className={clx("flex-1 px-4 py-2 flex items-center gap-2", !categoryColor && "bg-green-400")}
+        style={categoryColor ? { backgroundColor: categoryColor } : {}}
+      >
         {hasDiscount && (
           <Text
             className="text-sm text-black/50 line-through"

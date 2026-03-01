@@ -9,13 +9,13 @@ const Help = () => {
         <h3 className="text-sm font-black uppercase tracking-wider mb-1">
           Hai bisogno di aiuto?
         </h3>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-black/50">
           Scrivici a{" "}
           <a
-            href="mailto:assistenza@ilcovodixur.com"
+            href="mailto:ordini@ilcovodixur.com"
             className="text-black font-bold underline hover:text-green-600 transition-colors"
           >
-            assistenza@ilcovodixur.com
+            ordini@ilcovodixur.com
           </a>
         </p>
       </div>
@@ -25,9 +25,7 @@ const Help = () => {
         className="uppercase bg-black text-white hover:bg-green-400 hover:text-black transition-all duration-200"
         asChild
       >
-        <LocalizedClientLink href="/">
-          Continua lo shopping
-        </LocalizedClientLink>
+        <LocalizedClientLink href="/">Continua lo shopping</LocalizedClientLink>
       </Button>
     </div>
   )

@@ -56,7 +56,7 @@ export default function OrderCompletedTemplate({
             </strong>
             , grazie per il tuo ordine!
           </p>
-          <p className="text-sm text-gray-600 mt-1">
+          <p className="text-sm text-black/50 mt-1">
             Abbiamo inviato i dettagli di conferma a{" "}
             <strong className="text-black">{order.email}</strong>.
           </p>
@@ -65,7 +65,7 @@ export default function OrderCompletedTemplate({
         <OrderDetails order={order} />
 
         <div>
-          <h2 className="text-sm font-black uppercase tracking-wider mb-3">
+          <h2 className="text-sm font-black uppercase tracking-wider mb-3 border-l-4 border-green-400 pl-2">
             I tuoi articoli
           </h2>
           <Items items={order.items} currencyCode={order.currency_code} />

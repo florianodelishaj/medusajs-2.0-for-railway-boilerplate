@@ -9,7 +9,7 @@ export const retrieveOrder = cache(async function (id: string) {
   return sdk.store.order
     .retrieve(
       id,
-      { fields: "*payment_collections.payments" },
+      { fields: "*payment_collections.payments,+items.*" },
       { next: { tags: ["order"] }, ...getAuthHeaders() }
     )
     .then(({ order }) => order)
@@ -25,7 +25,8 @@ export const listOrders = cache(async function (
       {
         limit,
         offset,
-        order: "-created_at" // Ordina per data di creazione decrescente
+        order: "-created_at",
+        fields: "+items.*",
       },
       { next: { tags: ["order"] }, ...getAuthHeaders() }
     )

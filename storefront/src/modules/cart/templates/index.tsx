@@ -17,7 +17,7 @@ const CartTemplate = ({
         <div className="grid grid-cols-1 small:grid-cols-[1fr_416px] gap-x-24">
           <div className="flex flex-col gap-y-6 mb-6 lg:mb-0">
             {!customer && (
-              <div className="flex flex-col p-4 border rounded-md bg-white">
+              <div className="flex flex-col p-4 border border-black rounded-md bg-white">
                 <>
                   <SignInPrompt />
                 </>
@@ -29,7 +29,7 @@ const CartTemplate = ({
             />
           </div>
           <div className="relative">
-            <div className="flex flex-col p-4 border rounded-md gap-y-8 sticky top-12 bg-white">
+            <div className="flex flex-col p-4 border border-black rounded-md gap-y-8 sticky top-12 bg-white">
               {cart && cart.region && <Summary cart={cart as any} />}
             </div>
           </div>

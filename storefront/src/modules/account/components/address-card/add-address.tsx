@@ -1,7 +1,6 @@
 "use client"
 
 import { Plus } from "@medusajs/icons"
-import { Heading } from "@medusajs/ui"
 import { useEffect, useState } from "react"
 import { useFormState } from "react-dom"
 
@@ -45,17 +44,19 @@ const AddAddress = ({ region }: { region: HttpTypes.StoreRegion }) => {
     <>
       <Button
         variant="elevated"
-        className="p-5 min-h-[220px] h-full w-full flex flex-col justify-between hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:bg-green-400"
+        className="p-5 min-h-[220px] h-full w-full flex flex-col justify-between hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:bg-green-400 [border-style:dashed]"
         onClick={open}
         data-testid="add-address-button"
       >
-        <span className="text-base-semi self-center">Nuovo indirizzo</span>
-        <Plus className="self-start" />
+        <span className="text-sm font-black uppercase self-center">Nuovo indirizzo</span>
+        <Plus className="self-start w-5 h-5" />
       </Button>
 
       <Modal isOpen={state} close={close} data-testid="add-address-modal">
         <Modal.Title>
-          <Heading className="mb-4">Aggiungi indirizzo</Heading>
+          <h2 className="text-xl font-black uppercase mb-4 border-l-4 border-green-400 pl-2">
+            Aggiungi indirizzo
+          </h2>
         </Modal.Title>
         <form action={formAction} className="flex flex-col flex-1 min-h-0 overflow-hidden">
           <Modal.Body>

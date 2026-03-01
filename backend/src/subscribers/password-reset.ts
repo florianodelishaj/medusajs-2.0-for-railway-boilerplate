@@ -35,7 +35,7 @@ export default async function passwordResetHandler({
       template: EmailTemplates.RESET_PASSWORD,
       data: {
         emailOptions: {
-          replyTo: "assistenza@ilcovodixur.com",
+          replyTo: "ordini@ilcovodixur.com",
           subject: "Il Covo di Xur — Reimposta la tua password",
         },
         resetLink,

@@ -12,24 +12,28 @@ const CheckoutSummary = ({ cart }: { cart: any }) => {
   const totalDiscount = useMemo(() => getTotalDiscount(cart), [cart])
 
   return (
-    <div className="sticky top-0 flex flex-col-reverse small:flex-col gap-y-8 py-8 small:py-0 ">
-      <div className="w-full bg-white border border-black rounded-md p-6 flex flex-col">
-        <h2 className="flex flex-row text-2xl font-black uppercase items-baseline mb-6">
-          Il tuo carrello
-        </h2>
-        <div className="mb-4">
-          <FreeShippingProgress cart={cart} />
+    <div className="sticky top-0 flex flex-col-reverse small:flex-col gap-y-8 py-8 small:py-0">
+      <div className="w-full bg-white border border-black rounded-md overflow-hidden flex flex-col">
+        <div className="bg-green-400 border-b-2 border-black px-4 py-2.5">
+          <h2 className="flex flex-row text-2xl font-black uppercase items-baseline">
+            Il tuo carrello
+          </h2>
         </div>
-        <CartTotals totals={{
-          ...cart,
-          discount_total: totalDiscount
-        }} />
-        <ItemsPreviewTemplate
-          items={cart?.items}
-          currencyCode={cart?.currency_code}
-        />
-        <div className="mt-6">
-          <DiscountCode cart={cart} />
+        <div className="p-6 flex flex-col">
+          <div className="mb-4">
+            <FreeShippingProgress cart={cart} />
+          </div>
+          <CartTotals totals={{
+            ...cart,
+            discount_total: totalDiscount
+          }} />
+          <ItemsPreviewTemplate
+            items={cart?.items}
+            currencyCode={cart?.currency_code}
+          />
+          <div className="mt-6">
+            <DiscountCode cart={cart} />
+          </div>
         </div>
       </div>
     </div>

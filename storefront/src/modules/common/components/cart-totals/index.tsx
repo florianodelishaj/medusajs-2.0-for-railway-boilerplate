@@ -32,7 +32,7 @@ const CartTotals: React.FC<CartTotalsProps> = ({
 
   return (
     <div>
-      <div className="flex flex-col gap-y-2 txt-medium text-ui-fg-subtle ">
+      <div className="flex flex-col gap-y-2 text-sm text-black/60">
         <div className="flex items-center justify-between">
           <span className="flex gap-x-1 items-center">
             Subtotale (esclusi spedizione e tasse)
@@ -45,7 +45,7 @@ const CartTotals: React.FC<CartTotalsProps> = ({
           <div className="flex items-center justify-between">
             <span>Sconto</span>
             <span
-              className="text-ui-fg-interactive"
+              className="text-green-600"
               data-testid="cart-discount"
               data-value={discount_total || 0}
             >
@@ -62,7 +62,7 @@ const CartTotals: React.FC<CartTotalsProps> = ({
         </div>
         {!!tax_total && (
           <div className="flex justify-between">
-            <span className="flex gap-x-1 items-center ">Tasse (IVA)</span>
+            <span className="flex gap-x-1 items-center">Tasse (IVA)</span>
             <span data-testid="cart-taxes" data-value={tax_total || 0}>
               {convertToLocale({ amount: tax_total ?? 0, currency_code })}
             </span>
@@ -72,7 +72,7 @@ const CartTotals: React.FC<CartTotalsProps> = ({
           <div className="flex items-center justify-between">
             <span>Gift card</span>
             <span
-              className="text-ui-fg-interactive"
+              className="text-green-600"
               data-testid="cart-gift-card-amount"
               data-value={gift_card_total || 0}
             >
@@ -95,18 +95,18 @@ const CartTotals: React.FC<CartTotalsProps> = ({
         </div>
       ) : (
         <>
-          <div className="h-px w-full border-b border-gray-200 my-4" />
-          <div className="flex items-center justify-between text-ui-fg-base mb-2 txt-medium">
-            <span>Totale</span>
+          <div className="h-px w-full border-b border-black/20 my-4" />
+          <div className="flex items-center justify-between text-black mb-2">
+            <span className="font-black uppercase">Totale</span>
             <span
-              className="txt-xlarge-plus"
+              className="text-xl font-bold"
               data-testid="cart-total"
               data-value={total || 0}
             >
               {convertToLocale({ amount: total ?? 0, currency_code })}
             </span>
           </div>
-          <div className="h-px w-full border-b border-gray-200 mt-4" />
+          <div className="h-px w-full border-b border-black/20 mt-4" />
         </>
       )}
     </div>

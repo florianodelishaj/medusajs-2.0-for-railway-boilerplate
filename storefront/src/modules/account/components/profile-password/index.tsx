@@ -37,7 +37,7 @@ const ProfilePassword: React.FC = () => {
         clearState={clearState}
         data-testid="account-password-editor"
       >
-        <div className="text-small-regular">
+        <div className="text-sm">
           <p className="mb-3">
             Per motivi di sicurezza, non è possibile modificare direttamente la password.
             Clicca il pulsante qui sotto per ricevere un&apos;email con il link per reimpostare la password.

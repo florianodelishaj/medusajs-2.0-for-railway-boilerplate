@@ -19,9 +19,9 @@ export default async function PageLayout(props: { children: React.ReactNode }) {
   const categories = await getTopLevelCategories()
 
   return (
-    <SearchFiltersProvider>
+    <SearchFiltersProvider categories={categories || []}>
       <div className="flex flex-col min-h-screen">
-        <Nav />
+        <Nav categories={categories || []} />
         <SearchFilters categories={categories || []} />
         <div className="flex flex-col flex-1 bg-[#F4F4F0]">{props.children}</div>
         <Footer />

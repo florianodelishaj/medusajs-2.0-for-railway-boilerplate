@@ -6,38 +6,38 @@ import {
   Column,
   Link,
   Button,
-} from "@react-email/components"
-import * as React from "react"
-import { CircleCheckIcon } from "./icons"
-import { Base } from "./base"
-import { OrderDTO, OrderAddressDTO } from "@medusajs/framework/types"
+} from "@react-email/components";
+import * as React from "react";
+import { CircleCheckIcon } from "./icons";
+import { Base } from "./base";
+import { OrderDTO, OrderAddressDTO } from "@medusajs/framework/types";
 
-export const ORDER_PLACED = "order-placed"
+export const ORDER_PLACED = "order-placed";
 
 interface OrderPlacedPreviewProps {
   order: OrderDTO & {
-    display_id: string
-    summary: { raw_current_order_total: { value: number } }
-  }
-  shippingAddress: OrderAddressDTO
+    display_id: string;
+    summary: { raw_current_order_total: { value: number } };
+  };
+  shippingAddress: OrderAddressDTO;
 }
 
 export interface OrderPlacedTemplateProps {
   order: OrderDTO & {
-    display_id: string
-    summary: { raw_current_order_total: { value: number } }
-  }
-  shippingAddress: OrderAddressDTO
-  preview?: string
+    display_id: string;
+    summary: { raw_current_order_total: { value: number } };
+  };
+  shippingAddress: OrderAddressDTO;
+  preview?: string;
 }
 
 export const isOrderPlacedTemplateData = (
-  data: any
+  data: any,
 ): data is OrderPlacedTemplateProps =>
-  typeof data.order === "object" && typeof data.shippingAddress === "object"
+  typeof data.order === "object" && typeof data.shippingAddress === "object";
 
 export const OrderPlacedTemplate: React.FC<OrderPlacedTemplateProps> & {
-  PreviewProps: OrderPlacedPreviewProps
+  PreviewProps: OrderPlacedPreviewProps;
 } = ({
   order,
   shippingAddress,
@@ -47,8 +47,8 @@ export const OrderPlacedTemplate: React.FC<OrderPlacedTemplateProps> & {
     return new Intl.NumberFormat("it-IT", {
       style: "currency",
       currency: currency,
-    }).format(value)
-  }
+    }).format(value);
+  };
 
   return (
     <Base preview={preview}>
@@ -68,7 +68,11 @@ export const OrderPlacedTemplate: React.FC<OrderPlacedTemplateProps> & {
               textAlign: "center",
             }}
           >
-            <CircleCheckIcon size={28} color="#000" style={{ verticalAlign: "middle" }} />
+            <CircleCheckIcon
+              size={28}
+              color="#000"
+              style={{ verticalAlign: "middle" }}
+            />
           </div>
           <Text className="text-black text-[28px] font-black uppercase tracking-tight text-center m-0">
             Ordine Confermato
@@ -170,7 +174,7 @@ export const OrderPlacedTemplate: React.FC<OrderPlacedTemplateProps> & {
               <Text className="text-black text-[20px] font-black m-0">
                 {formatPrice(
                   order.summary.raw_current_order_total.value,
-                  order.currency_code
+                  order.currency_code,
                 )}
               </Text>
             </Column>
@@ -195,9 +199,7 @@ export const OrderPlacedTemplate: React.FC<OrderPlacedTemplateProps> & {
             {shippingAddress.address_1}
             <br />
             {shippingAddress.postal_code}, {shippingAddress.city}
-            {shippingAddress.province && (
-              <> ({shippingAddress.province})</>
-            )}
+            {shippingAddress.province && <> ({shippingAddress.province})</>}
             <br />
             {shippingAddress.country_code?.toUpperCase()}
           </Text>
@@ -224,16 +226,16 @@ export const OrderPlacedTemplate: React.FC<OrderPlacedTemplateProps> & {
         <Text className="text-[#999] text-[13px] leading-[20px] text-center m-0">
           Hai bisogno di aiuto? Scrivici a{" "}
           <Link
-            href="mailto:assistenza@ilcovodixur.com"
+            href="mailto:ordini@ilcovodixur.com"
             className="text-black font-medium no-underline"
           >
-            assistenza@ilcovodixur.com
+            ordini@ilcovodixur.com
           </Link>
         </Text>
       </Section>
     </Base>
-  )
-}
+  );
+};
 
 OrderPlacedTemplate.PreviewProps = {
   order: {
@@ -288,6 +290,6 @@ OrderPlacedTemplate.PreviewProps = {
     postal_code: "20100",
     country_code: "IT",
   },
-} as OrderPlacedPreviewProps
+} as OrderPlacedPreviewProps;
 
-export default OrderPlacedTemplate
+export default OrderPlacedTemplate;

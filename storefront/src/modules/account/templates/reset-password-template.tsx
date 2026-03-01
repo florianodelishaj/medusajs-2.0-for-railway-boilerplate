@@ -49,7 +49,7 @@ const ResetPasswordTemplate = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#F4F4F0]">
         <div className="bg-white border border-black rounded-md p-8 max-w-md">
-          <h1 className="text-2xl font-bold mb-4">Link non valido</h1>
+          <h1 className="text-2xl font-black uppercase mb-4">Link non valido</h1>
           <p className="mb-4">
             Il link per reimpostare la password non è valido o è scaduto.
           </p>
@@ -95,8 +95,8 @@ const ResetPasswordTemplate = () => {
 
           {/* Form content */}
           <div className="w-full">
-            <h1 className="text-4xl font-medium mb-2">Reimposta Password</h1>
-            <p className="text-gray-600 mb-8">
+            <h1 className="text-4xl font-black uppercase mb-2">Reimposta Password</h1>
+            <p className="text-black/50 mb-8">
               Inserisci la tua nuova password
             </p>
 

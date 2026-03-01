@@ -48,6 +48,7 @@ const Review = ({ cart }: { cart: any }) => {
             "flex flex-row text-2xl font-black uppercase gap-x-2 items-baseline",
             {
               "opacity-50 pointer-events-none select-none": !isOpen,
+              "border-l-4 border-green-400 pl-3": isOpen,
             }
           )}
         >

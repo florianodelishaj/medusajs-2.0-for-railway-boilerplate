@@ -9,6 +9,8 @@ import LineItemPrice from "@modules/common/components/line-item-price"
 import LineItemUnitPrice from "@modules/common/components/line-item-unit-price"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import Spinner from "@modules/common/icons/spinner"
+import { useSearchFilters } from "@lib/context/search-filters-context"
+import { findTopLevelCategory } from "@lib/util/get-category-background"
 import Thumbnail from "@modules/products/components/thumbnail"
 import { useState } from "react"
 import {
@@ -30,6 +32,13 @@ const Item = ({ item, currencyCode, type = "full" }: ItemProps) => {
   const [error, setError] = useState<string | null>(null)
 
   const { handle } = item.variant?.product ?? {}
+  const { productCategory, categories: allCategories } = useSearchFilters()
+  const productCategories = item.variant?.product?.categories as any[] | undefined
+  const categoryColor =
+    (productCategory?.metadata?.color as string | undefined) ??
+    (productCategories?.[0]?.id
+      ? (findTopLevelCategory(productCategories[0].id, allCategories)?.metadata?.color as string | undefined)
+      : undefined)
 
   // Check if item is in backorder
   const isBackorder =
@@ -50,12 +59,14 @@ const Item = ({ item, currencyCode, type = "full" }: ItemProps) => {
     }
   }
 
-  // TODO: Update this to grab the actual max inventory
-  const maxQtyFromInventory = 10
-  const maxQuantity = item.variant?.manage_inventory ? 10 : maxQtyFromInventory
+  const maxQuantity = 10
 
   return (
-    <div className="flex items-center w-full py-2 small:py-4 px-3 small:px-6" data-testid="product-row">
+    <div
+      className="relative flex items-center w-full py-2 small:py-4 px-3 small:px-6"
+      data-testid="product-row"
+    >
+      {categoryColor && <div className="absolute inset-y-0 left-0 w-1" style={{ backgroundColor: categoryColor }} />}
       <div className="w-14 small:w-24 shrink-0">
         <LocalizedClientLink href={`/products/${handle}`} className="flex">
           <div className="w-12 h-12 small:w-20 small:h-20 border border-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-md overflow-hidden">
@@ -76,11 +87,11 @@ const Item = ({ item, currencyCode, type = "full" }: ItemProps) => {
           {item.product_title}
         </p>
         {item.variant && item.variant.title !== "Default variant" && (
-            <LineItemOptions
-              variant={item.variant}
-              data-testid="product-variant"
-            />
-          )}
+          <LineItemOptions
+            variant={item.variant}
+            data-testid="product-variant"
+          />
+        )}
       </div>
 
       {type === "full" && (
@@ -101,7 +112,7 @@ const Item = ({ item, currencyCode, type = "full" }: ItemProps) => {
               <SelectContent className="border border-black rounded-md shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                 {Array.from(
                   {
-                    length: Math.min(maxQuantity, 10),
+                    length: maxQuantity,
                   },
                   (_, i) => (
                     <SelectItem
@@ -121,7 +132,7 @@ const Item = ({ item, currencyCode, type = "full" }: ItemProps) => {
         </div>
       )}
 
-      <div className="shrink-0 text-right px-1 small:px-4 font-bold text-xs small:text-sm text-black">
+      <div className="w-20 small:w-28 shrink-0 text-right px-1 small:px-4 font-bold text-xs small:text-sm text-black">
         <span className="flex flex-col items-end h-full justify-center gap-1">
           {isBackorder && (
             <span className="text-[10px] small:text-[12px] font-bold uppercase px-2 py-0.5 bg-yellow-400 border border-black">

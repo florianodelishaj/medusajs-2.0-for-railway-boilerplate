@@ -30,6 +30,8 @@ import {
 } from "@components/ui/sheet"
 import useBreakpoints from "@lib/hooks/useBreakpoints"
 import FreeShippingProgress from "@modules/cart/components/free-shipping-progress"
+import { useSearchFilters } from "@lib/context/search-filters-context"
+import { findTopLevelCategory } from "@lib/util/get-category-background"
 
 // Cart link component to avoid duplication
 const CartLink = ({ totalItems }: { totalItems: number }) => (
@@ -39,6 +41,95 @@ const CartLink = ({ totalItems }: { totalItems: number }) => (
     data-testid="nav-cart-link"
   >{`Carrello (${totalItems})`}</LocalizedClientLink>
 )
+
+const CartDropdownItem = ({
+  item,
+  currencyCode,
+}: {
+  item: HttpTypes.StoreCartLineItem
+  currencyCode: string
+}) => {
+  const { categories: allCategories } = useSearchFilters()
+  const productCategories = item.variant?.product?.categories as any[] | undefined
+  const categoryColor = productCategories?.[0]?.id
+    ? (findTopLevelCategory(productCategories[0].id, allCategories)?.metadata?.color as string | undefined)
+    : undefined
+
+  const isBackorder =
+    item.variant?.manage_inventory &&
+    item.variant?.allow_backorder &&
+    (item.variant?.inventory_quantity || 0) <= 0
+
+  return (
+    <div
+      className="relative border border-black rounded-md p-3 bg-white hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-shadow overflow-hidden"
+      data-testid="cart-item"
+    >
+      {categoryColor && <div className="absolute inset-y-0 left-0 w-1" style={{ backgroundColor: categoryColor }} />}
+      <div className="flex gap-3">
+        <LocalizedClientLink
+          href={`/products/${item.variant?.product?.handle}`}
+          className="flex-shrink-0"
+        >
+          <div className="w-20 h-20 border border-black rounded-md overflow-hidden">
+            <Thumbnail
+              thumbnail={item.variant?.product?.thumbnail}
+              images={item.variant?.product?.images}
+              size="square"
+            />
+          </div>
+        </LocalizedClientLink>
+        <div className="flex-1 min-w-0 flex flex-col gap-1">
+          <h3 className="font-bold text-sm truncate">
+            <LocalizedClientLink
+              href={`/products/${item.variant?.product?.handle}`}
+              data-testid="product-link"
+            >
+              {item.title}
+            </LocalizedClientLink>
+          </h3>
+          {item.variant && item.variant.title !== "Default variant" && (
+            <LineItemOptions
+              variant={item.variant}
+              data-testid="cart-item-variant"
+              data-value={item.variant}
+            />
+          )}
+          <div className="flex items-center justify-between gap-2">
+            <span
+              className="text-xs font-medium"
+              data-testid="cart-item-quantity"
+              data-value={item.quantity}
+            >
+              Quantità: {item.quantity}
+            </span>
+            <div className="flex flex-col items-end gap-1">
+              {isBackorder && (
+                <span className="text-[12px] font-bold uppercase px-2 py-0.5 bg-yellow-400 border border-black">
+                  Preordine
+                </span>
+              )}
+              <div className="font-bold text-sm">
+                <LineItemPrice
+                  item={item}
+                  currencyCode={currencyCode}
+                  style="tight"
+                />
+              </div>
+            </div>
+          </div>
+          <DeleteButton
+            id={item.id}
+            className="mt-1 text-xs"
+            data-testid="cart-item-remove-button"
+          >
+            Rimuovi
+          </DeleteButton>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 const CartDropdown = ({
   cart: cartState,
@@ -134,91 +225,21 @@ const CartDropdown = ({
         {cartState && cartState.items?.length ? (
           <>
             <div className="overflow-y-auto flex-1 p-4 grid grid-cols-1 gap-y-4 no-scrollbar">
-              {sortedItems.map((item) => {
-                // Check if item is in backorder
-                const isBackorder =
-                  item.variant?.manage_inventory &&
-                  item.variant?.allow_backorder &&
-                  (item.variant?.inventory_quantity || 0) <= 0
-
-                return (
-                  <div
-                    className="border border-black rounded-md p-3 bg-white hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-shadow"
-                    key={item.id}
-                    data-testid="cart-item"
-                  >
-                    <div className="flex gap-3">
-                      <LocalizedClientLink
-                        href={`/products/${item.variant?.product?.handle}`}
-                        className="flex-shrink-0"
-                      >
-                        <div className="w-20 h-20 border border-black rounded-md overflow-hidden">
-                          <Thumbnail
-                            thumbnail={item.variant?.product?.thumbnail}
-                            images={item.variant?.product?.images}
-                            size="square"
-                          />
-                        </div>
-                      </LocalizedClientLink>
-                      <div className="flex-1 min-w-0 flex flex-col gap-1">
-                        <h3 className="font-bold text-sm truncate">
-                          <LocalizedClientLink
-                            href={`/products/${item.variant?.product?.handle}`}
-                            data-testid="product-link"
-                          >
-                            {item.title}
-                          </LocalizedClientLink>
-                        </h3>
-                        {item.variant && item.variant.title !== "Default variant" && (
-                            <LineItemOptions
-                              variant={item.variant}
-                              data-testid="cart-item-variant"
-                              data-value={item.variant}
-                            />
-                          )}
-                        <div className="flex items-center justify-between gap-2">
-                          <span
-                            className="text-xs font-medium"
-                            data-testid="cart-item-quantity"
-                            data-value={item.quantity}
-                          >
-                            Quantità: {item.quantity}
-                          </span>
-                          <div className="flex flex-col items-end gap-1">
-                            {isBackorder && (
-                              <span className="text-[12px] font-bold uppercase px-2 py-0.5 bg-yellow-400 border border-black">
-                                Preordine
-                              </span>
-                            )}
-                            <div className="font-bold text-sm">
-                              <LineItemPrice
-                                item={item}
-                                currencyCode={cartState.currency_code}
-                                style="tight"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <DeleteButton
-                          id={item.id}
-                          className="mt-1 text-xs"
-                          data-testid="cart-item-remove-button"
-                        >
-                          Rimuovi
-                        </DeleteButton>
-                      </div>
-                    </div>
-                  </div>
-                )
-              })}
+              {sortedItems.map((item) => (
+                <CartDropdownItem
+                  key={item.id}
+                  item={item}
+                  currencyCode={cartState.currency_code}
+                />
+              ))}
             </div>
-            <div className="p-4 flex flex-col gap-y-3 border-t border-black bg-gray-50">
+            <div className="p-4 flex flex-col gap-y-3 border-t border-black bg-[#F4F4F0]">
               <FreeShippingProgress cart={cartState} />
               <div className="flex flex-col gap-y-2 p-3 border border-black rounded-md bg-white">
                 {totalDiscount > 0 && (
                   <>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-gray-600">
+                      <span className="text-sm text-black/50">
                         Subtotale
                       </span>
                       <span
@@ -234,7 +255,7 @@ const CartDropdown = ({
                     </div>
 
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-green-600">
+                      <span className="text-sm text-green-600 font-medium">
                         Sconto
                       </span>
                       <span
@@ -256,7 +277,7 @@ const CartDropdown = ({
                     totalDiscount > 0 ? "pt-2 border-t border-black" : ""
                   }`}
                 >
-                  <span className="uppercase font-medium text-gray-900">
+                  <span className="uppercase font-black text-black">
                     Totale
                   </span>
                   <span
@@ -326,9 +347,9 @@ const CartDropdown = ({
           >
             <SheetContent
               side="right"
-              className="w-full sm:max-w-lg p-0 bg-white border-l-2 border-black flex flex-col"
+              className="w-full sm:max-w-lg p-0 gap-0 bg-white border-l-2 border-black flex flex-col"
             >
-              <SheetHeader className="p-4 pr-16 border-b-2 border-black bg-green-400">
+              <SheetHeader className="px-4 py-2.5 pr-16 border-b-2 border-black bg-green-400">
                 <SheetTitle className="text-2xl font-black uppercase">
                   Carrello
                 </SheetTitle>

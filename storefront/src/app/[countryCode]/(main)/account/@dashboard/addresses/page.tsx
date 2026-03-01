@@ -29,8 +29,10 @@ export default async function Addresses({
   return (
     <div className="w-full" data-testid="addresses-page-wrapper">
       <div className="mb-8 flex flex-col gap-y-4">
-        <h1 className="text-2xl font-bold">Indirizzi</h1>
-        <p className="text-base text-gray-700">
+        <h1 className="text-2xl font-black uppercase border-l-4 border-green-400 pl-2">
+          Indirizzi
+        </h1>
+        <p className="text-base text-black/50">
           Visualizza e aggiorna i tuoi indirizzi di spedizione e fatturazione.
           Puoi aggiungerne quanti ne vuoi e contrassegnare uno di essi come
           indirizzo di fatturazione predefinito. Salvando i tuoi indirizzi li

@@ -68,8 +68,8 @@ const ForgotPasswordTemplate = () => {
 
           {/* Form content */}
           <div className="w-full">
-            <h1 className="text-4xl font-medium mb-2">Password dimenticata</h1>
-            <p className="text-gray-600 mb-8">
+            <h1 className="text-4xl font-black uppercase mb-2">Password dimenticata</h1>
+            <p className="text-black/50 mb-8">
               Inserisci la tua email e ti invieremo un link per reimpostare la
               password.
             </p>

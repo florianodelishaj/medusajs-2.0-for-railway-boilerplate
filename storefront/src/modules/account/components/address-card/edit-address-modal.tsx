@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react"
 import { PencilSquare as Edit, Trash } from "@medusajs/icons"
-import { Heading, Text, clx } from "@medusajs/ui"
+import { clx } from "@medusajs/ui"
 
 import useToggleState from "@lib/hooks/use-toggle-state"
 import CountrySelect from "@modules/checkout/components/country-select"
@@ -82,81 +82,80 @@ const EditAddress: React.FC<EditAddressProps> = ({
     <>
       <div
         className={clx(
-          "border rounded-rounded p-5 min-h-[220px] h-full w-full flex flex-col justify-between transition-colors bg-white",
-          {
-            "border-gray-900": isActive,
-          }
+          "rounded-md overflow-hidden min-h-[220px] h-full w-full flex flex-col bg-white",
+          isActive
+            ? "border-2 border-green-400"
+            : "border border-black"
         )}
         data-testid="address-container"
       >
-        <div className="flex flex-col">
-          <div className="flex items-center justify-between mb-1">
-            {address.address_name && (
-              <Heading
-                className="text-left text-base-semi"
-                data-testid="address-name"
-              >
-                {address.address_name}
-              </Heading>
-            )}
-            {address.is_default_billing && (
-              <span
-                className="text-xs font-semibold px-2 py-1 bg-green-400 border border-black rounded"
-                data-testid="billing-badge"
-              >
-                Fatturazione
-              </span>
-            )}
-          </div>
-          <Text className="txt-compact-small text-ui-fg-base mb-1">
-            {address.first_name} {address.last_name}
-          </Text>
-          {address.company && (
-            <Text
-              className="txt-compact-small text-ui-fg-base"
-              data-testid="address-company"
+        {/* Green header */}
+        <div className="bg-green-400 border-b-2 border-black px-4 py-2.5 flex items-center justify-between">
+          <h3 className="text-sm font-black uppercase" data-testid="address-name">
+            {address.address_name || "Indirizzo"}
+          </h3>
+          {address.is_default_billing && (
+            <span
+              className="text-xs font-bold px-2 py-0.5 bg-black text-white rounded"
+              data-testid="billing-badge"
             >
-              {address.company}
-            </Text>
+              Fatturazione
+            </span>
           )}
-          <Text className="flex flex-col text-left text-base-regular mt-2">
-            <span data-testid="address-address">
-              {address.address_1}
-              {address.address_2 && <span>, {address.address_2}</span>}
-            </span>
-            <span data-testid="address-postal-city">
-              {address.postal_code}, {address.city}
-            </span>
-            <span data-testid="address-province-country">
-              {address.province && `${address.province}, `}
-              {address.country_code?.toUpperCase()}
-            </span>
-          </Text>
         </div>
-        <div className="flex items-center gap-x-4">
-          <button
-            className="text-small-regular text-ui-fg-base flex items-center gap-x-2"
-            onClick={open}
-            data-testid="address-edit-button"
-          >
-            <Edit />
-            Modifica
-          </button>
-          <button
-            className="text-small-regular text-ui-fg-base flex items-center gap-x-2"
-            onClick={openDeleteModal}
-            data-testid="address-delete-button"
-            disabled={isDeleting}
-          >
-            {isDeleting ? <Spinner /> : <Trash />}
-            Rimuovi
-          </button>
+
+        {/* Body */}
+        <div className="flex flex-col flex-1 justify-between p-4">
+          <div className="flex flex-col">
+            <p className="text-sm font-bold">
+              {address.first_name} {address.last_name}
+            </p>
+            {address.company && (
+              <p className="text-sm text-black/60" data-testid="address-company">
+                {address.company}
+              </p>
+            )}
+            <p className="flex flex-col text-left text-sm mt-2 text-black/70">
+              <span data-testid="address-address">
+                {address.address_1}
+                {address.address_2 && <span>, {address.address_2}</span>}
+              </span>
+              <span data-testid="address-postal-city">
+                {address.postal_code}, {address.city}
+              </span>
+              <span data-testid="address-province-country">
+                {address.province && `${address.province}, `}
+                {address.country_code?.toUpperCase()}
+              </span>
+            </p>
+          </div>
+          <div className="flex items-center gap-x-4 mt-4 pt-3 border-t border-black/10">
+            <button
+              className="text-sm text-black/50 hover:text-black flex items-center gap-x-1.5 transition-colors"
+              onClick={open}
+              data-testid="address-edit-button"
+            >
+              <Edit />
+              Modifica
+            </button>
+            <button
+              className="text-sm text-black/50 hover:text-red-600 flex items-center gap-x-1.5 transition-colors"
+              onClick={openDeleteModal}
+              data-testid="address-delete-button"
+              disabled={isDeleting}
+            >
+              {isDeleting ? <Spinner /> : <Trash />}
+              Rimuovi
+            </button>
+          </div>
         </div>
       </div>
 
       <Modal isOpen={state} close={close} data-testid="edit-address-modal">
         <Modal.Title>
-          <Heading className="mb-4">Modifica indirizzo</Heading>
+          <h2 className="text-xl font-black uppercase mb-4 border-l-4 border-green-400 pl-2">
+            Modifica indirizzo
+          </h2>
         </Modal.Title>
         <form action={formAction} className="flex flex-col flex-1 min-h-0 overflow-hidden">
           <Modal.Body>
@@ -299,25 +298,27 @@ const EditAddress: React.FC<EditAddressProps> = ({
         data-testid="delete-address-modal"
       >
         <Modal.Title>
-          <Heading className="mb-6 text-center">Conferma eliminazione</Heading>
+          <h2 className="text-xl font-black uppercase mb-6 text-center border-b-2 border-red-500 pb-3">
+            Conferma eliminazione
+          </h2>
         </Modal.Title>
         <Modal.Body>
           <div className="flex flex-col gap-6 text-center">
-            <Text className="text-base-regular">
+            <p className="text-base">
               Sei sicuro di voler eliminare questo indirizzo?
-            </Text>
+            </p>
 
             {address.address_name && (
-              <div className="px-4 py-3 bg-gray-100 rounded-md">
-                <Text className="font-semibold text-lg">
+              <div className="px-4 py-3 bg-[#F4F4F0] rounded-md border border-black">
+                <p className="font-semibold text-lg">
                   {address.address_name}
-                </Text>
+                </p>
               </div>
             )}
 
-            <Text className="text-sm text-ui-fg-subtle italic">
+            <p className="text-sm text-black/50 italic">
               Questa azione non può essere annullata.
-            </Text>
+            </p>
           </div>
         </Modal.Body>
         <Modal.Footer>

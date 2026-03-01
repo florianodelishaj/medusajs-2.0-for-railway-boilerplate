@@ -16,7 +16,7 @@ const Login = ({ setCurrentView }: Props) => {
 
   return (
     <div className="w-full" data-testid="login-page">
-      <h1 className="text-4xl font-medium mb-8">Entra nel Covo di Xur</h1>
+      <h1 className="text-4xl font-black uppercase mb-8">Entra nel Covo di Xur</h1>
       <form className="w-full flex flex-col gap-6" action={formAction}>
         <Input
           label="Email"

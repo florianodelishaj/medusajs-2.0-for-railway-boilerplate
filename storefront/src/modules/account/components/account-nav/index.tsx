@@ -16,14 +16,14 @@ const AccountNav = () => {
 
   return (
     <div
-      className="w-full bg-white border border-black rounded-md p-6"
+      className="w-full bg-white border border-black rounded-md overflow-hidden"
       data-testid="account-nav"
     >
       <div>
-        <div className="pb-6 border-b border-black">
-          <h3 className="text-xl font-bold">Account</h3>
+        <div className="bg-green-400 border-b-2 border-black px-4 py-2.5">
+          <h3 className="text-xl font-black uppercase">Account</h3>
         </div>
-        <div className="text-base pt-6">
+        <div className="text-base p-6">
           <ul className="flex mb-0 justify-start items-start flex-col gap-y-4">
             <li>
               <AccountNavLink
@@ -61,12 +61,12 @@ const AccountNav = () => {
                 Ordini
               </AccountNavLink>
             </li>
-            <li className="text-gray-700">
+            <li>
               <button
                 type="button"
                 onClick={handleLogout}
                 data-testid="logout-button"
-                className="hover:text-green-600 transition-colors font-medium"
+                className="text-black/50 hover:text-black transition-colors font-medium"
               >
                 Esci
               </button>
@@ -98,9 +98,9 @@ const AccountNavLink = ({
     <LocalizedClientLink
       href={href}
       className={clx(
-        "text-gray-700 hover:text-green-600 transition-colors font-medium",
+        "block text-black/60 hover:text-black transition-colors font-medium",
         {
-          "text-green-600 font-bold": active,
+          "font-black text-black border-l-4 border-green-400 pl-2": active,
         }
       )}
       data-testid={dataTestId}

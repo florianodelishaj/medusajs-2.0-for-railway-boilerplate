@@ -56,28 +56,38 @@ const AccountInfo = ({
 
   return (
     <div
-      className="text-sm bg-white border border-black rounded-md p-6"
+      className="text-sm bg-white border border-black rounded-md overflow-hidden"
       data-testid={dataTestid}
     >
-      <div className="flex items-end justify-between">
-        <div className="flex flex-col">
-          <span className="uppercase text-xs font-bold text-gray-700 mb-2">
-            {label}
-          </span>
-          <div className="flex items-center flex-1 basis-0 justify-end gap-x-4">
+      {/* Green header */}
+      <div className="bg-green-400 border-b-2 border-black px-4 py-2.5">
+        <span className="text-sm font-black uppercase">{label}</span>
+      </div>
+
+      {/* Body */}
+      <div className="p-6">
+        <div className="flex items-center justify-between">
+          <div>
             {typeof currentInfo === "string" ? (
-              <span
-                className="font-semibold text-base"
-                data-testid="current-info"
-              >
-                {currentInfo}
-              </span>
+              currentInfo ? (
+                <span
+                  className="font-semibold text-base"
+                  data-testid="current-info"
+                >
+                  {currentInfo}
+                </span>
+              ) : (
+                <span
+                  className="text-black/40 text-sm italic"
+                  data-testid="current-info"
+                >
+                  Non impostato
+                </span>
+              )
             ) : (
               currentInfo
             )}
           </div>
-        </div>
-        <div>
           <Button
             variant="elevated"
             className="hover:bg-green-400"
@@ -89,79 +99,81 @@ const AccountInfo = ({
             {state ? "Annulla" : "Modifica"}
           </Button>
         </div>
-      </div>
 
-      {/* Success state */}
-      <Disclosure>
-        <Disclosure.Panel
-          static
-          className={clx(
-            "transition-[max-height,opacity] duration-300 ease-in-out overflow-hidden",
-            {
-              "max-h-[1000px] opacity-100": isSuccess,
-              "max-h-0 opacity-0": !isSuccess,
-            }
-          )}
-          data-testid="success-message"
-        >
-          <Badge
-            className="p-2 my-4 bg-green-400 text-black border-black"
-            color="green"
+        {/* Success state */}
+        <Disclosure>
+          <Disclosure.Panel
+            static
+            className={clx(
+              "transition-[max-height,opacity] duration-300 ease-in-out overflow-hidden",
+              {
+                "max-h-[1000px] opacity-100": isSuccess,
+                "max-h-0 opacity-0": !isSuccess,
+              }
+            )}
+            data-testid="success-message"
           >
-            <span>{successMessage || `${label} aggiornato con successo`}</span>
-          </Badge>
-        </Disclosure.Panel>
-      </Disclosure>
+            <Badge
+              className="p-2 my-4 bg-green-400 text-black border-black"
+              color="green"
+            >
+              <span>
+                {successMessage || `${label} aggiornato con successo`}
+              </span>
+            </Badge>
+          </Disclosure.Panel>
+        </Disclosure>
 
-      {/* Error state  */}
-      <Disclosure>
-        <Disclosure.Panel
-          static
-          className={clx(
-            "transition-[max-height,opacity] duration-300 ease-in-out overflow-hidden",
-            {
-              "max-h-[1000px] opacity-100": isError,
-              "max-h-0 opacity-0": !isError,
-            }
-          )}
-          data-testid="error-message"
-        >
-          <Badge
-            className="p-2 my-4 bg-red-500 text-white border-black"
-            color="red"
+        {/* Error state */}
+        <Disclosure>
+          <Disclosure.Panel
+            static
+            className={clx(
+              "transition-[max-height,opacity] duration-300 ease-in-out overflow-hidden",
+              {
+                "max-h-[1000px] opacity-100": isError,
+                "max-h-0 opacity-0": !isError,
+              }
+            )}
+            data-testid="error-message"
           >
-            <span>{errorMessage}</span>
-          </Badge>
-        </Disclosure.Panel>
-      </Disclosure>
+            <Badge
+              className="p-2 my-4 bg-red-500 text-white border-black"
+              color="red"
+            >
+              <span>{errorMessage}</span>
+            </Badge>
+          </Disclosure.Panel>
+        </Disclosure>
 
-      <Disclosure>
-        <Disclosure.Panel
-          static
-          className={clx(
-            "transition-[max-height,opacity] duration-300 ease-in-out",
-            {
-              "max-h-[1000px] opacity-100 overflow-visible": state,
-              "max-h-0 opacity-0 overflow-hidden": !state,
-            }
-          )}
-        >
-          <div className="flex flex-col gap-y-4 py-4 border-t border-black mt-4">
-            <div>{children}</div>
-            <div className="flex items-center justify-end mt-2">
-              <Button
-                variant="elevated"
-                isLoading={pending}
-                className="bg-black text-white hover:text-black hover:bg-green-400"
-                type="submit"
-                data-testid="save-button"
-              >
-                {submitButtonText}
-              </Button>
+        <Disclosure>
+          <Disclosure.Panel
+            static
+            className={clx(
+              "transition-[max-height,opacity] duration-300 ease-in-out",
+              {
+                "max-h-[1000px] opacity-100 overflow-visible": state,
+                "max-h-0 opacity-0 overflow-hidden": !state,
+              }
+            )}
+          >
+            <div className="flex flex-col gap-y-4 py-4 border-t border-black mt-4">
+              <div>{children}</div>
+              <div className="flex items-center justify-end mt-2">
+                <Button
+                  variant="elevated"
+                  isLoading={pending}
+                  className="bg-black text-white hover:text-black hover:bg-green-400"
+                  type="submit"
+                  data-testid="save-button"
+                >
+                  {submitButtonText}
+                </Button>
+              </div>
             </div>
-          </div>
-        </Disclosure.Panel>
-      </Disclosure>
+          </Disclosure.Panel>
+        </Disclosure>
+      </div>
     </div>
   )
 }

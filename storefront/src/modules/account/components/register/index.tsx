@@ -18,7 +18,7 @@ const Register = ({ setCurrentView }: Props) => {
 
   return (
     <div className="w-full" data-testid="register-page">
-      <h1 className="text-4xl font-medium mb-8">Entra nel Covo di Xur</h1>
+      <h1 className="text-4xl font-black uppercase mb-8">Crea il tuo account</h1>
       <form className="w-full flex flex-col gap-6" action={formAction}>
         <Input
           label="Nome"
@@ -58,7 +58,7 @@ const Register = ({ setCurrentView }: Props) => {
           data-testid="password-input"
         />
         <ErrorMessage error={message} data-testid="register-error" />
-        <span className="text-sm text-gray-700">
+        <span className="text-sm text-black/60">
           Creando un account, accetti la{" "}
           <a
             href="https://www.iubenda.com/privacy-policy/28571391"

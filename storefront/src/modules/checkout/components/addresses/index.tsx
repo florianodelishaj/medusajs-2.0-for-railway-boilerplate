@@ -46,11 +46,17 @@ const Addresses = ({
     <div className="bg-white border border-black rounded-md p-6">
       <div
         className={cn("flex flex-row items-center justify-between gap-x-4", {
-          "mb-6": isOpen,
+          "mb-6": isOpen || !!cart?.shipping_address,
         })}
       >
         <div className="flex items-center gap-x-2">
-          <h2 className="text-2xl font-black uppercase">
+          <h2
+            className={cn("text-2xl font-black uppercase", {
+              "border-l-4 border-green-400 pl-3": isOpen,
+              "border-l-4 border-pink-400 pl-3":
+                !isOpen && !!cart?.shipping_address,
+            })}
+          >
             Indirizzo di spedizione
           </h2>
           {!isOpen && <CheckCircleSolid className="shrink-0" />}
@@ -78,7 +84,7 @@ const Addresses = ({
 
           {!sameAsBilling && (
             <div>
-              <h2 className="text-2xl font-black uppercase gap-x-4 pb-6 pt-8">
+              <h2 className="text-2xl font-black uppercase gap-x-4 pb-6 pt-8 mb-6">
                 Indirizzo di fatturazione
               </h2>
 
@@ -141,9 +147,7 @@ const Addresses = ({
                   <p className="text-sm text-gray-500">
                     {cart.shipping_address.phone}
                   </p>
-                  <p className="text-sm text-gray-500">
-                    {cart.email}
-                  </p>
+                  <p className="text-sm text-gray-500">{cart.email}</p>
                 </div>
 
                 <div

@@ -6,13 +6,18 @@ import { NAV_ROUTES } from "@lib/constants/nav-routes"
 import { Poppins } from "next/font/google"
 import { cn } from "@lib/util/cn"
 import Image from "next/image"
+import { HttpTypes } from "@medusajs/types"
 
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["700"],
 })
 
-export default async function Nav() {
+export default async function Nav({
+  categories,
+}: {
+  categories: HttpTypes.StoreProductCategory[]
+}) {
   return (
     <nav className="flex h-20 border-b justify-between font-medium bg-white">
       {/* Logo */}
@@ -30,6 +35,7 @@ export default async function Nav() {
             alt="Anime illustration"
             width={50}
             height={50}
+            priority
             className="md:w-[70px] md:h-[70px]"
           />
           IL COVO DI XUR
@@ -38,7 +44,7 @@ export default async function Nav() {
 
       {/* Hamburger menu per mobile */}
       <div className="pr-5 flex items-center xl:hidden">
-        <NavMenuButton />
+        <NavMenuButton categories={categories} />
       </div>
 
       <NavButtons routes={NAV_ROUTES} />

@@ -11,9 +11,12 @@ import { Input } from "@components/ui/input"
 import { SEARCH_INDEX_NAME, searchClient } from "@lib/search-client"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import Thumbnail from "@modules/products/components/thumbnail"
+import { useSearchFilters } from "@lib/context/search-filters-context"
+import { findTopLevelCategory } from "@lib/util/get-category-background"
 
 function SearchResults({ isFocused }: { isFocused: boolean }) {
   const { hits } = useHits()
+  const { categories: allCategories } = useSearchFilters()
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   if (!isFocused || hits.length === 0) return null
@@ -23,28 +26,37 @@ function SearchResults({ isFocused }: { isFocused: boolean }) {
       ref={dropdownRef}
       className="absolute top-full left-0 right-0 mt-2 bg-white border border-black rounded-md shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] max-h-[400px] overflow-y-auto z-50"
     >
-      {hits.map((hit: any) => (
-        <LocalizedClientLink
-          key={hit.id}
-          href={`/products/${hit.handle}`}
-          className="flex items-center gap-4 p-4 hover:bg-gray-100 border-b border-gray-200 last:border-b-0"
-        >
-          <div className="w-16 h-16 shrink-0">
-            <Thumbnail
-              thumbnail={hit.thumbnail || hit.images?.[0]?.url}
-              size="square"
-            />
-          </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="font-medium text-sm truncate">{hit.title}</h3>
-            {hit.description && (
-              <p className="text-xs text-gray-600 line-clamp-2">
-                {hit.description}
-              </p>
+      {hits.map((hit: any) => {
+        const categoryColor = hit.categories?.[0]?.id
+          ? (findTopLevelCategory(hit.categories[0].id, allCategories)?.metadata?.color as string | undefined)
+          : undefined
+
+        return (
+          <LocalizedClientLink
+            key={hit.id}
+            href={`/products/${hit.handle}`}
+            className="relative flex items-center gap-4 p-4 hover:bg-[#F4F4F0] border-b border-black/10 last:border-b-0 overflow-hidden"
+          >
+            {categoryColor && (
+              <div className="absolute inset-y-0 left-0 w-1" style={{ backgroundColor: categoryColor }} />
             )}
-          </div>
-        </LocalizedClientLink>
-      ))}
+            <div className="w-16 h-16 shrink-0">
+              <Thumbnail
+                thumbnail={hit.thumbnail || hit.images?.[0]?.url}
+                size="square"
+              />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className="font-medium text-sm truncate">{hit.title}</h3>
+              {hit.description && (
+                <p className="text-xs text-black/50 line-clamp-2">
+                  {hit.description}
+                </p>
+              )}
+            </div>
+          </LocalizedClientLink>
+        )
+      })}
     </div>
   )
 }

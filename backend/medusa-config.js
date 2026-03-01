@@ -190,11 +190,13 @@ const medusaConfig = {
                     "categories.id",
                     "categories.handle",
                     "categories.name",
+                    "metadata.extended_description",
                   ],
                   indexSettings: {
                     searchableAttributes: [
                       "title",
                       "description",
+                      "metadata.extended_description",
                       "variant_sku",
                     ],
                     displayedAttributes: [
@@ -206,10 +208,26 @@ const medusaConfig = {
                       "thumbnail",
                       "images",
                       "categories",
+                      "metadata",
                     ],
                     filterableAttributes: ["id", "handle"],
                   },
                   primaryKey: "id",
+                  transformer: (product) => ({
+                    ...product,
+                    metadata: product.metadata
+                      ? {
+                          ...product.metadata,
+                          extended_description:
+                            typeof product.metadata.extended_description === "string"
+                              ? product.metadata.extended_description
+                                  .replace(/<[^>]*>/g, " ")
+                                  .replace(/\s+/g, " ")
+                                  .trim()
+                              : product.metadata.extended_description,
+                        }
+                      : product.metadata,
+                  }),
                 },
               },
             },

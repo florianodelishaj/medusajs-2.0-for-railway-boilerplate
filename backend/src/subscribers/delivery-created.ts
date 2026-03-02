@@ -3,27 +3,17 @@ import { INotificationModuleService } from "@medusajs/framework/types";
 import { SubscriberArgs, SubscriberConfig } from "@medusajs/medusa";
 import { EmailTemplates } from "../modules/email-notifications/templates";
 
-export default async function orderShippedHandler({
+export default async function deliveryCreatedHandler({
   event: { data },
   container,
 }: SubscriberArgs<any>) {
-  const notificationModuleService: INotificationModuleService =
-    container.resolve(Modules.NOTIFICATION);
+  console.log("[delivery-created] Event fired, data:", JSON.stringify(data));
 
   const fulfillmentId = data.id;
   if (!fulfillmentId) {
-    console.error("[order-shipped] No fulfillment id in event data");
+    console.error("[delivery-created] No fulfillment id in event data");
     return;
   }
-
-  // Retrieve fulfillment with labels (tracking info)
-  const fulfillmentModuleService = container.resolve(Modules.FULFILLMENT);
-  const fulfillment = await (
-    fulfillmentModuleService as any
-  ).retrieveFulfillment(fulfillmentId, { relations: ["labels"] });
-
-  const trackingNumber = fulfillment?.labels?.[0]?.tracking_number || undefined;
-  const trackingUrl = fulfillment?.labels?.[0]?.tracking_url || undefined;
 
   // Get order_id via query.graph with minimal fields (only order.id — no cross-module joins)
   const query = container.resolve("query");
@@ -35,14 +25,11 @@ export default async function orderShippedHandler({
 
   const orderId = fulfillmentWithOrder?.order?.id;
   if (!orderId) {
-    console.error(
-      "[order-shipped] Could not find order for fulfillment",
-      fulfillmentId,
-    );
+    console.error("[delivery-created] Could not find order for fulfillment", fulfillmentId);
     return;
   }
 
-  // Retrieve full order with items, shipping address and shipping methods
+  console.log("[delivery-created] orderId:", orderId);
   const orderModuleService = container.resolve(Modules.ORDER);
   const order = await (orderModuleService as any).retrieveOrder(orderId, {
     relations: ["items", "shipping_address", "shipping_methods"],
@@ -58,24 +45,30 @@ export default async function orderShippedHandler({
     return name.includes("ritiro") || name.includes("pickup");
   });
 
+  console.log("[delivery-created] isPickup:", isPickup);
+
+  const notificationModuleService: INotificationModuleService =
+    container.resolve(Modules.NOTIFICATION);
+
   if (isPickup) {
     try {
       await notificationModuleService.createNotifications({
         to: order.email,
         channel: "email",
-        template: EmailTemplates.ORDER_PICKUP_READY,
+        template: EmailTemplates.ORDER_DELIVERED,
         data: {
           emailOptions: {
             replyTo: "ordini@ilcovodixur.com",
-            subject: `Il Covo di Xur — Il tuo ordine #${order.display_id} è pronto per il ritiro!`,
+            subject: `Il Covo di Xur — Ordine #${order.display_id} ritirato!`,
           },
           order,
           shippingAddress,
-          preview: `Il tuo ordine #${order.display_id} ti aspetta in negozio!`,
+          preview: `Grazie per essere passato a ritirare il tuo ordine #${order.display_id}!`,
         },
       });
+      console.log("[delivery-created] Pickup confirmed email sent OK to", order.email);
     } catch (error) {
-      console.error("[order-shipped] Error sending pickup notification:", error);
+      console.error("[delivery-created] Error sending pickup confirmed email:", error);
     }
     return;
   }
@@ -84,24 +77,23 @@ export default async function orderShippedHandler({
     await notificationModuleService.createNotifications({
       to: order.email,
       channel: "email",
-      template: EmailTemplates.ORDER_SHIPPED,
+      template: EmailTemplates.ORDER_SHIPPING_DELIVERED,
       data: {
         emailOptions: {
           replyTo: "ordini@ilcovodixur.com",
-          subject: `Il Covo di Xur — Il tuo ordine #${order.display_id} è stato spedito!`,
+          subject: `Il Covo di Xur — Ordine #${order.display_id} consegnato!`,
         },
         order,
         shippingAddress,
-        trackingNumber,
-        trackingUrl,
-        preview: `Il tuo ordine #${order.display_id} è in viaggio!`,
+        preview: `Il tuo ordine #${order.display_id} è stato consegnato. Grazie!`,
       },
     });
+    console.log("[delivery-created] Shipping delivered email sent OK to", order.email);
   } catch (error) {
-    console.error("[order-shipped] Error sending shipped notification:", error);
+    console.error("[delivery-created] Error sending shipping delivered email:", error);
   }
 }
 
 export const config: SubscriberConfig = {
-  event: "shipment.created",
+  event: "delivery.created",
 };

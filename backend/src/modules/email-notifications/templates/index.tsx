@@ -2,16 +2,24 @@ import { ReactNode } from 'react'
 import { MedusaError } from '@medusajs/framework/utils'
 import { InviteUserEmail, INVITE_USER, isInviteUserData } from './invite-user'
 import { OrderPlacedTemplate, ORDER_PLACED, isOrderPlacedTemplateData } from './order-placed'
+import { OrderReceivedTemplate, ORDER_RECEIVED, isOrderReceivedTemplateData } from './order-received'
 import { ResetPasswordEmail, RESET_PASSWORD, isResetPasswordData } from './reset-password'
 import { OrderShippedTemplate, ORDER_SHIPPED, isOrderShippedTemplateData } from './order-shipped'
 import { RefundProcessedTemplate, REFUND_PROCESSED, isRefundProcessedTemplateData } from './refund-processed'
 import { WelcomeTemplate, WELCOME, isWelcomeTemplateData } from './welcome'
 import { OrderCancelledTemplate, ORDER_CANCELLED, isOrderCancelledTemplateData } from './order-cancelled'
 import { ReturnRequestedTemplate, RETURN_REQUESTED, isReturnRequestedTemplateData } from './return-requested'
+import { OrderPickupReadyTemplate, ORDER_PICKUP_READY, isOrderPickupReadyTemplateData } from './order-pickup-ready'
+import { OrderDeliveredTemplate, ORDER_DELIVERED, isOrderDeliveredTemplateData } from './order-delivered'
+import { OrderShippingDeliveredTemplate, ORDER_SHIPPING_DELIVERED, isOrderShippingDeliveredTemplateData } from './order-shipping-delivered'
 
 export const EmailTemplates = {
   INVITE_USER,
   ORDER_PLACED,
+  ORDER_RECEIVED,
+  ORDER_PICKUP_READY,
+  ORDER_DELIVERED,
+  ORDER_SHIPPING_DELIVERED,
   RESET_PASSWORD,
   ORDER_SHIPPED,
   REFUND_PROCESSED,
@@ -41,6 +49,15 @@ export function generateEmailTemplate(templateKey: string, data: unknown): React
         )
       }
       return <OrderPlacedTemplate {...data} />
+
+    case EmailTemplates.ORDER_RECEIVED:
+      if (!isOrderReceivedTemplateData(data)) {
+        throw new MedusaError(
+          MedusaError.Types.INVALID_DATA,
+          `Invalid data for template "${EmailTemplates.ORDER_RECEIVED}"`
+        )
+      }
+      return <OrderReceivedTemplate {...data} />
 
     case EmailTemplates.RESET_PASSWORD:
       if (!isResetPasswordData(data)) {
@@ -96,6 +113,33 @@ export function generateEmailTemplate(templateKey: string, data: unknown): React
       }
       return <ReturnRequestedTemplate {...data} />
 
+    case EmailTemplates.ORDER_PICKUP_READY:
+      if (!isOrderPickupReadyTemplateData(data)) {
+        throw new MedusaError(
+          MedusaError.Types.INVALID_DATA,
+          `Invalid data for template "${EmailTemplates.ORDER_PICKUP_READY}"`
+        )
+      }
+      return <OrderPickupReadyTemplate {...data} />
+
+    case EmailTemplates.ORDER_DELIVERED:
+      if (!isOrderDeliveredTemplateData(data)) {
+        throw new MedusaError(
+          MedusaError.Types.INVALID_DATA,
+          `Invalid data for template "${EmailTemplates.ORDER_DELIVERED}"`
+        )
+      }
+      return <OrderDeliveredTemplate {...data} />
+
+    case EmailTemplates.ORDER_SHIPPING_DELIVERED:
+      if (!isOrderShippingDeliveredTemplateData(data)) {
+        throw new MedusaError(
+          MedusaError.Types.INVALID_DATA,
+          `Invalid data for template "${EmailTemplates.ORDER_SHIPPING_DELIVERED}"`
+        )
+      }
+      return <OrderShippingDeliveredTemplate {...data} />
+
     default:
       throw new MedusaError(
         MedusaError.Types.INVALID_DATA,
@@ -107,10 +151,14 @@ export function generateEmailTemplate(templateKey: string, data: unknown): React
 export {
   InviteUserEmail,
   OrderPlacedTemplate,
+  OrderReceivedTemplate,
   ResetPasswordEmail,
   OrderShippedTemplate,
   RefundProcessedTemplate,
   WelcomeTemplate,
   OrderCancelledTemplate,
   ReturnRequestedTemplate,
+  OrderPickupReadyTemplate,
+  OrderDeliveredTemplate,
+  OrderShippingDeliveredTemplate,
 }

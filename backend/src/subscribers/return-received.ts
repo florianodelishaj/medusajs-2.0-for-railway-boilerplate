@@ -6,7 +6,7 @@ import {
 import { SubscriberArgs, SubscriberConfig } from "@medusajs/medusa";
 import { EmailTemplates } from "../modules/email-notifications/templates";
 
-export default async function returnRequestedHandler({
+export default async function returnReceivedHandler({
   event: { data },
   container,
 }: SubscriberArgs<any>) {
@@ -19,7 +19,7 @@ export default async function returnRequestedHandler({
   const orderId = data.order_id;
 
   if (!orderId) {
-    console.error("[return-requested] Missing order_id:", data);
+    console.error("[return-received] Missing order_id:", data);
     return;
   }
 
@@ -38,12 +38,22 @@ export default async function returnRequestedHandler({
         data.return_id,
         { relations: ["items", "items.item"] },
       );
+
+      // Guard: fire only when the return has actually been received
+      if (returnData.status !== "received") {
+        console.log(
+          `[return-received] Skipping — return ${data.return_id} status is "${returnData.status}", not "received"`,
+        );
+        return;
+      }
+
       items = (returnData.items || []).map((item: any) => ({
         title: item.item?.title || item.title || "Articolo",
         quantity: item.quantity || 1,
       }));
     } catch (e) {
-      console.error("[return-requested] Error retrieving return items:", e);
+      console.error("[return-received] Error retrieving return:", e);
+      return;
     }
   }
 
@@ -55,34 +65,21 @@ export default async function returnRequestedHandler({
       data: {
         emailOptions: {
           replyTo: "ordini@ilcovodixur.com",
-          subject: `Il Covo di Xur — Reso richiesto per ordine #${order.display_id}`,
+          subject: `Il Covo di Xur — Reso ricevuto per ordine #${order.display_id}`,
         },
         orderDisplayId: String(order.display_id),
         customerName,
         items,
-        returnStatus: "requested",
-        preview: `Il tuo reso per l'ordine #${order.display_id} è stato richiesto.`,
+        returnStatus: "received",
+        preview: `Il tuo reso per l'ordine #${order.display_id} è stato ricevuto.`,
       },
     });
   } catch (error) {
-    console.error("[return-requested] Error sending email:", error);
+    console.error("[return-received] Error sending email:", error);
   }
 
-  try {
-    await notificationModuleService.createNotifications({
-      to: "admin",
-      channel: "feed",
-      template: "admin-ui",
-      data: {
-        title: `Reso richiesto — ordine #${order.display_id}`,
-        description: `${customerName} — ${order.email}`,
-      },
-    });
-  } catch (error) {
-    console.error("[return-requested] Error sending admin feed:", error);
-  }
 }
 
 export const config: SubscriberConfig = {
-  event: "order.return_requested",
+  event: "order.return_received",
 };

@@ -34,7 +34,7 @@ export default function OrderCompletedTemplate({
             <CircleCheck size={28} className="text-black" />
           </div>
           <h1 className="text-2xl md:text-3xl font-black uppercase tracking-tight">
-            Ordine Confermato
+            Grazie {order.shipping_address?.first_name}!
           </h1>
           <p className="text-sm text-gray-500">
             Ordine #{order.display_id} —{" "}
@@ -57,7 +57,7 @@ export default function OrderCompletedTemplate({
             , grazie per il tuo ordine!
           </p>
           <p className="text-sm text-black/50 mt-1">
-            Abbiamo inviato i dettagli di conferma a{" "}
+            Abbiamo inviato i dettagli dell&apos;ordine a{" "}
             <strong className="text-black">{order.email}</strong>.
           </p>
         </div>

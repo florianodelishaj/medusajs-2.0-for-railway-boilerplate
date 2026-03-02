@@ -79,9 +79,20 @@ export const ReturnRequestedTemplate = ({
           Ciao <strong>{customerName}</strong>,
         </Text>
         <Text className="text-[#444] text-[15px] leading-[24px] m-0 mb-[28px]">
-          {isReceived
-            ? "Abbiamo ricevuto il tuo reso. Procederemo con la verifica e il rimborso il prima possibile."
-            : "La tua richiesta di reso è stata registrata. Segui le istruzioni per rispedire gli articoli."}
+          {isReceived ? (
+            "Abbiamo ricevuto il tuo reso. Procederemo con la verifica e il rimborso il prima possibile."
+          ) : (
+            <>
+              La tua richiesta di reso è stata registrata. Consulta la nostra{" "}
+              <Link
+                href="https://ilcovodixur.com/it/politica-resi"
+                className="text-black font-medium underline"
+              >
+                Politica Resi
+              </Link>{" "}
+              per tutte le istruzioni su come procedere con la restituzione degli articoli.
+            </>
+          )}
         </Text>
 
         {/* Items to return */}

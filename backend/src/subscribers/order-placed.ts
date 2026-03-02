@@ -17,7 +17,7 @@ export default async function orderPlacedHandler({
   );
 
   const order = await orderModuleService.retrieveOrder(data.id, {
-    relations: ["items", "summary", "shipping_address"],
+    relations: ["items", "summary", "shipping_address", "shipping_methods"],
   });
   const shippingAddress = await (
     orderModuleService as any
@@ -27,19 +27,19 @@ export default async function orderPlacedHandler({
     await notificationModuleService.createNotifications({
       to: order.email,
       channel: "email",
-      template: EmailTemplates.ORDER_PLACED,
+      template: EmailTemplates.ORDER_RECEIVED,
       data: {
         emailOptions: {
           replyTo: "ordini@ilcovodixur.com",
-          subject: `Il Covo di Xur — Ordine #${order.display_id} confermato!`,
+          subject: `Il Covo di Xur — Grazie per il tuo ordine #${order.display_id}!`,
         },
         order,
         shippingAddress,
-        preview: `Grazie per il tuo ordine #${order.display_id}! Lo stiamo preparando.`,
+        preview: `Ordine #${order.display_id} ricevuto! Ti confermeremo a breve.`,
       },
     });
   } catch (error) {
-    console.error("Error sending order confirmation notification:", error);
+    console.error("Error sending order received notification:", error);
   }
 
   try {

@@ -75,9 +75,36 @@ export const OrderShippedTemplate = ({
           </strong>
           ,
         </Text>
-        <Text className="text-[#444] text-[15px] leading-[24px] m-0 mb-[28px]">
+        <Text className="text-[#444] text-[15px] leading-[24px] m-0 mb-[20px]">
           Il tuo ordine è stato spedito e sta arrivando da te!
         </Text>
+
+        {/* Video warning */}
+        <div
+          style={{
+            backgroundColor: "#fefce8",
+            border: "2px solid #ca8a04",
+            borderRadius: "8px",
+            padding: "16px 20px",
+            marginBottom: "28px",
+          }}
+        >
+          <Text
+            className="text-[#854d0e] text-[13px] font-black uppercase tracking-[0.05em] m-0 mb-[8px]"
+          >
+            ⚠️ Importante — Tutela il tuo acquisto
+          </Text>
+          <Text className="text-[#78350f] text-[14px] leading-[22px] m-0 mb-[10px]">
+            Gentile cliente, per garantirti la massima tutela, ti invitiamo a
+            effettuare un video durante l&apos;apertura del pacco.
+          </Text>
+          <Text className="text-[#78350f] text-[14px] leading-[22px] m-0">
+            Si informa che tale video-prova è necessaria per attivare la
+            garanzia in caso di danni dovuti al trasporto o articoli mancanti.
+            Senza questa documentazione, non potremo procedere con eventuali
+            reclami o rimborsi.
+          </Text>
+        </div>
 
         {/* Tracking info */}
         {trackingNumber && (

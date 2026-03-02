@@ -47,6 +47,7 @@ const OrderCard = ({ order }: OrderCardProps) => {
   const fulfillmentStatus = (order as any).fulfillment_status as
     | string
     | undefined
+  const paymentStatus = (order as any).payment_status as string | undefined
 
   return (
     <div
@@ -128,6 +129,15 @@ const OrderCard = ({ order }: OrderCardProps) => {
               )}`}
             >
               {translateStatus(fulfillmentStatus, "fulfillment")}
+            </span>
+          )}
+          {paymentStatus && (
+            <span
+              className={`text-xs font-bold uppercase px-2 py-0.5 rounded border border-black ${getStatusBg(
+                paymentStatus
+              )}`}
+            >
+              {translateStatus(paymentStatus, "payment")}
             </span>
           )}
           <LocalizedClientLink href={`/account/orders/details/${order.id}`}>

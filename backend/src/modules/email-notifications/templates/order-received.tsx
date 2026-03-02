@@ -5,24 +5,15 @@ import {
   Row,
   Column,
   Link,
-  Button,
 } from "@react-email/components";
 import * as React from "react";
 import { CircleCheckIcon } from "./icons";
 import { Base } from "./base";
 import { OrderDTO, OrderAddressDTO } from "@medusajs/framework/types";
 
-export const ORDER_PLACED = "order-placed";
+export const ORDER_RECEIVED = "order-received";
 
-interface OrderPlacedPreviewProps {
-  order: OrderDTO & {
-    display_id: string;
-    summary: { raw_current_order_total: { value: number } };
-  };
-  shippingAddress: OrderAddressDTO;
-}
-
-export interface OrderPlacedTemplateProps {
+export interface OrderReceivedTemplateProps {
   order: OrderDTO & {
     display_id: string;
     summary: { raw_current_order_total: { value: number } };
@@ -32,17 +23,17 @@ export interface OrderPlacedTemplateProps {
   preview?: string;
 }
 
-export const isOrderPlacedTemplateData = (
+export const isOrderReceivedTemplateData = (
   data: any,
-): data is OrderPlacedTemplateProps =>
+): data is OrderReceivedTemplateProps =>
   typeof data.order === "object" && typeof data.shippingAddress === "object";
 
-export const OrderPlacedTemplate: React.FC<OrderPlacedTemplateProps> & {
-  PreviewProps: OrderPlacedPreviewProps;
+export const OrderReceivedTemplate: React.FC<OrderReceivedTemplateProps> & {
+  PreviewProps: OrderReceivedTemplateProps;
 } = ({
   order,
   shippingAddress,
-  preview = "Il tuo ordine è stato confermato!",
+  preview = "Grazie per il tuo ordine! Ti confermeremo a breve.",
 }) => {
   const formatPrice = (value: number, currency: string) => {
     return new Intl.NumberFormat("it-IT", {
@@ -54,7 +45,7 @@ export const OrderPlacedTemplate: React.FC<OrderPlacedTemplateProps> & {
   return (
     <Base preview={preview}>
       <Section>
-        {/* Success icon + heading (da A) con badge ordine (da C) */}
+        {/* Icon + heading */}
         <div style={{ textAlign: "center", marginBottom: "24px" }}>
           <div
             style={{
@@ -76,7 +67,7 @@ export const OrderPlacedTemplate: React.FC<OrderPlacedTemplateProps> & {
             />
           </div>
           <Text className="text-black text-[28px] font-black uppercase tracking-tight text-center m-0">
-            Ordine Confermato
+            Ordine Ricevuto
           </Text>
           <Text className="text-[#666] text-[14px] text-center m-0 mt-[6px]">
             Ordine #{order.display_id} —{" "}
@@ -88,7 +79,7 @@ export const OrderPlacedTemplate: React.FC<OrderPlacedTemplateProps> & {
           </Text>
         </div>
 
-        {/* Greeting (da A) */}
+        {/* Greeting */}
         <Text className="text-black text-[16px] leading-[24px] m-0 mb-[16px]">
           Ciao{" "}
           <strong>
@@ -97,11 +88,11 @@ export const OrderPlacedTemplate: React.FC<OrderPlacedTemplateProps> & {
           ,
         </Text>
         <Text className="text-[#444] text-[15px] leading-[24px] m-0 mb-[28px]">
-          Grazie per il tuo ordine! Lo stiamo preparando con cura. Riceverai
-          un&apos;email quando sarà stato spedito.
+          Grazie per aver effettuato l&apos;ordine! Lo stiamo verificando e
+          riceverai a breve un&apos;email di conferma con tutti i dettagli.
         </Text>
 
-        {/* Items — card individuali (da C) */}
+        {/* Items */}
         <Text className="text-black text-[12px] font-black uppercase tracking-[0.1em] m-0 mb-[12px]">
           I tuoi articoli
         </Text>
@@ -186,7 +177,7 @@ export const OrderPlacedTemplate: React.FC<OrderPlacedTemplateProps> & {
           </div>
         ))}
 
-        {/* Total — mix: sfondo verde con bordo nero (A green + C box style) */}
+        {/* Total */}
         <div
           style={{
             backgroundColor: "#4ade80",
@@ -214,47 +205,7 @@ export const OrderPlacedTemplate: React.FC<OrderPlacedTemplateProps> & {
           </Row>
         </div>
 
-        {/* Shipping address — card singola (senza pagamento) */}
-        <div
-          style={{
-            border: "2px solid #000",
-            borderRadius: "8px",
-            padding: "20px",
-            marginBottom: "28px",
-          }}
-        >
-          <Text className="text-black text-[12px] font-black uppercase tracking-[0.1em] m-0 mb-[10px]">
-            Indirizzo di Spedizione
-          </Text>
-          <Text className="text-[#444] text-[14px] leading-[22px] m-0">
-            {shippingAddress.first_name} {shippingAddress.last_name}
-            <br />
-            {shippingAddress.address_1}
-            <br />
-            {shippingAddress.postal_code}, {shippingAddress.city}
-            {shippingAddress.province && <> ({shippingAddress.province})</>}
-            <br />
-            {shippingAddress.country_code?.toUpperCase()}
-          </Text>
-        </div>
-
-        {/* CTA button neobrutalist (da C) */}
-        <div style={{ textAlign: "center", marginBottom: "8px" }}>
-          <Button
-            href="https://ilcovodixur.com"
-            className="bg-[#4ade80] text-black text-[13px] font-black uppercase tracking-[0.05em] no-underline"
-            style={{
-              border: "2px solid #000",
-              borderRadius: "6px",
-              padding: "12px 28px",
-              boxShadow: "3px 3px 0px 0px #000",
-            }}
-          >
-            Continua lo shopping
-          </Button>
-        </div>
-
-        {/* Help note (da A) */}
+        {/* Help note */}
         <Hr className="border-[#e5e5e5] my-[20px] mx-0 w-full" />
         <Text className="text-[#999] text-[13px] leading-[20px] text-center m-0">
           Hai bisogno di aiuto? Scrivici a{" "}
@@ -270,7 +221,7 @@ export const OrderPlacedTemplate: React.FC<OrderPlacedTemplateProps> & {
   );
 };
 
-OrderPlacedTemplate.PreviewProps = {
+OrderReceivedTemplate.PreviewProps = {
   order: {
     id: "test-order-id",
     display_id: "1042",
@@ -281,7 +232,6 @@ OrderPlacedTemplate.PreviewProps = {
       {
         id: "item-1",
         title: "Funko Pop! Naruto Uzumaki #727",
-        product_title: "Funko Pop! Naruto",
         variant_title: "Standard",
         quantity: 2,
         unit_price: 14.99,
@@ -289,31 +239,13 @@ OrderPlacedTemplate.PreviewProps = {
       {
         id: "item-2",
         title: "Pokemon TCG - Booster Box Scarlet & Violet",
-        product_title: "Pokemon TCG Box",
         variant_title: null,
         quantity: 1,
         unit_price: 149.99,
       },
-      {
-        id: "item-3",
-        title: "Dragon Ball Super Card Game - Zenkai Series Set 06",
-        product_title: "DBS Card Game",
-        variant_title: "Display Box",
-        quantity: 1,
-        unit_price: 89.99,
-      },
     ],
-    shipping_address: {
-      first_name: "Marco",
-      last_name: "Rossi",
-      address_1: "Via Roma 42",
-      city: "Milano",
-      province: "MI",
-      postal_code: "20100",
-      country_code: "IT",
-    },
     shipping_methods: [{ name: "Spedizione Standard", amount: 5.99 }],
-    summary: { raw_current_order_total: { value: 269.96 } },
+    summary: { raw_current_order_total: { value: 179.97 } },
   },
   shippingAddress: {
     first_name: "Marco",
@@ -324,6 +256,6 @@ OrderPlacedTemplate.PreviewProps = {
     postal_code: "20100",
     country_code: "IT",
   },
-} as OrderPlacedPreviewProps;
+} as OrderReceivedTemplateProps;
 
-export default OrderPlacedTemplate;
+export default OrderReceivedTemplate;

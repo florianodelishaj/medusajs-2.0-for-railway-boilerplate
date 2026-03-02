@@ -97,6 +97,39 @@ export default function PoliticaResiPage() {
           </ul>
 
           <h3 className="text-lg font-semibold mt-6 mb-2">
+            Reso in negozio
+          </h3>
+          <p>
+            È possibile effettuare il reso direttamente presso il nostro
+            negozio, evitando le spese di spedizione:
+          </p>
+          <p className="font-semibold">
+            Il Covo di Xur
+            <br />
+            Via G. Galilei SNC
+            <br />
+            64100 Teramo — Fraz. San Nicolò a Tordino
+          </p>
+          <p>
+            Per il reso in negozio è necessario presentarsi con:
+          </p>
+          <ul>
+            <li>Il prodotto nella sua confezione originale;</li>
+            <li>Il numero d&apos;ordine;</li>
+            <li>Un documento d&apos;identità valido;</li>
+            <li>
+              Il <strong>video dell&apos;apertura del pacco</strong> (obbligatorio
+              per tutti i resi — se non lo hai, verrai contattato prima che il
+              reso venga accettato).
+            </li>
+          </ul>
+          <p>
+            Ti chiediamo di contattarci in anticipo per concordare giorno e
+            orario, scrivendo a <strong>info@ilcovodixur.com</strong> o su
+            WhatsApp al <strong>331.3988919</strong>.
+          </p>
+
+          <h3 className="text-lg font-semibold mt-6 mb-2">
             Il diritto di recesso non si applica a:
           </h3>
           <ul>

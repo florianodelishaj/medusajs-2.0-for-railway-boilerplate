@@ -3,6 +3,7 @@ import Link from "next/link"
 import { ShieldCheck, Heart, Users, Sparkles, Quote } from "lucide-react"
 import { Button } from "@components/ui/button"
 import ScrollReveal from "@modules/common/components/scroll-reveal"
+import StoreMap from "./store-map"
 
 const MINIO_BASE = `https://${process.env.NEXT_PUBLIC_MINIO_ENDPOINT}/medusa-media/chi-siamo`
 
@@ -249,7 +250,82 @@ const ChiSiamoTemplate = () => {
         </div>
       </section> */}
 
-      {/* Sezione 5: CTA */}
+      {/* Sezione 5: Dove siamo */}
+      <section className="bg-black border-y border-black">
+        <div className="content-container py-16 md:py-24">
+          <ScrollReveal>
+            <div className="text-center mb-10">
+              <span className="inline-block bg-green-400 text-black text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-md border border-black mb-4">
+                Vieni a trovarci
+              </span>
+              <h2 className="text-2xl md:text-3xl font-black uppercase text-white">
+                Dove siamo
+              </h2>
+            </div>
+          </ScrollReveal>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+            <ScrollReveal className="min-h-[320px]">
+              <StoreMap />
+            </ScrollReveal>
+            <ScrollReveal delay={150}>
+              <div className="flex flex-col gap-4 h-full">
+                <div className="border border-white/20 rounded-md p-6 bg-white/5 flex-1">
+                  <h3 className="font-black uppercase text-lg mb-3 text-white">
+                    Il Covo di Xur
+                  </h3>
+                  <p className="text-white/70 text-sm leading-relaxed mb-5">
+                    Via G. Galilei SNC
+                    <br />
+                    Fraz. San Nicolò a Tordino
+                    <br />
+                    64100 Teramo (TE)
+                  </p>
+                  <div className="space-y-1 text-sm text-white/70">
+                    <p>
+                      <span className="font-bold text-white">
+                        Lun – Mar – Mer
+                      </span>{" "}
+                      18:00 – 22:00
+                    </p>
+                    <p>
+                      <span className="font-bold text-white">Gio</span> 18:00 –
+                      00:00
+                    </p>
+                    <p>
+                      <span className="font-bold text-white">Ven</span> 18:00 –
+                      02:00
+                    </p>
+                    <p>
+                      <span className="font-bold text-white">Sab</span> 10:00 –
+                      02:00
+                    </p>
+                    <p>
+                      <span className="font-bold text-white">Dom</span> 14:00 –
+                      00:00
+                    </p>
+                  </div>
+                </div>
+                <Button
+                  variant="elevated"
+                  size="lg"
+                  asChild
+                  className="bg-green-400 font-black uppercase w-full hover:shadow-[4px_4px_0px_#4ade80] hover:bg-white hover:text-black"
+                >
+                  <a
+                    href="https://maps.google.com/?q=Il+Covo+di+Xur,+Via+Galileo+Galilei,+64100+San+Nicol%C3%B2+A+Tordino+TE"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Apri in Google Maps
+                  </a>
+                </Button>
+              </div>
+            </ScrollReveal>
+          </div>
+        </div>
+      </section>
+
+      {/* Sezione 6: CTA */}
       <section className="bg-white border-t-2 border-black">
         <div className="content-container py-16 md:py-20">
           <ScrollReveal>

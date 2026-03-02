@@ -49,6 +49,17 @@
   }
 }
 
+/* MapLibre popup overrides — outside @layer to win over non-layered MapLibre styles */
+.maplibregl-popup-content {
+  background: transparent !important;
+  box-shadow: none !important;
+  /* padding: 0 !important; */
+  border-radius: 0 !important;
+}
+.maplibregl-popup-tip {
+  display: none !important;
+}
+
 @layer base {
   * {
     @apply border-border;

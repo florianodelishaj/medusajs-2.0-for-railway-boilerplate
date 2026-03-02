@@ -22,10 +22,8 @@ const Item = ({ item, currencyCode }: ItemProps) => {
   const categoryColor =
     (productCategory?.metadata?.color as string | undefined) ??
     (productCategories?.[0]?.id
-      ? (findTopLevelCategory(
-          productCategories[0].id,
-          allCategories
-        )?.metadata?.color as string | undefined)
+      ? (findTopLevelCategory(productCategories[0].id, allCategories)?.metadata
+          ?.color as string | undefined)
       : undefined)
 
   return (
@@ -33,7 +31,12 @@ const Item = ({ item, currencyCode }: ItemProps) => {
       className="relative flex items-center gap-4 border border-black rounded-md p-4 overflow-hidden"
       data-testid="product-row"
     >
-      {categoryColor && <div className="absolute inset-y-0 left-0 w-1" style={{ backgroundColor: categoryColor }} />}
+      {categoryColor && (
+        <div
+          className="absolute inset-y-0 left-0 w-1"
+          style={{ backgroundColor: categoryColor }}
+        />
+      )}
       <div className="w-16 h-16 shrink-0">
         <Thumbnail thumbnail={item.thumbnail} size="square" />
       </div>
@@ -42,12 +45,12 @@ const Item = ({ item, currencyCode }: ItemProps) => {
         <p className="text-sm font-bold truncate" data-testid="product-name">
           {item.title}
         </p>
-        {item.variant && item.variant.title !== "Default variant" && (
+        {/* {item.variant && item.variant.title !== "Default variant" && (
           <LineItemOptions
             variant={item.variant}
             data-testid="product-variant"
           />
-        )}
+        )} */}
       </div>
 
       <div className="flex flex-col items-end shrink-0">

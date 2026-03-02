@@ -47,6 +47,11 @@ const ERROR_PATTERNS: Array<{
     translate: (match) =>
       `Regione non trovata per il codice paese: ${match[1]}`,
   },
+  {
+    pattern: /Not enough stock available for item/i,
+    translate: () =>
+      "Quantità non disponibile: la scorta di uno o più prodotti nel carrello è insufficiente. Riduci la quantità e riprova.",
+  },
 ]
 
 /**

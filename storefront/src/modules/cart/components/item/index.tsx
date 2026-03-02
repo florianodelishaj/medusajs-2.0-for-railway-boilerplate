@@ -33,11 +33,14 @@ const Item = ({ item, currencyCode, type = "full" }: ItemProps) => {
 
   const { handle } = item.variant?.product ?? {}
   const { productCategory, categories: allCategories } = useSearchFilters()
-  const productCategories = item.variant?.product?.categories as any[] | undefined
+  const productCategories = item.variant?.product?.categories as
+    | any[]
+    | undefined
   const categoryColor =
     (productCategory?.metadata?.color as string | undefined) ??
     (productCategories?.[0]?.id
-      ? (findTopLevelCategory(productCategories[0].id, allCategories)?.metadata?.color as string | undefined)
+      ? (findTopLevelCategory(productCategories[0].id, allCategories)?.metadata
+          ?.color as string | undefined)
       : undefined)
 
   // Check if item is in backorder
@@ -66,7 +69,12 @@ const Item = ({ item, currencyCode, type = "full" }: ItemProps) => {
       className="relative flex items-center w-full py-2 small:py-4 px-3 small:px-6"
       data-testid="product-row"
     >
-      {categoryColor && <div className="absolute inset-y-0 left-0 w-1" style={{ backgroundColor: categoryColor }} />}
+      {categoryColor && (
+        <div
+          className="absolute inset-y-0 left-0 w-1"
+          style={{ backgroundColor: categoryColor }}
+        />
+      )}
       <div className="w-14 small:w-24 shrink-0">
         <LocalizedClientLink href={`/products/${handle}`} className="flex">
           <div className="w-12 h-12 small:w-20 small:h-20 border border-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-md overflow-hidden">
@@ -81,17 +89,17 @@ const Item = ({ item, currencyCode, type = "full" }: ItemProps) => {
 
       <div className="flex-1 text-left px-2 small:px-4 min-w-0">
         <p
-          className="text-xs small:text-sm font-medium text-black truncate"
+          className="text-xs small:text-sm font-medium text-black"
           data-testid="product-title"
         >
           {item.product_title}
         </p>
-        {item.variant && item.variant.title !== "Default variant" && (
+        {/* {item.variant && item.variant.title !== "Default variant" && (
           <LineItemOptions
             variant={item.variant}
             data-testid="product-variant"
           />
-        )}
+        )} */}
       </div>
 
       {type === "full" && (

@@ -7,7 +7,7 @@ import { HttpTypes } from "@medusajs/types"
 import { omit } from "lodash"
 import { revalidateTag } from "next/cache"
 import { redirect } from "next/navigation"
-import { getAuthHeaders, getCartId, removeCartId, setCartId } from "./cookies"
+import { getAuthHeaders, getCartId, removeCartId, setAuthToken, setCartId } from "./cookies"
 import { getProductsById } from "./products"
 import { getRegion } from "./regions"
 
@@ -39,7 +39,7 @@ export async function getOrSetCart(countryCode: string) {
   }
 
   if (!cart) {
-    const cartResp = await sdk.store.cart.create({ region_id: region.id })
+    const cartResp = await sdk.store.cart.create({ region_id: region.id }, {}, getAuthHeaders())
     cart = cartResp.cart
     setCartId(cart.id)
     revalidateTag("cart")
@@ -452,6 +452,57 @@ export async function setAddresses(currentState: unknown, formData: FormData) {
         phone: formData.get("billing_address.phone"),
       }
     await updateCart(data)
+
+    // Registrazione automatica dal checkout (solo per guest)
+    if (formData.get("register_account") === "on") {
+      const email = formData.get("email") as string
+      const firstName = formData.get("shipping_address.first_name") as string
+      const lastName = formData.get("shipping_address.last_name") as string
+
+      try {
+        // Password temporanea — verrà subito sostituita via reset link
+        const tempPassword = `Tmp${Math.random().toString(36).slice(-8)}1!`
+
+        const registerToken = await sdk.auth.register("customer", "emailpass", {
+          email,
+          password: tempPassword,
+        })
+
+        await sdk.store.customer.create(
+          { email, first_name: firstName, last_name: lastName, metadata: { checkout_registration: true } },
+          {},
+          { authorization: `Bearer ${registerToken}` }
+        )
+
+        const loginToken = await sdk.auth.login("customer", "emailpass", {
+          email,
+          password: tempPassword,
+        })
+        const tokenValue = typeof loginToken === "string" ? loginToken : loginToken.location
+        setAuthToken(tokenValue)
+        revalidateTag("customer")
+
+        // Trasferisce il cart al nuovo account
+        const cartId = getCartId()
+        if (cartId) {
+          await sdk.store.cart
+            .transferCart(cartId, {}, { authorization: `Bearer ${tokenValue}` })
+            .catch(() => {})
+          revalidateTag("cart")
+        }
+
+        // Invia email con link per impostare la password (usa subscriber esistente)
+        const backendUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || "http://localhost:9000"
+        await fetch(`${backendUrl}/auth/customer/emailpass/reset-password`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ identifier: email }),
+        }).catch(() => {})
+      } catch (error) {
+        console.warn("[Auto-register] Errore durante la registrazione:", error)
+        // Email già registrata o altro errore — procede come guest senza bloccare
+      }
+    }
   } catch (e: any) {
     return e.message
   }
@@ -459,6 +510,11 @@ export async function setAddresses(currentState: unknown, formData: FormData) {
   redirect(
     `/${formData.get("shipping_address.country_code")}/checkout?step=delivery`
   )
+}
+
+export async function resetCart() {
+  removeCartId()
+  revalidateTag("cart")
 }
 
 export async function placeOrder() {
@@ -482,7 +538,11 @@ export async function placeOrder() {
     redirect(`/${countryCode}/order/confirmed/${cartRes?.order.id}`)
   }
 
-  return cartRes.cart
+  const err = new Error(
+    (cartRes as any)?.error?.message || "Errore durante il completamento dell'ordine"
+  ) as any
+  err.errorType = (cartRes as any)?.error?.type
+  throw err
 }
 
 /**

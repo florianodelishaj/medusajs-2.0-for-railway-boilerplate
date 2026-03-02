@@ -6,7 +6,7 @@ import { HttpTypes } from "@medusajs/types"
 import { revalidateTag } from "next/cache"
 import { redirect } from "next/navigation"
 import { cache } from "react"
-import { getAuthHeaders, removeAuthToken, setAuthToken } from "./cookies"
+import { getAuthHeaders, getCartId, removeAuthToken, setAuthToken } from "./cookies"
 
 export const getCustomer = cache(async function () {
   return await sdk.store.customer
@@ -55,9 +55,18 @@ export async function signup(_currentState: unknown, formData: FormData) {
       password,
     })
 
-    setAuthToken(typeof loginToken === 'string' ? loginToken : loginToken.location)
-
+    const loginTokenValue = typeof loginToken === "string" ? loginToken : loginToken.location
+    setAuthToken(loginTokenValue)
     revalidateTag("customer")
+
+    const cartId = getCartId()
+    if (cartId) {
+      await sdk.store.cart
+        .transferCart(cartId, {}, { authorization: `Bearer ${loginTokenValue}` })
+        .catch(() => {})
+      revalidateTag("cart")
+    }
+
     return createdCustomer
   } catch (error: any) {
     return error.toString()
@@ -69,12 +78,20 @@ export async function login(_currentState: unknown, formData: FormData) {
   const password = formData.get("password") as string
 
   try {
-    await sdk.auth
-      .login("customer", "emailpass", { email, password })
-      .then((token) => {
-        setAuthToken(typeof token === 'string' ? token : token.location)
-        revalidateTag("customer")
-      })
+    const token = await sdk.auth.login("customer", "emailpass", { email, password })
+    const tokenValue = typeof token === "string" ? token : token.location
+
+    setAuthToken(tokenValue)
+    revalidateTag("customer")
+    revalidateTag("order")
+
+    const cartId = getCartId()
+    if (cartId) {
+      await sdk.store.cart
+        .transferCart(cartId, {}, { authorization: `Bearer ${tokenValue}` })
+        .catch(() => {})
+      revalidateTag("cart")
+    }
   } catch (error: any) {
     return error.toString()
   }

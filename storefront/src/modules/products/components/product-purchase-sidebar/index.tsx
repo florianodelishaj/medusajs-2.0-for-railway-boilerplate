@@ -26,8 +26,14 @@ const ProductPurchaseSidebar = ({
   product: _product,
   region,
 }: ProductPurchaseSidebarProps) => {
-  const { product, selectedVariant, inStock, isBackorder, availableInventory, disabled } =
-    useProductSelection()
+  const {
+    product,
+    selectedVariant,
+    inStock,
+    isBackorder,
+    availableInventory,
+    disabled,
+  } = useProductSelection()
   const [quantity, setQuantity] = useState(1)
   const { addToCart, isAdding } = useAddToCart()
   const countryCode = useParams().countryCode as string
@@ -122,7 +128,9 @@ const ProductPurchaseSidebar = ({
         >
           <p className="text-sm font-bold text-white flex items-center gap-2">
             <AlertTriangle className="w-4 h-4" />
-            Ultimi {availableInventory} rimasti!
+            {availableInventory === 1
+              ? "Ultimo disponibile!"
+              : `Ultimi ${availableInventory} disponibili!`}
           </p>
         </div>
       )}

@@ -33,6 +33,7 @@ const Wrapper: React.FC<WrapperProps> = ({ cart, children }) => {
     return (
       <StripeContext.Provider value={true}>
         <StripeWrapper
+          key={paymentSession.id}
           paymentSession={paymentSession}
           stripeKey={stripeKey}
           stripePromise={stripePromise}

@@ -162,7 +162,7 @@ const Payment = ({
                 </RadioGroup>
               )}
               {/* Mostra direttamente il PaymentElement per Stripe */}
-              {isStripe && stripeReady && (
+              {isStripe && stripeReady && !isLoading && (
                 <div className="mt-5 transition-all duration-150 ease-in-out">
                   <p className="text-sm font-bold text-black mb-1 uppercase">
                     Seleziona il metodo di pagamento:
@@ -204,7 +204,9 @@ const Payment = ({
               Vendita e Politica di Reso e riconosci di aver letto la Politica
               sulla Privacy di Il Covo di Xur.
             </p>
-            <PaymentButton cart={cart} data-testid="submit-order-button" />
+            {(!isStripe || stripeReady) && (
+              <PaymentButton cart={cart} data-testid="submit-order-button" />
+            )}
           </div>
         </div>
 

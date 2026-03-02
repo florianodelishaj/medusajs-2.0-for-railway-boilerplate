@@ -20,6 +20,9 @@ export default async function customerCreatedHandler({
 
   if (!customer.email) return;
 
+  // Registrazione automatica dal checkout — non inviare la welcome email
+  if (customer.metadata?.checkout_registration) return;
+
   const customerName = customer.first_name || "collezionista";
 
   try {

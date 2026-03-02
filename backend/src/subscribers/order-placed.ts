@@ -41,6 +41,20 @@ export default async function orderPlacedHandler({
   } catch (error) {
     console.error("Error sending order confirmation notification:", error);
   }
+
+  try {
+    await notificationModuleService.createNotifications({
+      to: "admin",
+      channel: "feed",
+      template: "admin-ui",
+      data: {
+        title: `Nuovo ordine #${order.display_id}`,
+        description: `${shippingAddress.first_name} ${shippingAddress.last_name} — ${order.email}`,
+      },
+    });
+  } catch (error) {
+    console.error("Error sending admin feed notification:", error);
+  }
 }
 
 export const config: SubscriberConfig = {

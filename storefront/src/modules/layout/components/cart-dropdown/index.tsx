@@ -50,9 +50,12 @@ const CartDropdownItem = ({
   currencyCode: string
 }) => {
   const { categories: allCategories } = useSearchFilters()
-  const productCategories = item.variant?.product?.categories as any[] | undefined
+  const productCategories = item.variant?.product?.categories as
+    | any[]
+    | undefined
   const categoryColor = productCategories?.[0]?.id
-    ? (findTopLevelCategory(productCategories[0].id, allCategories)?.metadata?.color as string | undefined)
+    ? (findTopLevelCategory(productCategories[0].id, allCategories)?.metadata
+        ?.color as string | undefined)
     : undefined
 
   const isBackorder =
@@ -65,7 +68,12 @@ const CartDropdownItem = ({
       className="relative border border-black rounded-md p-3 bg-white hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-shadow overflow-hidden"
       data-testid="cart-item"
     >
-      {categoryColor && <div className="absolute inset-y-0 left-0 w-1" style={{ backgroundColor: categoryColor }} />}
+      {categoryColor && (
+        <div
+          className="absolute inset-y-0 left-0 w-1"
+          style={{ backgroundColor: categoryColor }}
+        />
+      )}
       <div className="flex gap-3">
         <LocalizedClientLink
           href={`/products/${item.variant?.product?.handle}`}
@@ -88,13 +96,13 @@ const CartDropdownItem = ({
               {item.title}
             </LocalizedClientLink>
           </h3>
-          {item.variant && item.variant.title !== "Default variant" && (
+          {/* {item.variant && item.variant.title !== "Default variant" && (
             <LineItemOptions
               variant={item.variant}
               data-testid="cart-item-variant"
               data-value={item.variant}
             />
-          )}
+          )} */}
           <div className="flex items-center justify-between gap-2">
             <span
               className="text-xs font-medium"
@@ -239,9 +247,7 @@ const CartDropdown = ({
                 {totalDiscount > 0 && (
                   <>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-black/50">
-                        Subtotale
-                      </span>
+                      <span className="text-sm text-black/50">Subtotale</span>
                       <span
                         className="text-sm font-bold"
                         data-testid="cart-subtotal"

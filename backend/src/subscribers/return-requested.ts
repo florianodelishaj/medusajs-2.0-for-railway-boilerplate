@@ -76,6 +76,20 @@ export default async function returnRequestedHandler({
   } catch (error) {
     console.error("Error sending return notification:", error);
   }
+
+  try {
+    await notificationModuleService.createNotifications({
+      to: "admin",
+      channel: "feed",
+      template: "admin-ui",
+      data: {
+        title: `Reso ${statusLabel} — ordine #${order.display_id}`,
+        description: `${customerName} — ${order.email}`,
+      },
+    });
+  } catch (error) {
+    console.error("Error sending admin feed notification:", error);
+  }
 }
 
 export const config: SubscriberConfig = {

@@ -18,6 +18,8 @@ const ShippingAddress = ({
   checked: boolean
   onChange: () => void
 }) => {
+  const [registerAccount, setRegisterAccount] = useState(false)
+
   const [formData, setFormData] = useState<Record<string, any>>({
     "shipping_address.first_name": "",
     "shipping_address.last_name": "",
@@ -183,7 +185,7 @@ const ShippingAddress = ({
           data-testid="shipping-province-input"
         />
       </div>
-      <div className="my-8">
+      <div className="my-6">
         <Checkbox
           label="Indirizzo di fatturazione uguale a quello di spedizione"
           name="same_as_billing"
@@ -213,6 +215,16 @@ const ShippingAddress = ({
           data-testid="shipping-phone-input"
         />
       </div>
+      {!customer && (
+        <div className="mt-6">
+          <Checkbox
+            label="Crea un account con questa email — riceverai un link per impostare la password"
+            name="register_account"
+            checked={registerAccount}
+            onChange={() => setRegisterAccount(!registerAccount)}
+          />
+        </div>
+      )}
     </>
   )
 }

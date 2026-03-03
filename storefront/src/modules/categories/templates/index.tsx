@@ -39,7 +39,7 @@ export default function CategoryTemplate({
   return (
     <DynamicBackground backgroundImage={backgroundImage} categoryColor={categoryColor}>
       <div
-        className="flex flex-col flex-1 small:flex-row w-full px-4 lg:px-12 py-8"
+        className="flex flex-col flex-1 small:flex-row small:items-start w-full px-4 lg:px-12 py-8"
         data-testid="category-container"
       >
         <RefinementList

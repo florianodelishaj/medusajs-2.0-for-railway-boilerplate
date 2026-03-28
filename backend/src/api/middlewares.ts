@@ -7,7 +7,7 @@ import {
 import { revalidateFrontendCache } from '../lib/revalidate-frontend'
 
 function removeFingerprinting(
-  req: MedusaRequest,
+  _req: MedusaRequest,
   res: MedusaResponse,
   next: MedusaNextFunction
 ) {
@@ -15,52 +15,71 @@ function removeFingerprinting(
   next()
 }
 
-// Rate limiter in-memory per l'admin login (max 5 tentativi per IP in 15 min)
+// Rate limiter in-memory generico
 type RateEntry = { count: number; lastAttempt: number; blockedAt?: number }
-const adminLoginStore = new Map<string, RateEntry>()
-const ADMIN_MAX_ATTEMPTS = 5
-const ADMIN_WINDOW_MS = 15 * 60 * 1000
 
+function createRateLimiter(maxAttempts: number, windowMs: number) {
+  const store = new Map<string, RateEntry>()
+
+  return function isBlocked(ip: string): boolean {
+    const now = Date.now()
+    const entry = store.get(ip)
+    if (!entry || now - entry.lastAttempt > windowMs) {
+      store.set(ip, { count: 1, lastAttempt: now })
+      return false
+    }
+    entry.count++
+    entry.lastAttempt = now
+    if (entry.count >= maxAttempts && entry.blockedAt === undefined) {
+      entry.blockedAt = now
+    }
+    return entry.blockedAt !== undefined
+  }
+}
+
+const checkAdminLogin = createRateLimiter(5, 15 * 60 * 1000)
+const checkAdminReset = createRateLimiter(3, 15 * 60 * 1000)
+
+function getIp(req: MedusaRequest): string {
+  return (
+    (req.headers['x-real-ip'] as string) ??
+    (req.headers['x-forwarded-for'] as string)?.split(',')[0].trim() ??
+    req.socket.remoteAddress ??
+    'unknown'
+  )
+}
+
+// Login admin: blocca con 429 dopo 5 tentativi falliti per IP
 function adminLoginRateLimit(
   req: MedusaRequest,
   res: MedusaResponse,
   next: MedusaNextFunction
 ) {
-  const ip =
-    (req.headers['x-real-ip'] as string) ??
-    (req.headers['x-forwarded-for'] as string)?.split(',')[0].trim() ??
-    req.socket.remoteAddress ??
-    'unknown'
+  const ip = getIp(req)
 
-  const now = Date.now()
-  const entry = adminLoginStore.get(ip)
-
-  if (entry) {
-    if (now - entry.lastAttempt > ADMIN_WINDOW_MS) {
-      adminLoginStore.delete(ip)
-    } else if (entry.blockedAt !== undefined) {
-      entry.lastAttempt = now
-      res.status(429).json({ message: 'Troppi tentativi. Riprova tra 15 minuti.' })
-      return
-    }
+  // Controlla prima della chiamata (blocco attivo)
+  if (checkAdminLogin(ip)) {
+    res.status(429).json({ message: 'Troppi tentativi. Riprova tra 15 minuti.' })
+    return
   }
 
-  res.on('finish', () => {
-    if (res.statusCode === 401) {
-      const current = adminLoginStore.get(ip)
-      if (!current || now - current.lastAttempt > ADMIN_WINDOW_MS) {
-        adminLoginStore.set(ip, { count: 1, lastAttempt: Date.now() })
-      } else {
-        current.count++
-        current.lastAttempt = Date.now()
-        if (current.count >= ADMIN_MAX_ATTEMPTS && current.blockedAt === undefined) {
-          current.blockedAt = Date.now()
-        }
-      }
-    } else if (res.statusCode === 200) {
-      adminLoginStore.delete(ip)
-    }
-  })
+  next()
+}
+
+// Reset password admin: registra sempre il tentativo (anti email-bombing)
+// Risponde sempre con successo quando bloccato per non rivelare info
+function adminResetRateLimit(
+  req: MedusaRequest,
+  res: MedusaResponse,
+  next: MedusaNextFunction
+) {
+  const ip = getIp(req)
+
+  if (checkAdminReset(ip)) {
+    // Blocco silenzioso — risposta generica per non rivelare se l'email esiste
+    res.status(200).json({ success: true })
+    return
+  }
 
   next()
 }
@@ -70,13 +89,12 @@ function adminLoginRateLimit(
  * Medusa non emette eventi price-list.*, quindi intercettiamo le API admin mutations.
  */
 function priceListCacheInvalidation(
-  req: MedusaRequest,
+  _req: MedusaRequest,
   res: MedusaResponse,
   next: MedusaNextFunction
 ) {
   res.on('finish', () => {
     if (res.statusCode >= 200 && res.statusCode < 300) {
-      console.log(`[Price List Middleware] ${req.method} ${req.originalUrl} completed with ${res.statusCode}, invalidating cache`)
       revalidateFrontendCache('products', 'Price List Cache Invalidation')
     }
   })
@@ -93,6 +111,11 @@ export default defineMiddlewares({
       matcher: '/auth/user/emailpass',
       method: ['POST'],
       middlewares: [adminLoginRateLimit],
+    },
+    {
+      matcher: '/auth/user/emailpass/reset-password',
+      method: ['POST'],
+      middlewares: [adminResetRateLimit],
     },
     {
       matcher: '/admin/price-lists',

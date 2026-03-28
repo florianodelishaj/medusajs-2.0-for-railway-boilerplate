@@ -55,6 +55,7 @@ const Register = ({ setCurrentView }: Props) => {
           required
           type="password"
           autoComplete="new-password"
+          minLength={8}
           data-testid="password-input"
         />
         <ErrorMessage error={message} data-testid="register-error" />

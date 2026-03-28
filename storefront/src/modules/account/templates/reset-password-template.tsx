@@ -117,6 +117,7 @@ const ResetPasswordTemplate = () => {
                   name="new_password"
                   type="password"
                   required
+                  minLength={8}
                   autoComplete="new-password"
                   data-testid="new-password-input"
                 />
@@ -125,6 +126,7 @@ const ResetPasswordTemplate = () => {
                   name="confirm_password"
                   type="password"
                   required
+                  minLength={8}
                   autoComplete="new-password"
                   data-testid="confirm-password-input"
                 />

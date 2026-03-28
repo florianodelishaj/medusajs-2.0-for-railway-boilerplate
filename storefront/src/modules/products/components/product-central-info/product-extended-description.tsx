@@ -1,3 +1,4 @@
+import sanitizeHtml from "sanitize-html"
 import { HttpTypes } from "@medusajs/types"
 import Accordion from "@modules/products/components/accordion"
 
@@ -8,14 +9,26 @@ type ProductExtendedDescriptionProps = {
 const ProductExtendedDescription = ({
   product,
 }: ProductExtendedDescriptionProps) => {
-  const extendedDescription = product.metadata?.extended_description as
+  const rawDescription = product.metadata?.extended_description as
     | string
     | undefined
 
   // Se non c'è descrizione estesa, non mostrare l'accordion
-  if (!extendedDescription) {
+  if (!rawDescription) {
     return null
   }
+
+  const extendedDescription = sanitizeHtml(rawDescription, {
+    allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img", "figure", "figcaption"]),
+    allowedAttributes: {
+      ...sanitizeHtml.defaults.allowedAttributes,
+      img: ["src", "alt", "width", "height"],
+      "*": ["class"],
+    },
+    allowedSchemesByTag: {
+      img: ["https", "http"],
+    },
+  })
 
   // Controlla se il contenuto HTML è effettivamente vuoto (rimuove tag HTML e controlla se c'è testo)
   const textContent = extendedDescription.replace(/<[^>]*>/g, "").trim()

@@ -9,6 +9,7 @@ if (process.env.NODE_ENV !== 'production') {
  */
 const nextConfig = {
   reactStrictMode: true,
+  poweredByHeader: false,
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -75,31 +76,45 @@ const nextConfig = {
   serverRuntimeConfig: {
     port: process.env.PORT || 3000,
   },
-  // async headers() {
-  //   // Build connect-src dynamically based on environment
-  //   const medusaBackendUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || 'http://localhost:9000';
-  //   const meilisearchUrl = process.env.NEXT_PUBLIC_MEILISEARCH_HOST || 'http://localhost:7700';
+  async headers() {
+    const medusaBackendUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || 'http://localhost:9000';
+    const meilisearchUrl = process.env.NEXT_PUBLIC_SEARCH_ENDPOINT || 'http://localhost:7700';
+    const minioEndpoint = process.env.NEXT_PUBLIC_MINIO_ENDPOINT ? `https://${process.env.NEXT_PUBLIC_MINIO_ENDPOINT}` : '';
 
-  //   return [
-  //     {
-  //       source: '/:path*',
-  //       headers: [
-  //         {
-  //           key: 'Content-Security-Policy',
-  //           value: [
-  //             "default-src 'self'",
-  //             "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com",
-  //             "style-src 'self' 'unsafe-inline'",
-  //             "font-src 'self' data: https://js.stripe.com",
-  //             "img-src 'self' data: blob: https:",
-  //             `connect-src 'self' https://api.stripe.com ${medusaBackendUrl} ${meilisearchUrl}`,
-  //             "frame-src https://js.stripe.com https://hooks.stripe.com",
-  //           ].join('; '),
-  //         },
-  //       ],
-  //     },
-  //   ]
-  // },
+    // In dev Next.js usa eval() per webpack source maps: unsafe-eval necessario
+    const isDev = process.env.NODE_ENV !== 'production'
+    const csp = [
+      "default-src 'self'",
+      // Next.js App Router richiede unsafe-inline per gli script di hydration
+      `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://js.stripe.com https://embeds.iubenda.com https://cdn.iubenda.com`,
+      "style-src 'self' 'unsafe-inline' https://cdn.iubenda.com",
+      "font-src 'self' data:",
+      // blob: necessario per MapLibre GL WebWorkers
+      "worker-src blob:",
+      `img-src 'self' data: blob: https: ${minioEndpoint}`,
+      `connect-src 'self' https://api.stripe.com ${medusaBackendUrl} ${meilisearchUrl} ${minioEndpoint} https://api.maptiler.com https://idb.iubenda.com`,
+      "frame-src https://js.stripe.com https://hooks.stripe.com",
+      "object-src 'none'",
+      "base-uri 'self'",
+    ].join('; ');
+
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=63072000; includeSubDomains; preload',
+          },
+          { key: 'Content-Security-Policy', value: csp },
+        ],
+      },
+    ]
+  },
 }
 
 module.exports = nextConfig

@@ -2,9 +2,19 @@
 
 import { sdk } from "@lib/config"
 import medusaError from "@lib/util/medusa-error"
+import { checkRateLimit, recordFailure, resetLimit } from "@lib/util/rate-limit"
 import { HttpTypes } from "@medusajs/types"
 import { revalidateTag } from "next/cache"
+import { headers } from "next/headers"
 import { redirect } from "next/navigation"
+
+function getClientIp(): string {
+  return (
+    headers().get("x-real-ip") ??
+    headers().get("x-forwarded-for")?.split(",")[0].trim() ??
+    "unknown"
+  )
+}
 import { cache } from "react"
 import { getAuthHeaders, getCartId, removeAuthToken, setAuthToken } from "./cookies"
 
@@ -28,6 +38,13 @@ export const updateCustomer = cache(async function (
 })
 
 export async function signup(_currentState: unknown, formData: FormData) {
+  const ip = getClientIp()
+
+  const { blocked } = checkRateLimit("signup", ip)
+  if (blocked) {
+    return "Troppi tentativi di registrazione. Riprova tra un'ora."
+  }
+
   const password = formData.get("password") as string
   const customerForm = {
     email: formData.get("email") as string,
@@ -69,11 +86,18 @@ export async function signup(_currentState: unknown, formData: FormData) {
 
     return createdCustomer
   } catch (error: any) {
+    recordFailure("signup", ip)
     return error.toString()
   }
 }
 
 export async function login(_currentState: unknown, formData: FormData) {
+  const ip = getClientIp()
+  const { blocked } = checkRateLimit("login", ip)
+  if (blocked) {
+    return "Troppi tentativi di accesso. Riprova tra 15 minuti."
+  }
+
   const email = formData.get("email") as string
   const password = formData.get("password") as string
 
@@ -81,6 +105,7 @@ export async function login(_currentState: unknown, formData: FormData) {
     const token = await sdk.auth.login("customer", "emailpass", { email, password })
     const tokenValue = typeof token === "string" ? token : token.location
 
+    resetLimit("login", ip)
     setAuthToken(tokenValue)
     revalidateTag("customer")
     revalidateTag("order")
@@ -93,6 +118,7 @@ export async function login(_currentState: unknown, formData: FormData) {
       revalidateTag("cart")
     }
   } catch (error: any) {
+    recordFailure("login", ip)
     return error.toString()
   }
 }
@@ -198,6 +224,15 @@ export const requestPasswordReset = async (
   _currentState: unknown,
   formData: FormData
 ): Promise<any> => {
+  const ip = getClientIp()
+
+  const { blocked } = checkRateLimit("forgotPassword", ip)
+  if (blocked) {
+    return { success: true, error: null }
+  }
+
+  recordFailure("forgotPassword", ip)
+
   try {
     const customer = await getCustomer()
     if (!customer?.email) {
@@ -233,6 +268,16 @@ export const forgotPassword = async (
   _currentState: unknown,
   formData: FormData
 ): Promise<{ success: boolean; error: string | null }> => {
+  const ip = getClientIp()
+
+  const { blocked } = checkRateLimit("forgotPassword", ip)
+  if (blocked) {
+    // Risposta generica per non rivelare info
+    return { success: true, error: null }
+  }
+
+  recordFailure("forgotPassword", ip)
+
   const email = formData.get("email") as string
 
   if (!email) {

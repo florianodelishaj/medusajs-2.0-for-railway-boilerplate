@@ -111,8 +111,8 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
     include_root_family, // Se true, risale alla root e include tutti i fratelli
   } = req.query;
 
-  const pageNum = parseInt(page as string);
-  const limitNum = parseInt(limit as string);
+  const pageNum = Math.max(1, parseInt(page as string) || 1);
+  const limitNum = Math.min(Math.max(1, parseInt(limit as string) || 12), 100);
 
   // Build base filters (only for DB-level filtering)
   const filters: any = {

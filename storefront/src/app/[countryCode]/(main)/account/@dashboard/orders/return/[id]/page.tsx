@@ -5,6 +5,7 @@ import ReturnRequestForm from "@modules/account/components/return-request-form"
 import { retrieveOrder } from "@lib/data/orders"
 import { enrichLineItems } from "@lib/data/cart"
 import { listReturnReasons, listReturnShippingOptions } from "@lib/data/returns"
+import { getCustomer } from "@lib/data/customer"
 import { HttpTypes } from "@medusajs/types"
 
 type Props = {
@@ -32,9 +33,17 @@ export async function generateMetadata(_props: Props): Promise<Metadata> {
 }
 
 export default async function ReturnRequestPage({ params }: Props) {
-  const orderData = await getOrder(params.id).catch(() => null)
+  const [orderData, customer] = await Promise.all([
+    getOrder(params.id).catch(() => null),
+    getCustomer(),
+  ])
 
   if (!orderData || orderData.fulfillment_status !== "delivered") {
+    notFound()
+  }
+
+  // V3/V4 — verifica che l'ordine appartenga al cliente loggato
+  if (!customer || (orderData as any).customer_id !== customer.id) {
     notFound()
   }
 

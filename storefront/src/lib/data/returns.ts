@@ -4,6 +4,8 @@ import { revalidateTag } from "next/cache"
 import { cache } from "react"
 import { sdk } from "@lib/config"
 import { getAuthHeaders } from "./cookies"
+import { getCustomer } from "./customer"
+import { retrieveOrder } from "./orders"
 
 export const listReturnShippingOptions = cache(async function (
   cartId?: string
@@ -50,6 +52,28 @@ export async function createReturnRequest(
 
   if (!orderId || !itemsJson || !returnShippingOptionId) {
     return { success: false, error: "Dati mancanti" }
+  }
+
+  // V4 — verifica ownership e finestra di reso
+  const [customer, order] = await Promise.all([getCustomer(), retrieveOrder(orderId)])
+  if (!customer || !order || (order as any).customer_id !== customer.id) {
+    return { success: false, error: "Ordine non trovato" }
+  }
+
+  if (order.fulfillment_status !== "delivered") {
+    return { success: false, error: "Ordine non idoneo al reso" }
+  }
+
+  const RETURN_WINDOW_MS = 14 * 24 * 60 * 60 * 1000
+  const fulfillments = (order as any).fulfillments ?? []
+  const latestDeliveredAt = fulfillments
+    .map((f: any) => f.delivered_at)
+    .filter(Boolean)
+    .sort()
+    .at(-1)
+
+  if (!latestDeliveredAt || Date.now() - new Date(latestDeliveredAt).getTime() > RETURN_WINDOW_MS) {
+    return { success: false, error: "La finestra di reso di 14 giorni è scaduta" }
   }
 
   let items: { id: string; quantity: number; reason_id?: string; note?: string }[]

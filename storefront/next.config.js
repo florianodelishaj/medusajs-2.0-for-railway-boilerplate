@@ -92,6 +92,7 @@ const nextConfig = {
       // blob: necessario per MapLibre GL WebWorkers
       "worker-src blob:",
       `img-src 'self' data: blob: https: ${minioEndpoint}`,
+      `media-src 'self' ${minioEndpoint}`,
       `connect-src 'self' https://api.stripe.com ${medusaBackendUrl} ${meilisearchUrl} ${minioEndpoint} https://api.maptiler.com https://idb.iubenda.com`,
       "frame-src https://js.stripe.com https://hooks.stripe.com",
       "object-src 'none'",
